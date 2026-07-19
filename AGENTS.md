@@ -82,4 +82,5 @@ Review: `/review-papercuts`. Details: `docs/papercuts.md`.
 - Hooks live in `.cursor/hooks.json` (PowerShell)
 - Essential bootstrap = product surface only; toolkit skills stay in this repo
 - After harness/.ps1 edits: `scripts/parse-check-ps1.ps1` then `scripts/smoke-bootstrap.ps1`
-- Plugin packaging deferred — see `docs/harness-as-cursor-plugin.md`
+- Local plugin: `plugin/cursor-project-harness` via `scripts/install-harness-plugin.ps1`
+- Live consumers: TG_BOT_PRO, inkavrio_ru — see `docs/harness-consumers.md`

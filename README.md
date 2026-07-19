@@ -58,7 +58,8 @@ Skill: `/bootstrap-project` · гайд: [`docs/bootstrap-scaffold.md`](docs/boo
 | Rules & skills | Исполняемый harness; Essential = product subset |
 | Ведение проектов | Bootstrap, DoD, papercuts loop |
 | Документация | AI-first выжимки + [`SOURCES.md`](SOURCES.md) |
-| Plugin? | Пока copy/bootstrap; см. [`docs/harness-as-cursor-plugin.md`](docs/harness-as-cursor-plugin.md) |
+| Plugin | Local: [`plugin/cursor-project-harness`](plugin/cursor-project-harness) · `scripts/install-harness-plugin.ps1` · [`docs/harness-as-cursor-plugin.md`](docs/harness-as-cursor-plugin.md) |
+| Consumers | [`docs/harness-consumers.md`](docs/harness-consumers.md) (TG_BOT_PRO, inkavrio_ru) |
 
 ## Слои знаний
 

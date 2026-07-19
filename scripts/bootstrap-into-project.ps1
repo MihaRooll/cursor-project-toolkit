@@ -47,13 +47,13 @@ function Copy-Path($Rel) {
     Write-Host "copied $Rel"
 }
 
-function Copy-FileTo($RelSrc, $RelDst) {
+function Copy-FileTo($RelSrc, $RelDst, [switch]$Always) {
     $src = Join-Path $ToolkitRoot $RelSrc
     $dst = Join-Path $Target $RelDst
     if (-not (Test-Path $src)) { Write-Warning "skip missing: $RelSrc"; return }
     $dstDir = Split-Path -Parent $dst
     if ($dstDir) { New-Item -ItemType Directory -Force -Path $dstDir | Out-Null }
-    if ((Test-Path $dst) -and -not $Force) {
+    if ((Test-Path $dst) -and -not $Force -and -not $Always) {
         Write-Host "exists (use -Force to overwrite): $RelDst"
         return
     }
@@ -61,13 +61,146 @@ function Copy-FileTo($RelSrc, $RelDst) {
     Write-Host "copied $RelSrc -> $RelDst"
 }
 
+function Merge-PapercutsHooks {
+    $hooksDir = Join-Path $Target ".cursor\hooks"
+    New-Item -ItemType Directory -Force -Path $hooksDir | Out-Null
+
+    # Always refresh papercuts hook scripts (do not wipe other project hook scripts)
+    foreach ($name in @(
+            "session-start.ps1",
+            "after-shell-papercuts.ps1",
+            "stop-papercuts-nudge.ps1"
+        )) {
+        Copy-Item (Join-Path $ToolkitRoot ".cursor\hooks\$name") (Join-Path $hooksDir $name) -Force
+        Write-Host "synced hook script $name"
+    }
+
+    $dstHooks = Join-Path $Target ".cursor\hooks.json"
+    $papercutsHooks = @{
+        sessionStart         = @(
+            @{
+                command = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .cursor/hooks/session-start.ps1"
+                timeout = 15
+            }
+        )
+        afterShellExecution  = @(
+            @{
+                command = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .cursor/hooks/after-shell-papercuts.ps1"
+                timeout = 20
+            }
+        )
+        stop                 = @(
+            @{
+                command = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .cursor/hooks/stop-papercuts-nudge.ps1"
+                timeout = 15
+            }
+        )
+    }
+
+    if (-not (Test-Path $dstHooks)) {
+        $obj = @{ version = 1; hooks = $papercutsHooks }
+        $json = $obj | ConvertTo-Json -Depth 8
+        $utf8 = New-Object System.Text.UTF8Encoding $false
+        [System.IO.File]::WriteAllText($dstHooks, $json, $utf8)
+        Write-Host "created .cursor/hooks.json (papercuts)"
+        return
+    }
+
+    if ($Force) {
+        Copy-Item (Join-Path $ToolkitRoot ".cursor\hooks.json") $dstHooks -Force
+        Write-Host "overwrote .cursor/hooks.json (-Force)"
+        return
+    }
+
+    try {
+        $existing = Get-Content $dstHooks -Raw -Encoding utf8 | ConvertFrom-Json
+    } catch {
+        Write-Warning "hooks.json parse failed; leaving as-is"
+        return
+    }
+
+    if (-not $existing.hooks) {
+        $existing | Add-Member -NotePropertyName hooks -NotePropertyValue ([pscustomobject]@{}) -Force
+    }
+
+    $changed = $false
+    foreach ($evt in @("sessionStart", "afterShellExecution", "stop")) {
+        $arr = @()
+        $prop = $existing.hooks.PSObject.Properties[$evt]
+        if ($null -ne $prop -and $null -ne $prop.Value) {
+            $arr = @($prop.Value | Where-Object { $null -ne $_ })
+        }
+        $hasPapercuts = $false
+        foreach ($item in $arr) {
+            if ($item.command -and ($item.command -match "papercuts|session-start\.ps1")) {
+                $hasPapercuts = $true
+                break
+            }
+        }
+        if (-not $hasPapercuts) {
+            $toAdd = @($papercutsHooks[$evt])
+            $newArr = @($arr) + $toAdd
+            $existing.hooks | Add-Member -NotePropertyName $evt -NotePropertyValue $newArr -Force
+            $changed = $true
+            Write-Host "merged hook event: $evt"
+        } elseif ($arr.Count -ne @($prop.Value).Count) {
+            # strip accidental nulls from prior bad merges
+            $existing.hooks | Add-Member -NotePropertyName $evt -NotePropertyValue $arr -Force
+            $changed = $true
+            Write-Host "cleaned nulls in hook event: $evt"
+        }
+    }
+
+    if ($changed) {
+        if (-not $existing.version) {
+            $existing | Add-Member -NotePropertyName version -NotePropertyValue 1 -Force
+        }
+        $json = $existing | ConvertTo-Json -Depth 8
+        $utf8 = New-Object System.Text.UTF8Encoding $false
+        [System.IO.File]::WriteAllText($dstHooks, $json, $utf8)
+        Write-Host "updated .cursor/hooks.json (merged papercuts)"
+    } else {
+        Write-Host "hooks.json already has papercuts events"
+    }
+}
+
+function Ensure-AgentsHarnessSnippet {
+    $agentsDst = Join-Path $Target "AGENTS.md"
+    $fullSrc = Join-Path $ToolkitRoot "templates\project-AGENTS.md"
+    $snippetSrc = Join-Path $ToolkitRoot "templates\project-AGENTS-harness-snippet.md"
+    $marker = "cursor-project-toolkit-harness"
+
+    if (-not (Test-Path $agentsDst)) {
+        Copy-Item $fullSrc $agentsDst -Force
+        Write-Host "copied templates/project-AGENTS.md -> AGENTS.md"
+        return
+    }
+
+    if ($Force) {
+        Copy-Item $fullSrc $agentsDst -Force
+        Write-Host "overwrote AGENTS.md (-Force)"
+        return
+    }
+
+    $txt = Get-Content $agentsDst -Raw -Encoding utf8
+    if ($txt -match [regex]::Escape($marker)) {
+        Write-Host "AGENTS.md already has harness snippet"
+        return
+    }
+
+    $snippet = Get-Content $snippetSrc -Raw -Encoding utf8
+    $utf8 = New-Object System.Text.UTF8Encoding $false
+    $nl = if ($txt.EndsWith("`n")) { "" } else { [Environment]::NewLine }
+    [System.IO.File]::WriteAllText($agentsDst, $txt + $nl + [Environment]::NewLine + $snippet, $utf8)
+    Write-Host "appended harness snippet to AGENTS.md"
+}
+
 Write-Host "Bootstrap $Mode -> $Target"
 Write-Host "From toolkit: $ToolkitRoot"
 
 # --- Essential: product harness (not toolkit meta) ---
+# hooks handled separately (merge-safe)
 $essentialFiles = @(
-    ".cursor\hooks.json",
-    ".cursor\hooks",
     ".gitattributes",
     "scripts\papercuts.ps1",
     "scripts\papercuts.cmd",
@@ -77,7 +210,6 @@ $essentialFiles = @(
     "docs\cursor-agent-best-practices.md",
     "docs\cursor-primitives.md",
     "docs\bootstrap-scaffold.md",
-    # Prompting / roles / subagents (Essential subset)
     "prompting\README.md",
     "prompting\plan-then-build.md",
     "prompting\context-hygiene.md",
@@ -91,22 +223,12 @@ $essentialFiles = @(
 
 foreach ($p in $essentialFiles) { Copy-Path $p }
 
-# Product skills only
 Copy-Path ".cursor\skills\review-papercuts"
-
-# Product rules (not toolkit-core / docs-ai-first with SOURCES)
 Copy-Path ".cursor\rules\skills-ru-description.mdc"
-Copy-FileTo "templates\project-rules\product-core.mdc" ".cursor\rules\product-core.mdc"
+Copy-FileTo "templates\project-rules\product-core.mdc" ".cursor\rules\product-core.mdc" -Always
 
-# Project-facing AGENTS (do not overwrite custom AGENTS without -Force)
-$agentsSrc = Join-Path $ToolkitRoot "templates\project-AGENTS.md"
-$agentsDst = Join-Path $Target "AGENTS.md"
-if ((Test-Path $agentsDst) -and -not $Force) {
-    Write-Host "exists: AGENTS.md (use -Force to overwrite)"
-} else {
-    Copy-Item $agentsSrc $agentsDst -Force
-    Write-Host "copied templates/project-AGENTS.md -> AGENTS.md"
-}
+Merge-PapercutsHooks
+Ensure-AgentsHarnessSnippet
 
 if ($Mode -eq "Full") {
     $full = @(
@@ -122,7 +244,9 @@ if ($Mode -eq "Full") {
         "scripts\smoke-bootstrap.ps1",
         "scripts\parse-check-ps1.ps1",
         ".cursor\skills",
-        ".cursor\rules"
+        ".cursor\rules",
+        ".cursor\hooks.json",
+        ".cursor\hooks"
     )
     foreach ($p in $full) { Copy-Path $p }
 }
@@ -150,13 +274,11 @@ if ($WithSubmodule) {
     }
 }
 
-# Windows HOME for papercuts
 if (-not [Environment]::GetEnvironmentVariable("HOME", "User")) {
     [Environment]::SetEnvironmentVariable("HOME", $env:USERPROFILE, "User")
     Write-Host "Set User HOME=$env:USERPROFILE (new terminals will see it)"
 }
 
-# Ensure gitattributes merge for papercuts
 $ga = Join-Path $Target ".gitattributes"
 $line = ".papercuts.jsonl merge=union"
 if (Test-Path $ga) {
@@ -176,7 +298,8 @@ Write-Host "  1. cd `"$Target`""
 Write-Host "  2. Open folder in Cursor"
 Write-Host "  3. Optional: cargo install papercuts  (or use scripts/papercuts.ps1)"
 Write-Host "  4. /add-plugin cursor-team-kit"
-Write-Host "  5. Start building - hooks auto-log failed shells to .papercuts.jsonl"
+Write-Host "  5. Optional local harness plugin: plugin/cursor-project-harness (see docs/harness-as-cursor-plugin.md)"
+Write-Host "  6. Start building - hooks auto-log failed shells to .papercuts.jsonl"
 if ($WithSubmodule) {
-    Write-Host "  6. Toolkit reference: vendor/cursor-project-toolkit (submodule)"
+    Write-Host "  7. Toolkit reference: vendor/cursor-project-toolkit (submodule)"
 }

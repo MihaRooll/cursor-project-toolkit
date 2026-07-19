@@ -29,6 +29,7 @@ Skill: `/bootstrap-project` · гайд: [`docs/bootstrap-scaffold.md`](docs/boo
 | Hooks (авто) | [`.cursor/hooks.json`](.cursor/hooks.json) — sessionStart, failed-shell → papercuts, stop nudge |
 | Papercuts | CLI или [`scripts/papercuts.ps1`](scripts/papercuts.ps1) · [`docs/papercuts.md`](docs/papercuts.md) |
 | Bootstrap | [`scripts/bootstrap-into-project.ps1`](scripts/bootstrap-into-project.ps1) |
+| WSL stabilize | [`scripts/stabilize-wsl.ps1`](scripts/stabilize-wsl.ps1) · [`docs/wsl-windows-stability.md`](docs/wsl-windows-stability.md) |
 | Workflow | [`project-workflow/`](project-workflow/) |
 
 ### Marketplace (в Cursor)

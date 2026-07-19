@@ -30,10 +30,20 @@
 - Не дублировать полный оригинал — только actionable выжимку
 - Людские «истории» и мотивация — в 1–2 строки или в ссылку на источник
 
+### Skills этого репо
+
+- `description` в `SKILL.md` — **на русском** (меню `/`)
+- `name` / папка — латиница
+- Стандарт: [skills-russian-descriptions.md](skills-russian-descriptions.md)
+
 ## Индекс
 
 | Файл | Тема | SRC | Когда агенту читать |
 |------|------|-----|---------------------|
+| [skills-russian-descriptions.md](skills-russian-descriptions.md) | RU descriptions для skills | — | Новый/правка `SKILL.md` |
+| [prompts-chat-verdict.md](prompts-chat-verdict.md) | prompts.chat — не bulk-ingest | SRC-010 | Предлагают скачать community prompts |
+| [papercuts.md](papercuts.md) | Papercuts CLI — жалобы агентов | SRC-011 | Friction, tooling footguns, triage backlog |
+| [bootstrap-scaffold.md](bootstrap-scaffold.md) | Toolkit → новый проект | — | Bootstrap harness в продукт |
 | [cursor-official-index.md](cursor-official-index.md) | Карта всего official Cursor | SRC-004…009 | Старт: найти plugin/docs/blog |
 | [cursor-agent-best-practices.md](cursor-agent-best-practices.md) | Операционный manual агента | SRC-005 | Plan, context, rules/skills, workflows |
 | [cursor-primitives.md](cursor-primitives.md) | Rules / Skills / AGENTS.md | SRC-006 | Создание rules и skills |

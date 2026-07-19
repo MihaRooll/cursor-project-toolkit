@@ -13,9 +13,10 @@
 - Prefer pointer на canonical file, не копипаст
 - Rule `< 500` lines; большие — дробить
 - Skill: сильный `description` (для discovery); детали в `references/` (progressive load)
+- **В этом репо `description` — на русском** (меню `/`); `name` — латиница. См. [skills-russian-descriptions.md](skills-russian-descriptions.md)
 - `alwaysApply: true` только для действительно глобального
 
-**Не делай:** `.md` в `.cursor/rules` без `.mdc` (игнорируется); style guide целиком; дублировать linter/common CLI knowledge.
+**Не делай:** `.md` в `.cursor/rules` без `.mdc` (игнорируется); style guide целиком; дублировать linter/common CLI knowledge; английский `description` у project skills toolkit.
 
 ---
 
@@ -58,12 +59,12 @@ Nested `AGENTS.md` в подпапках: более специфичные ин
 Структура: `skill-name/SKILL.md` (+ optional `scripts/`, `references/`, `assets/`).  
 `name` в frontmatter = имя папки. Nested folder skills в monorepo авто-скоупятся к своей директории.
 
-| Field | Назначение |
-|-------|------------|
-| `name` | id |
-| `description` | когда применять (критично для auto) |
-| `paths` | glob-скоуп к файлам |
-| `disable-model-invocation` | только через `/skill-name` |
+| Field | Назначение | Язык в этом репо |
+|-------|------------|------------------|
+| `name` | id (= имя папки) | латиница kebab-case |
+| `description` | когда применять; текст в меню `/` | **русский** |
+| `paths` | glob-скоуп к файлам | — |
+| `disable-model-invocation` | только через `/skill-name` | — |
 
 Миграция: `/migrate-to-skills` (dynamic rules без globs + slash commands → skills).  
 Always-on / glob rules **не** мигрируются автоматически.

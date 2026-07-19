@@ -15,6 +15,8 @@
 | SRC-007 | [Dynamic context discovery](https://cursor.com/blog/dynamic-context-discovery) | Cursor blog | Static index vs on-demand load; skills/MCP/files pattern | [docs/cursor-dynamic-context.md](docs/cursor-dynamic-context.md) | — | 2026-07-19 |
 | SRC-008 | [Plugins docs](https://cursor.com/docs/plugins) · [Marketplace blog](https://cursor.com/blog/marketplace) | Cursor docs/blog | Как пакуются plugins; marketplace | [docs/cursor-official-index.md](docs/cursor-official-index.md) | — | 2026-07-19 |
 | SRC-009 | [cursor/plugins](https://github.com/cursor/plugins) (all Cursor-authored plugins) | GitHub repo | continual-learning, thermos, orchestrate, create-plugin, canvases, sdk, … | [docs/cursor-official-plugins.md](docs/cursor-official-plugins.md) · [docs/cursor-official-index.md](docs/cursor-official-index.md) | — (ставить plugins; клон репо — по нужде) | 2026-07-19 |
+| SRC-010 | [prompts.chat/prompts](https://prompts.chat/prompts) | community prompt lib | **Не ingest оптом** — шум/one-off ТЗ; политика точечного отбора | [docs/prompts-chat-verdict.md](docs/prompts-chat-verdict.md) | — (не архивировать каталог) | 2026-07-19 |
+| SRC-011 | [papercuts](https://github.com/treygoff24/papercuts) · [idea/X](https://x.com/steveruizok/status/2075303919664734295) | CLI / agent tooling | Complaint box для агентов → `.papercuts.jsonl`; triage harness friction | [docs/papercuts.md](docs/papercuts.md) | — (ставить CLI; не клонировать репо обязательно) | 2026-07-19 |
 
 ## Когда копировать в `archive/`
 

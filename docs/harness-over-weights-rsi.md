@@ -57,6 +57,7 @@
 | Metasystem учится на разнообразии задач | Пополнять `docs/` и skills после реальных проектов |
 | Model-agnostic | Не хардкодить одного провайдера в правилах |
 | Living evaluation | Чеклисты DoD, ревью PR, реальные сценарии — вместо «прошли абстрактный бенчмарк» |
+| Agent friction signal | [papercuts](papercuts.md) — жалобы в `.papercuts.jsonl` → чиним harness |
 | Compounding | Каждый SRC → выжимка в `docs/` + запись в `SOURCES.md` |
 
 ### Мини-чеклист агента при новой практике

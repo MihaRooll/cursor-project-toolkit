@@ -1,88 +1,85 @@
 # Cursor Project Toolkit
 
-## Цель репозитория
+## Зачем это
 
-Собрать в одном месте всё самое актуальное и полезное по разработке и ведению проектов с AI-агентами — чтобы из отдельных практик получилась **синергия с максимальной эффективностью**.
+Это **каркас среды разработки для ИИ-агентов**: документация + rules/skills/hooks + papercuts.
 
-Репозиторий — живой toolkit: рекомендации, шаблоны и **исполняемый harness** для Cursor.
+Его **накатывают на новый проект**, чтобы не начинать в голой папке, а сразу работать в настроенном harness (агент знает правила, умеет логировать friction, видит AI-first docs).
 
-## Аудитория документации
+```text
+toolkit (этот репо)  --bootstrap-->  my-app (продукт + harness)
+```
 
-**Сначала ИИ, потом люди.**
+```powershell
+.\scripts\bootstrap-into-project.ps1 -TargetPath C:\work\my-app -Mode Essential
+```
 
-1. **ИИ-агенты** — основной потребитель: факты, команды, чеклисты, роли, правила применения  
-2. **Люди** — вторичный: быстрый обзор, навигация, ссылки на источники  
+Skill: `/bootstrap-project` · гайд: [`docs/bootstrap-scaffold.md`](docs/bootstrap-scaffold.md)
 
-## Live harness (уже в репо)
+## Аудитория docs
+
+**Сначала ИИ, потом люди.** Стандарт: [`docs/README.md`](docs/README.md).
+
+## Live harness
 
 | Что | Где |
 |-----|-----|
-| Agent instructions | [`AGENTS.md`](AGENTS.md) |
-| Always-on rules | [`.cursor/rules/`](.cursor/rules/) |
-| Skills | [`.cursor/skills/`](.cursor/skills/) — `add-source`, `distill-doc`, `ship-toolkit` |
-| Session / ingest DoD | [`project-workflow/`](project-workflow/) |
+| Agent instructions | [`AGENTS.md`](AGENTS.md) · шаблон продукта: [`templates/project-AGENTS.md`](templates/project-AGENTS.md) |
+| Rules / skills | [`.cursor/rules/`](.cursor/rules/) · [`.cursor/skills/`](.cursor/skills/) |
+| Hooks (авто) | [`.cursor/hooks.json`](.cursor/hooks.json) — sessionStart, failed-shell → papercuts, stop nudge |
+| Papercuts | CLI или [`scripts/papercuts.ps1`](scripts/papercuts.ps1) · [`docs/papercuts.md`](docs/papercuts.md) |
+| Bootstrap | [`scripts/bootstrap-into-project.ps1`](scripts/bootstrap-into-project.ps1) |
+| Workflow | [`project-workflow/`](project-workflow/) |
 
-Как писать docs: [`docs/README.md`](docs/README.md).  
-Карта official Cursor: [`docs/cursor-official-index.md`](docs/cursor-official-index.md).
-
-### Рекомендуемые marketplace plugins
+### Marketplace (в Cursor)
 
 ```
 /add-plugin cursor-team-kit
 /add-plugin continual-learning
 ```
 
+## Авто-papercuts
+
+| Когда | Что происходит |
+|-------|----------------|
+| Упала shell-команда | Hook пишет cut в `.papercuts.jsonl` (лимит/dedupe) |
+| Старт сессии | HOME + короткий reminder |
+| Конец сессии (раз/день) | Nudge открыть backlog, если есть cuts |
+| Остальной friction | Агент/ты: `papercuts add "…"` |
+
+Разбор: `/review-papercuts`.
+
 ## Что собираем
 
 | Область | Содержание |
 |--------|------------|
-| **Промптирование** | Лучшие практики промптов, паттерны задач, антипаттерны |
-| **Роли** | Роли агента и когда их включать |
-| **Субагенты** | Делегирование, параллельные агенты |
-| **Правила и skills** | Cursor rules, skills, hooks |
-| **Ведение проектов** | Планирование, DoD, handoff |
-| **Документация** | Выжимки AI-first → human-second |
+| Промптирование / роли / субагенты | Паттерны под агентов |
+| Rules & skills | Исполняемый harness |
+| Ведение проектов | Bootstrap, DoD, papercuts loop |
+| Документация | AI-first выжимки + [`SOURCES.md`](SOURCES.md) |
 
-## Принцип
+## Слои знаний
 
-1. **Актуальность** — рабочие и свежие подходы  
-2. **Применимость** — агент и человек используют сразу  
-3. **Синергия** — промпты + роли + субагенты + docs  
-4. **Эффективность** — меньше хаоса, больше предсказуемого результата  
-5. **Dynamic context** — короткий индекс, тело по запросу (`docs/` vs `archive/`)
-
-## Два слоя знаний
-
-| Слой | Где | Зачем |
-|------|-----|--------|
-| **Основное** | `docs/`, `.cursor/`, шаблоны | То, с чем работают агент и команда |
-| **Архив** | `archive/` | Полные копии источников (сбоку) |
-
-Реестр внешнего: [`SOURCES.md`](SOURCES.md).
+| Слой | Где | Роль |
+|------|-----|------|
+| Основное | `docs/`, `.cursor/` | То, что едет в проекты (Essential) |
+| Архив | `archive/` | Сырьё сбоку, не обязательно копировать |
 
 ## Структура
 
 ```
 cursor-project-toolkit/
-├── README.md
-├── AGENTS.md                 # инструкции агенту
-├── SOURCES.md                # реестр SRC-NNN
-├── .cursor/rules/            # project rules
-├── .cursor/skills/           # project skills
-├── archive/                  # полный архив (опционально)
-├── docs/                     # основная документация (AI-first)
-├── prompting/
-├── roles/
-├── subagents/
-├── rules-and-skills/         # заметки; canonical skills в .cursor/skills/
-└── project-workflow/         # чеклисты сессии / ingest
+├── scripts/bootstrap-into-project.ps1
+├── templates/project-AGENTS.md
+├── AGENTS.md / SOURCES.md
+├── .cursor/rules|skills|hooks
+├── docs/                     # AI-first
+├── project-workflow/
+└── prompting|roles|subagents|…
 ```
 
-### Docs highlights
-
-- [Cursor official index](docs/cursor-official-index.md) · [best practices](docs/cursor-agent-best-practices.md) · [primitives](docs/cursor-primitives.md) · [dynamic context](docs/cursor-dynamic-context.md) · [plugins](docs/cursor-official-plugins.md) · [Team Kit](docs/cursor-team-kit.md)
-- [GitHub essentials](docs/github-for-beginners-essentials.md) · [Harness/RSI](docs/harness-over-weights-rsi.md) · [Blume](docs/blume-ai-ready-docs.md)
+Карта Cursor official: [`docs/cursor-official-index.md`](docs/cursor-official-index.md)
 
 ---
 
-**Миссия:** максимальная эффективность разработки за счёт согласованной системы практик — от промпта до документации и живого harness в `.cursor/`.
+**Миссия:** каждый новый проект стартует как полноценная AI-native среда, а не как пустая директория.

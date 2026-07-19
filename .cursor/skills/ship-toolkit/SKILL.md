@@ -1,22 +1,22 @@
 ---
 name: ship-toolkit
-description: Ship changes to cursor-project-toolkit via GitHub flow (status, branch, commit, push, optional PR). Use when user asks to commit, push, open PR, or ship toolkit updates.
+description: Закоммитить и запушить изменения toolkit (GitHub flow, опционально PR). Когда просят commit, push, PR, «зашей», отправить на GitHub.
 ---
 
-# Ship toolkit
+# Зашить в GitHub (ship-toolkit)
 
-## When to use
+## Когда использовать
 
-- User asks to commit / push / PR / "зашей" / ship
-- After a batch of docs/harness changes is ready
+- Просят commit / push / PR / «зашей» / ship
+- Пачка правок docs/harness готова к публикации
 
-## Preconditions
+## Предусловия
 
-- Only commit when the user explicitly asked (or clearly asked to ship).
-- Never update git config; never force-push `main`; never skip hooks unless asked.
-- Never commit `.env`, credentials, or secrets.
+- Коммит только если пользователь явно попросил (или ясно сказал «зашей»).
+- Не трогать git config; не force-push в `main`; не skip hooks без просьбы.
+- Не коммитить `.env`, credentials, секреты.
 
-## Steps
+## Шаги
 
 1. Parallel inspect:
    - `git status`

@@ -1,14 +1,14 @@
 ---
 name: add-source
-description: Ingest an external article, plugin, or repo into the toolkit. Use when the user shares a URL/resource to capture, or asks to add something to SOURCES/docs/archive.
+description: Добавить внешний ресурс в toolkit (статья, plugin, репо). Когда пользователь кидает URL или просит занести в SOURCES/docs/archive / сделать выжимку.
 ---
 
-# Add source
+# Добавить источник (add-source)
 
-## When to use
+## Когда использовать
 
-- User pastes a URL / names an official Cursor plugin / external guide
-- "занеси в docs", "добавь в SOURCES", "выжимка из …"
+- Пользователь прислал URL / назвал official Cursor plugin / внешний гайд
+- Фразы: «занеси в docs», «добавь в SOURCES», «выжимка из …»
 
 ## Steps
 

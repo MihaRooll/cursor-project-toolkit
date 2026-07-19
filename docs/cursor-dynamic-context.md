@@ -9,7 +9,7 @@
 **Применяй при авторстве toolkit:**
 - **Static** = короткий индекс (имена, description, llms-style TOC)
 - **Dynamic** = тело файла агент читает сам, когда нужно
-- Skills: description в индексе, детали в `SKILL.md` / `references/`
+- Skills: `description` в индексе (в этом репо — **на русском**), детали в `SKILL.md` / `references/` — см. [skills-russian-descriptions.md](skills-russian-descriptions.md)
 - MCP: не рассчитывать что все tool descriptions всегда в промпте — учи навык «сначала list/read tools»
 - Длинные выводы команд → писать в файл, читать через `tail`/grep, не пихать целиком в чат
 - Наша схема `docs/` + `SOURCES.md` + `archive/` = тот же паттерн (выжимка vs сырьё)

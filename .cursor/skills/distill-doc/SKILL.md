@@ -1,15 +1,15 @@
 ---
 name: distill-doc
-description: Rewrite or create an AI-first documentation file for this toolkit. Use when docs are too narrative, need For agents section, or user asks to make docs agent-ready.
+description: Сделать или переписать документ AI-first для toolkit. Когда текст слишком «для людей», нет блока For agents, или просят выжимку для агента.
 ---
 
-# Distill doc
+# Выжимка документа (distill-doc)
 
-## When to use
+## Когда использовать
 
-- Existing note is human-essay style
-- New topic needs a canonical `docs/*.md`
-- User asks to "сделай AI-first" / "выжми для агента"
+- Заметка в стиле эссе / воды
+- Нужен канонический файл `docs/*.md`
+- Фразы: «сделай AI-first», «выжми для агента»
 
 ## Steps
 
@@ -40,9 +40,11 @@ description: Rewrite or create an AI-first documentation file for this toolkit. 
 4. Prefer tables over paragraphs.
 5. If source is new → run `add-source` flow (or ensure SRC exists).
 6. Update `docs/README.md` index.
+7. Если создаёшь/правишь skill — `description` **на русском** (`docs/skills-russian-descriptions.md`).
 
 ## Anti-patterns
 
 - Pasting full blog HTML/markdown
 - Missing `## For agents`
 - Duplicate of another `docs/` file — merge or cross-link instead
+- Английский `description` у project skills этого репо

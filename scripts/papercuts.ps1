@@ -70,7 +70,7 @@ function Get-OpenCuts {
 switch ($Command) {
     "help" {
         @"
-papercuts.ps1 (shim) — no Rust required
+papercuts.ps1 (shim) - no Rust required
 
   add "text" [--Tag area] [--Severity minor|major|blocker]
   list [--Format json|md]

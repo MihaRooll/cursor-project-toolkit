@@ -12,6 +12,8 @@
 ```powershell
 cd C:\Users\katko\Desktop\Programms\cursor-project-toolkit
 .\scripts\bootstrap-into-project.ps1 -TargetPath C:\path\to\new-app -Mode Essential
+# опционально:
+.\scripts\bootstrap-into-project.ps1 -TargetPath C:\path\to\new-app -Mode Essential -WithSubmodule
 ```
 
 3. Открой `new-app` в Cursor.
@@ -26,6 +28,13 @@ cd C:\Users\katko\Desktop\Programms\cursor-project-toolkit
 ## Что считать успехом
 
 - [ ] В продукте есть `.cursor/hooks.json` и `AGENTS.md`
-- [ ] Агент видит skills/rules
+- [ ] Есть `product-core.mdc` + skill `review-papercuts`
+- [ ] **Нет** toolkit-only skills (`ship-toolkit`, `add-source`, …)
+- [ ] Есть Essential `prompting/` / `roles/` / `subagents/verifier`
 - [ ] `.papercuts.jsonl` появляется после первого fail/add
 - [ ] Не нужно вручную «настраивать Cursor с нуля» каждый раз
+
+## См. также
+
+- [`docs/bootstrap-scaffold.md`](../docs/bootstrap-scaffold.md)
+- [`docs/harness-as-cursor-plugin.md`](../docs/harness-as-cursor-plugin.md)

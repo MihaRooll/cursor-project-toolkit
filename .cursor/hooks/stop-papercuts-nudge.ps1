@@ -38,7 +38,7 @@ $utf8 = New-Object System.Text.UTF8Encoding $false
 
 if ($openHint -eq "open") {
     @{
-        followup_message = "Papercuts: есть открытые жалобы в .papercuts.jsonl. Кратко глянь `papercuts list --format md` (или /review-papercuts). Если сейчас не до triage — ответь одним словом SKIP и остановись."
+        followup_message = "Papercuts: есть открытые жалобы в .papercuts.jsonl. Кратко глянь `papercuts list --format md` (или /review-papercuts). Если сейчас не до triage - ответь одним словом SKIP и остановись."
     } | ConvertTo-Json -Compress
 } else {
     Write-Output "{}"

@@ -1,1 +1,4 @@
 {"kind":"cut","id":"pc_28ef291b4ae0","ts":"2026-07-19T11:53:37.464Z","agent":"cursor","text":"Windows: papercuts needs HOME=USERPROFILE or --file; run from git repo root","tags":["tooling"],"severity":"minor","cwd":"C:\\Users\\katko\\Desktop\\Programms\\cursor-project-toolkit","repo":"C:\\Users\\katko\\Desktop\\Programms\\cursor-project-toolkit"}
+{"kind":"cut","id":"pc_83b95a10ff60","ts":"2026-07-19T12:05:40.7227334Z","agent":"cursor-toolkit-shim","text":"Windows PowerShell 5.1: UTF-8 em-dash in .ps1 strings -\u003e ParserError (broke bootstrap). Also dollar-exit-colon is drive-qualified var -\u003e use dollar{exit}. Mitigated: ASCII punctuation, parse-check-ps1.ps1, smoke-bootstrap.ps1, docs note.","tags":["powershell"],"severity":"major"}
+{"kind":"resolve","id":"pc_83b95a10ff60","ts":"2026-07-19T12:09:20.3179308Z"}
+{"kind":"resolve","id":"pc_28ef291b4ae0","ts":"2026-07-19T12:09:25.6983756Z"}

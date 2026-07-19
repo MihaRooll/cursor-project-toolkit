@@ -20,6 +20,8 @@
 - [ ] If new external material → SRC + docs + index
 - [ ] If process repeated twice → rule or skill (compound)
 - [ ] New/edited skill → `description` на русском (`docs/skills-russian-descriptions.md`)
+- [ ] Harness/.ps1 changed → `scripts/parse-check-ps1.ps1` + `scripts/smoke-bootstrap.ps1`
+- [ ] Essential still product-only (no `ship-toolkit` in product bootstrap)
 - [ ] No secrets staged
 - [ ] Ship only if user asked (`/ship-toolkit`)
 

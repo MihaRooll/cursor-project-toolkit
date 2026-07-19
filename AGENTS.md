@@ -80,3 +80,6 @@ Review: `/review-papercuts`. Details: `docs/papercuts.md`.
 - Official Cursor distillations: `docs/cursor-*.md` (SRC-004…009)
 - Windows: `$env:HOME = $env:USERPROFILE` for papercuts; prefer git repo cwd or `--file`
 - Hooks live in `.cursor/hooks.json` (PowerShell)
+- Essential bootstrap = product surface only; toolkit skills stay in this repo
+- After harness/.ps1 edits: `scripts/parse-check-ps1.ps1` then `scripts/smoke-bootstrap.ps1`
+- Plugin packaging deferred — see `docs/harness-as-cursor-plugin.md`

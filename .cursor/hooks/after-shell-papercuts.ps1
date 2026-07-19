@@ -52,7 +52,7 @@ $fp = ($cmd.Trim() -replace "\s+", " ")
 if ($fp.Length -gt 160) { $fp = $fp.Substring(0, 160) }
 if ($state.recent -contains $fp) { Write-Output "{}"; exit 0 }
 
-$text = "shell exit $exit: $fp"
+$text = "shell exit ${exit}: $fp"
 $logFile = Join-Path $root ".papercuts.jsonl"
 $filed = $false
 
@@ -77,7 +77,7 @@ if ($filed) {
     $state.recent = $recent
     $utf8 = New-Object System.Text.UTF8Encoding $false
     [System.IO.File]::WriteAllText($stateFile, ($state | ConvertTo-Json -Compress), $utf8)
-    @{ additional_context = "Papercut auto-logged (shell exit $exit). Continue the task; do not stop." } | ConvertTo-Json -Compress
+    @{ additional_context = "Papercut auto-logged (shell exit ${exit}). Continue the task; do not stop." } | ConvertTo-Json -Compress
 } else {
     Write-Output "{}"
 }

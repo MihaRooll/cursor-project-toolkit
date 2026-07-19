@@ -54,10 +54,11 @@ Skill: `/bootstrap-project` · гайд: [`docs/bootstrap-scaffold.md`](docs/boo
 
 | Область | Содержание |
 |--------|------------|
-| Промптирование / роли / субагенты | Паттерны под агентов |
-| Rules & skills | Исполняемый harness |
+| Промптирование / роли / субагенты | [`prompting/`](prompting/) · [`roles/`](roles/) · [`subagents/`](subagents/) — AI-first шаблоны (не community dump) |
+| Rules & skills | Исполняемый harness; Essential = product subset |
 | Ведение проектов | Bootstrap, DoD, papercuts loop |
 | Документация | AI-first выжимки + [`SOURCES.md`](SOURCES.md) |
+| Plugin? | Пока copy/bootstrap; см. [`docs/harness-as-cursor-plugin.md`](docs/harness-as-cursor-plugin.md) |
 
 ## Слои знаний
 

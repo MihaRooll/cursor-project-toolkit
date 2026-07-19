@@ -7,6 +7,7 @@ This project was bootstrapped with **cursor-project-toolkit** — an AI-agent ha
 1. Follow project code conventions in this repo.
 2. Use `.cursor/rules` and `.cursor/skills` when relevant.
 3. Docs are **AI-first** when present under `docs/`.
+4. Patterns: `prompting/`, roles in `roles/`, isolation briefs in `subagents/`.
 
 ## Papercuts (automatic + manual)
 
@@ -27,6 +28,7 @@ Do not stop the user task — log and continue. Review backlog with `/review-pap
 - Prefer branches + small PRs.
 - Do not commit secrets.
 - Use project scripts/checks when they exist.
+- Recommended: `/add-plugin cursor-team-kit` for CI/PR workflows.
 
 ## Learned User Preferences
 

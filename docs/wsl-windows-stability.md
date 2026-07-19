@@ -40,6 +40,19 @@
 | Docker containers | WSL / Docker Desktop |
 | Файлы проекта | `C:\Users\...\project` |
 
+## PowerShell 5.1 footguns (hooks / bootstrap)
+
+Windows PowerShell читает `.ps1` в системной ANSI (не UTF-8), если нет BOM.
+
+| Симптом | Причина | Фикс |
+|---------|---------|------|
+| ParserError на закрывающей `"` | em-dash `—` / fancy quotes в строке | ASCII `-` / `'` или сохранить файл UTF-8 **с BOM** |
+| `Недопустимая ссылка на переменную` около `$exit:` | `$name:` = drive-qualified var | `${exit}:` / `"shell exit $($exit): …"` |
+| `$env:VAR` в agent bash | это не PowerShell | писать `.ps1` + `powershell.exe -File …` |
+
+Проверка: `powershell -File scripts/parse-check-ps1.ps1`  
+Smoke Essential: `powershell -File scripts/smoke-bootstrap.ps1`
+
 ## Если снова упало
 
 ```powershell

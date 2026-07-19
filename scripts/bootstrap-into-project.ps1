@@ -13,7 +13,10 @@ param(
     [ValidateSet("Essential", "Full")]
     [string]$Mode = "Essential",
 
-    [switch]$Force
+    [switch]$Force,
+
+    # Optional: also add toolkit as git submodule at vendor/cursor-project-toolkit
+    [switch]$WithSubmodule
 )
 
 $ErrorActionPreference = "Stop"
@@ -30,12 +33,13 @@ function Copy-Path($Rel) {
     $dst = Join-Path $Target $Rel
     if (-not (Test-Path $src)) { Write-Warning "skip missing: $Rel"; return }
     $dstDir = Split-Path -Parent $dst
-    New-Item -ItemType Directory -Force -Path $dstDir | Out-Null
+    if ($dstDir) { New-Item -ItemType Directory -Force -Path $dstDir | Out-Null }
     if ((Test-Path $dst) -and -not $Force) {
         Write-Host "exists (use -Force to overwrite): $Rel"
         return
     }
     if (Test-Path $src -PathType Container) {
+        if (Test-Path $dst) { Remove-Item -Recurse -Force $dst }
         Copy-Item -Path $src -Destination $dst -Recurse -Force
     } else {
         Copy-Item -Path $src -Destination $dst -Force
@@ -43,13 +47,25 @@ function Copy-Path($Rel) {
     Write-Host "copied $Rel"
 }
 
+function Copy-FileTo($RelSrc, $RelDst) {
+    $src = Join-Path $ToolkitRoot $RelSrc
+    $dst = Join-Path $Target $RelDst
+    if (-not (Test-Path $src)) { Write-Warning "skip missing: $RelSrc"; return }
+    $dstDir = Split-Path -Parent $dst
+    if ($dstDir) { New-Item -ItemType Directory -Force -Path $dstDir | Out-Null }
+    if ((Test-Path $dst) -and -not $Force) {
+        Write-Host "exists (use -Force to overwrite): $RelDst"
+        return
+    }
+    Copy-Item -Path $src -Destination $dst -Force
+    Write-Host "copied $RelSrc -> $RelDst"
+}
+
 Write-Host "Bootstrap $Mode -> $Target"
 Write-Host "From toolkit: $ToolkitRoot"
 
-# Essential harness for any new product repo
-$essential = @(
-    ".cursor\rules",
-    ".cursor\skills",
+# --- Essential: product harness (not toolkit meta) ---
+$essentialFiles = @(
     ".cursor\hooks.json",
     ".cursor\hooks",
     ".gitattributes",
@@ -59,10 +75,28 @@ $essential = @(
     "docs\papercuts.md",
     "docs\skills-russian-descriptions.md",
     "docs\cursor-agent-best-practices.md",
-    "docs\cursor-primitives.md"
+    "docs\cursor-primitives.md",
+    "docs\bootstrap-scaffold.md",
+    # Prompting / roles / subagents (Essential subset)
+    "prompting\README.md",
+    "prompting\plan-then-build.md",
+    "prompting\context-hygiene.md",
+    "prompting\verify-loop.md",
+    "roles\README.md",
+    "roles\implementer.md",
+    "roles\reviewer.md",
+    "subagents\README.md",
+    "subagents\verifier.md"
 )
 
-foreach ($p in $essential) { Copy-Path $p }
+foreach ($p in $essentialFiles) { Copy-Path $p }
+
+# Product skills only
+Copy-Path ".cursor\skills\review-papercuts"
+
+# Product rules (not toolkit-core / docs-ai-first with SOURCES)
+Copy-Path ".cursor\rules\skills-ru-description.mdc"
+Copy-FileTo "templates\project-rules\product-core.mdc" ".cursor\rules\product-core.mdc"
 
 # Project-facing AGENTS (do not overwrite custom AGENTS without -Force)
 $agentsSrc = Join-Path $ToolkitRoot "templates\project-AGENTS.md"
@@ -84,9 +118,36 @@ if ($Mode -eq "Full") {
         "rules-and-skills",
         "project-workflow",
         "archive\README.md",
-        "scripts\install-rust-papercuts.ps1"
+        "scripts\install-rust-papercuts.ps1",
+        "scripts\smoke-bootstrap.ps1",
+        "scripts\parse-check-ps1.ps1",
+        ".cursor\skills",
+        ".cursor\rules"
     )
     foreach ($p in $full) { Copy-Path $p }
+}
+
+if ($WithSubmodule) {
+    $vendor = Join-Path $Target "vendor\cursor-project-toolkit"
+    if (Test-Path $vendor) {
+        Write-Host "exists: vendor/cursor-project-toolkit (skip submodule)"
+    } else {
+        Push-Location $Target
+        try {
+            if (-not (Test-Path (Join-Path $Target ".git"))) {
+                Write-Warning "WithSubmodule: target is not a git repo; init first or add submodule manually"
+            } else {
+                git submodule add https://github.com/MihaRooll/cursor-project-toolkit.git vendor/cursor-project-toolkit
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Host "added submodule vendor/cursor-project-toolkit"
+                } else {
+                    Write-Warning "git submodule add failed (exit $LASTEXITCODE)"
+                }
+            }
+        } finally {
+            Pop-Location
+        }
+    }
 }
 
 # Windows HOME for papercuts
@@ -115,4 +176,7 @@ Write-Host "  1. cd `"$Target`""
 Write-Host "  2. Open folder in Cursor"
 Write-Host "  3. Optional: cargo install papercuts  (or use scripts/papercuts.ps1)"
 Write-Host "  4. /add-plugin cursor-team-kit"
-Write-Host "  5. Start building — hooks auto-log failed shells to .papercuts.jsonl"
+Write-Host "  5. Start building - hooks auto-log failed shells to .papercuts.jsonl"
+if ($WithSubmodule) {
+    Write-Host "  6. Toolkit reference: vendor/cursor-project-toolkit (submodule)"
+}

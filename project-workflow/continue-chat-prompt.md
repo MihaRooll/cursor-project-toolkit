@@ -20,39 +20,37 @@ docs AI-first → human-second, `.cursor/rules|skills|hooks`, papercuts,
 3. docs/bootstrap-scaffold.md
 4. docs/papercuts.md
 5. docs/cursor-official-index.md
-6. project-workflow/session-checklist.md
-7. SOURCES.md (что уже ingest’нули)
+6. docs/harness-as-cursor-plugin.md
+7. project-workflow/session-checklist.md
+8. SOURCES.md
+9. project-workflow/continue-chat-prompt.md
 
 ## Что уже сделано (не повторяй с нуля)
-- Подключён remote GitHub, ветка main
-- AI-first docs + SRC-001…011 (GitHub beginners, Poetiq, Blume, Cursor official, prompts.chat REJECT bulk, papercuts)
-- Skills (RU descriptions): add-source, distill-doc, ship-toolkit, review-papercuts, bootstrap-project
-- Hooks: sessionStart, afterShellExecution→auto papercuts, stop nudge
-- Windows: papercuts CLI установлен; нужен HOME=$USERPROFILE; shim scripts/papercuts.ps1
-- Host .wslconfig: memory=12GB, processors=6, mirrored DNS; scripts/stabilize-wsl.ps1
-- Правило среды: git/push/papercuts/winget → Windows PowerShell; WSL → Docker/Linux-only
-- Коммиты (проверь `git log` / push status): bootstrap+papercuts, WSL docs
+- Remote GitHub, main; SRC-001…011
+- Skills RU: add-source, distill-doc, ship-toolkit, review-papercuts, bootstrap-project
+- Hooks + papercuts shim; WSL stabilize; PowerShell footguns задокументированы
+- Essential = product surface (не toolkit meta-skills)
+- prompting/roles/subagents AI-first шаблоны
+- smoke: scripts/smoke-bootstrap.ps1 + parse-check-ps1.ps1
+- Plugin: решение отложено (docs/harness-as-cursor-plugin.md); submodule флаг -WithSubmodule
 
 ## Ограничения среды
-- Агент часто в bash/WSL: `$env:VAR` ломается — для PowerShell пиши .ps1 файлы и запускай через powershell.exe
-- Push иногда падает на DNS github.com — retry из Windows PowerShell
-- Не force-push main; коммит/push только по просьбе пользователя
+- Агент часто в bash/WSL: для PowerShell пиши .ps1 + powershell.exe
+- Em-dash / `$exit:` ломают PS 5.1 — ASCII + `${var}`; parse-check перед ship
+- Не force-push main; коммит/push только по просьбе
 - Project skill `description` — на русском; `name` — латиница
 
-## Приоритеты продолжения (по порядку, уточни у пользователя если неочевидно)
-1. Проверить `git status` и что все коммиты на origin (push если ahead)
-2. Прогнать smoke: hooks/papercuts/bootstrap на пустую тестовую папку
-3. Наполнить `prompting/`, `roles/`, `subagents/` реальными AI-first шаблонами (не community dump)
-4. Улучшить Essential bootstrap (что именно копировать в продукт) + опциональный git submodule toolkit
-5. Рассмотреть упаковку harness как Cursor plugin (`create-plugin`)
-6. Continual-learning / Team Kit — только как рекомендации install, не форкать весь kit
+## Приоритеты продолжения
+1. git status / smoke зелёный
+2. Реальные продукты: bootstrap + feedback → papercuts → compound
+3. Когда ≥2 продукта на harness — scaffold Cursor plugin (create-plugin)
+4. Не тащи prompts.chat оптом
 
-## Стиль работы
-- Документация: блок `## For agents` первым; таблицы/чеклисты; SRC в SOURCES.md
-- После повторяющегося friction → papercuts + fix в docs/rules (compound)
-- Не тащи prompts.chat оптом (см. docs/prompts-chat-verdict.md)
+## Стиль
+- Docs: `## For agents` первым; SRC в SOURCES.md
+- Friction → papercuts + fix
 
-Начни с: git status, git log -5, сверка с origin; кратко скажи что не запушено/сломано; предложи следующий конкретный шаг.
+Начни с: git status, git log -5; предложи следующий конкретный шаг.
 ```
 
 ---

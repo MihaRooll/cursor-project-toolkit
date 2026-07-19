@@ -1,0 +1,15 @@
+---
+description: Core operating rules for Cursor Project Toolkit
+alwaysApply: true
+---
+
+# Toolkit core
+
+- Docs are **AI-first → human-second**. Prefer `docs/` over prose in chat.
+- Before inventing process: read `docs/cursor-official-index.md` and `AGENTS.md`.
+- Any external borrow → row in `SOURCES.md` + distill in `docs/` + index update in `docs/README.md`.
+- Default: link to source. Use `archive/` only when a snapshot is required.
+- Keep rules/skills short; point to files (`@docs/...`, `@SOURCES.md`) instead of pasting large content.
+- Do not commit secrets, `.env`, or credentials.
+- Prefer small, reviewable changes; descriptive branches; no force-push to `main`.
+- Harness mindset: improve reusable rules/skills/docs after real tasks (compound), don't chase vanity benchmarks.

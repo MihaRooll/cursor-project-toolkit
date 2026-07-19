@@ -1,0 +1,17 @@
+---
+description: Standards when writing or editing toolkit documentation in docs/
+globs: docs/**/*.md, SOURCES.md, AGENTS.md, README.md
+alwaysApply: false
+---
+
+# Docs AI-first
+
+When creating or editing docs in this repo:
+
+1. Start with `## For agents` (when to read, apply, do-not).
+2. Facts in tables/lists; checklists for verifiable steps.
+3. End with source URL + `SRC-NNN` link to `SOURCES.md`.
+4. One file ≈ one topic; filename = search key.
+5. Do not dump full original articles — distill only.
+6. Update `docs/README.md` index when adding a file.
+7. Follow the template in `docs/README.md`.

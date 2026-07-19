@@ -1,0 +1,31 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+*.pem
+credentials.json
+
+# Cursor local runtime (keep rules/skills; ignore state/cache)
+.cursor/hooks/state/
+.cursor/projects/
+.cursor/**/*.log
+
+# Plans may contain private notes — commit only if intentional
+# .cursor/plans/
+
+# Dependencies / build (future)
+node_modules/
+dist/
+build/
+.venv/
+__pycache__/
+*.pyc
+
+# Archives of huge clones (prefer git submodule or sparse)
+archive/repos/**/.git/

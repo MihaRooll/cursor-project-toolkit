@@ -1,0 +1,17 @@
+{
+  "name": "cursor-project-harness",
+  "version": "0.1.0",
+  "description": "Product AI harness: papercuts hooks, product-core rule, review-papercuts skill. Pair with bootstrap scripts for on-disk shim.",
+  "author": {
+    "name": "MihaRooll"
+  },
+  "homepage": "https://github.com/MihaRooll/cursor-project-toolkit",
+  "repository": "https://github.com/MihaRooll/cursor-project-toolkit",
+  "license": "MIT",
+  "keywords": [
+    "harness",
+    "papercuts",
+    "bootstrap",
+    "agents"
+  ]
+}

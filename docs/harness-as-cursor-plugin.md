@@ -1,57 +1,74 @@
-# Harness как Cursor plugin — решение и путь
+# Harness как Cursor plugin
 
-> **AI-first.** Когда упаковывать toolkit в installable plugin vs оставаться bootstrap-copy.
+> **AI-first.** Copy/bootstrap + optional local plugin. Marketplace publish — позже.
 
 ## For agents
 
-**Когда читать:** просят «сделай plugin»; сравнивают bootstrap vs marketplace; планируют team distribute.
+**Когда читать:** install plugin; сравнить bootstrap vs plugin; обновить verdict.
 
-**Вердикт сейчас:** **не паковать в plugin в этом PR.** Остаёмся на `bootstrap-into-project.ps1` (Essential/Full). Plugin — следующий этап, когда harness стабилен и есть 2+ продукта-потребителя.
+**Вердикт сейчас:** plugin **scaffolded и установлен локально** (`cursor-project-harness` v0.1.0). Bootstrap Essential остаётся default для on-disk файлов (prompting, `scripts/papercuts.ps1`, merge AGENTS/hooks). Marketplace submit — когда человек готов.
 
 **Применяй:**
-- Продуктам → Essential bootstrap (copy)
-- Обновления библиотеки → опциональный `git submodule` (`-WithSubmodule`) или re-run bootstrap `-Force` выборочно
-- Когда созреем → `/add-plugin create-plugin` + scaffold по чеклисту ниже
+- Новый продукт → `bootstrap-into-project.ps1 -Mode Essential`
+- Rules/skills/hooks из Cursor → `scripts/install-harness-plugin.ps1` (или reload после copy в `~/.cursor/plugins/local/`)
+- Consumers: [harness-consumers.md](harness-consumers.md)
 
-**Не делай:** форкать весь `cursor-team-kit` в этот репо; дублировать marketplace plugins.
-
----
-
-## Copy vs Plugin vs Submodule
-
-| Модель | Плюс | Минус | Когда |
-|--------|------|-------|-------|
-| Essential copy | Просто, продукт независим | Дрейф от upstream | Default для новых apps |
-| Full copy | Вся библиотека docs | Шум, путаница toolkit skills | Meta/docs-heavy fork |
-| Submodule `vendor/…` | Одна версия истины | Нужен git submodule discipline | Команда хочет sync с toolkit |
-| Cursor plugin | `/add-plugin`, единый бандл | Нужен publish/versioning; hooks/paths Windows-sensitive | 2+ продуктов + стабильный surface |
+**Не делай:** форкать Team Kit; класть `ship-toolkit` / `add-source` в plugin.
 
 ---
 
-## Когда plugin имеет смысл (критерии)
+## Критерии (статус)
 
-- [ ] Essential harness прошёл smoke на Windows стабильно
-- [ ] Product skills/rules отделены от toolkit-only (уже)
-- [ ] ≥2 реальных продукта используют harness
-- [ ] Есть версионирование (semver / changelog)
-- [ ] Hooks проверены вне этого репо
+| Критерий | Статус |
+|----------|--------|
+| Essential smoke на Windows | done |
+| Product vs toolkit skills | done |
+| ≥2 реальных продукта | done (TG_BOT_PRO, inkavrio_ru) |
+| Semver в plugin.json | done (`0.1.0`) |
+| Hooks проверены вне toolkit | done (merge в inkavrio + TG_BOT) |
+| Marketplace publish | optional / human |
 
 ---
 
-## Scaffold checklist (будущее)
+## Layout
 
-1. `/add-plugin create-plugin` (официальный scaffold)
-2. `.cursor-plugin/plugin.json`: name, description, skills/rules/hooks paths
-3. В plugin класть **product** surface: `product-core`, `review-papercuts`, hooks, papercuts shim docs — **не** `ship-toolkit` / `add-source`
-4. Validate plugin layout (create-plugin skill)
-5. Private team marketplace или public — решение человека
-6. Docs: install = `/add-plugin …` + optional bootstrap для scripts на диске
+```
+plugin/cursor-project-harness/
+  .cursor-plugin/plugin.json
+  rules/product-core.mdc
+  rules/skills-ru-description.mdc
+  skills/review-papercuts/
+  hooks/hooks.json
+  scripts/*.ps1  (hooks + papercuts shim)
+  agents/verifier.md
+  commands/install-harness-scripts.md
+  README.md
+```
 
-Официально: [Plugins](https://cursor.com/docs/plugins) · [create-plugin](https://github.com/cursor/plugins/tree/main/create-plugin) · SRC-008/009.
+Install:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\install-harness-plugin.ps1
+```
+
+→ `%USERPROFILE%\.cursor\plugins\local\cursor-project-harness` → reload Cursor.
+
+---
+
+## Copy vs Plugin
+
+| Need | Use |
+|------|-----|
+| On-disk prompting/docs/shim + merge AGENTS | bootstrap Essential |
+| Cursor-loaded rules/skills/hooks everywhere | local plugin |
+| Team marketplace | publish later (cursor.com/marketplace/publish) |
+
+Официально: [Plugins](https://cursor.com/docs/plugins) · [reference](https://cursor.com/docs/reference/plugins) · SRC-008/009.
 
 ---
 
 ## Связанное
 
 - [bootstrap-scaffold.md](bootstrap-scaffold.md)
+- [harness-consumers.md](harness-consumers.md)
 - [cursor-official-plugins.md](cursor-official-plugins.md)

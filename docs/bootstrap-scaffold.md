@@ -83,16 +83,20 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\smoke-bootstrap.ps1 
 
 Ожидание: `ALL_OK` + `SMOKE PASS`; в target — product skills/rules; **нет** `ship-toolkit` / `toolkit-core`.
 
+**Merge-safe:** чужой `AGENTS.md` → append snippet; чужой `hooks.json` → merge papercuts events (не wipe). Consumers: [harness-consumers.md](harness-consumers.md).
+
 ---
 
-## Plugin?
+## Plugin
 
-Сейчас — copy/bootstrap. Решение и критерии: [harness-as-cursor-plugin.md](harness-as-cursor-plugin.md).
+Local plugin: `plugin/cursor-project-harness` + `scripts/install-harness-plugin.ps1`.  
+Детали: [harness-as-cursor-plugin.md](harness-as-cursor-plugin.md).
 
 ---
 
 ## Связанное
 
 - [papercuts.md](papercuts.md)
+- [harness-consumers.md](harness-consumers.md)
 - [wsl-windows-stability.md](wsl-windows-stability.md) — PowerShell encoding / `${var}`
 - [new-project-bootstrap.md](../project-workflow/new-project-bootstrap.md)

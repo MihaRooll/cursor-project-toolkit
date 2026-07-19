@@ -42,8 +42,8 @@ docs AI-first → human-second, `.cursor/rules|skills|hooks`, papercuts,
 
 ## Приоритеты продолжения
 1. git status / smoke зелёный
-2. Реальные продукты: bootstrap + feedback → papercuts → compound
-3. Когда ≥2 продукта на harness — scaffold Cursor plugin (create-plugin)
+2. Consumers (TG_BOT_PRO, inkavrio_ru): triage papercuts → compound в toolkit
+3. Plugin: local ok; marketplace publish — по решению человека
 4. Не тащи prompts.chat оптом
 
 ## Стиль

@@ -1,0 +1,26 @@
+{
+  "contract_id": "sample-recovery",
+  "tier": "T3",
+  "bounded_task_contract": {
+    "goal": "Fix validator exit 1 on Windows PS 5.1",
+    "owned_files": ["scripts/sample.ps1"],
+    "verify_commands": ["scripts/validate-sample.ps1 -SelfTest"],
+    "forbidden": ["network", "secrets"]
+  },
+  "invariants": [{ "id": "INV-R1", "text": "No product writes outside owned_files" }],
+  "hypotheses": ["H-1"],
+  "evidence_refs": ["E-1"],
+  "oracle": { "available": true, "description": "validate-sample.ps1 exits 0" },
+  "availability": {
+    "premium_openai": "runtime-check",
+    "premium_claude": "runtime-check",
+    "premium_fable": "runtime-check"
+  },
+  "scope_summary": "Bounded recovery packet sample for static size validation.",
+  "remaining_budget": {
+    "evidence_retries": 1,
+    "readonly_scouts": 3,
+    "experiments": 1,
+    "premium_reviews": 2
+  }
+}

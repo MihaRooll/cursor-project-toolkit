@@ -1,0 +1,9 @@
+{
+  "availability": {
+    "premium_openai": "unavailable",
+    "premium_claude": "unavailable"
+  },
+  "degraded_mode": true,
+  "silent_substitution_forbidden": true,
+  "expected_policy": "require-human"
+}

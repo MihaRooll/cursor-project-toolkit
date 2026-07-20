@@ -1,0 +1,9 @@
+{
+  "nl_progress_claim": false,
+  "evidence_delta": ["E-new-1"],
+  "normalized_signature": "sig-flaky-test-v2",
+  "previous_signature": "sig-flaky-test-v1",
+  "is_stuck": false,
+  "agent_claims_stuck": true,
+  "expected_policy": "deny"
+}

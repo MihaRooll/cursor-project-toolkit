@@ -1,0 +1,6 @@
+{
+  "is_stuck": false,
+  "normalized_signature": "sig-norm-only",
+  "evidence_delta": [],
+  "expected_failure_reason": "missing_previous_signature"
+}

@@ -1,0 +1,9 @@
+{
+  "nl_progress_claim": true,
+  "evidence_delta": ["E-new-1"],
+  "normalized_signature": "sig-test-fail-v2",
+  "previous_signature": "sig-test-fail-v1",
+  "is_stuck": false,
+  "reject_recovery_entry": true,
+  "agent_claims_stuck": true
+}

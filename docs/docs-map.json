@@ -70,6 +70,13 @@
       "status": "active",
       "owners": ["team"],
       "tags": ["harness", "hooks", "wave4b", "final-mcp-fix"]
+    },
+    {
+      "path": "docs/recovery-escalation.md",
+      "title": "Recovery escalation R0a",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["recovery", "orchestration", "wave-r0a", "experimental"]
     }
   ],
   "rules": {

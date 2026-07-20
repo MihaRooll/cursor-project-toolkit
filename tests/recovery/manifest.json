@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "challenge_packet_max_chars": 48000,
+  "budgets": {
+    "retry_t0": 1,
+    "retry_t1_t3_max": 2,
+    "readonly_scouts_max": 3,
+    "experiments_max": 1,
+    "competing_worktrees_r0": 0
+  },
+  "required_failure_classes": [
+    "normal_retry",
+    "repeated_signature",
+    "genuinely_new_evidence",
+    "duplicate_hypothesis",
+    "environment_blocker",
+    "external_auth",
+    "no_oracle",
+    "malicious_output",
+    "premium_unavailable",
+    "cross_family_disagreement",
+    "false_stuck_trigger"
+  ],
+  "model_registry": [
+    {
+      "canonical_id": "grok-4.5",
+      "runtime_slug": "cursor-grok-4.5-high-fast",
+      "family": "xai",
+      "capability": "coordinator",
+      "availability": "runtime-check",
+      "agent_file": "recovery-orchestrator.md"
+    },
+    {
+      "canonical_id": "composer-2.5",
+      "runtime_slug": "composer-2.5-fast",
+      "family": "cursor",
+      "capability": "reproducer",
+      "availability": "runtime-check",
+      "agent_file": "reproducer.md"
+    },
+    {
+      "canonical_id": "gpt-5.6-sol",
+      "runtime_slug": "gpt-5.6-sol-medium",
+      "family": "openai",
+      "capability": "premium_arbiter",
+      "availability": "runtime-check",
+      "agent_file": "recovery-arbiter-openai.md"
+    },
+    {
+      "canonical_id": "claude-opus-4-8",
+      "runtime_slug": "claude-opus-4-8-thinking-high",
+      "family": "anthropic",
+      "capability": "premium_arbiter_blind",
+      "availability": "runtime-check",
+      "agent_file": "recovery-arbiter-claude.md"
+    },
+    {
+      "canonical_id": "claude-fable-5",
+      "runtime_slug": "claude-fable-5-thinking-high",
+      "family": "anthropic",
+      "capability": "deep_arbiter",
+      "availability": "runtime-check",
+      "agent_file": "recovery-arbiter-fable.md"
+    }
+  ],
+  "cases": [
+    {
+      "id": "normal_retry_first_failure",
+      "failure_class": "normal_retry",
+      "expected_decision": "retry",
+      "fixture": "cases/normal_retry/first-failure.json"
+    },
+    {
+      "id": "repeated_signature_stuck",
+      "failure_class": "repeated_signature",
+      "expected_decision": "scout",
+      "fixture": "cases/repeated_signature/same-signature.json"
+    },
+    {
+      "id": "genuinely_new_evidence",
+      "failure_class": "genuinely_new_evidence",
+      "expected_decision": "retry",
+      "fixture": "cases/genuinely_new_evidence/new-evidence-delta.json"
+    },
+    {
+      "id": "duplicate_hypothesis_fingerprint",
+      "failure_class": "duplicate_hypothesis",
+      "expected_decision": "blocked",
+      "fixture": "cases/duplicate_hypothesis/same-fingerprint.json"
+    },
+    {
+      "id": "environment_blocker_hash_drift",
+      "failure_class": "environment_blocker",
+      "expected_decision": "human_pending",
+      "fixture": "cases/environment_blocker/hash-drift.json"
+    },
+    {
+      "id": "external_auth_gate",
+      "failure_class": "external_auth",
+      "expected_decision": "human_pending",
+      "fixture": "cases/external_auth/oauth-required.json"
+    },
+    {
+      "id": "no_oracle_flaky_test",
+      "failure_class": "no_oracle",
+      "expected_decision": "blocked",
+      "fixture": "cases/no_oracle/unreliable-oracle.json"
+    },
+    {
+      "id": "malicious_output_injection",
+      "failure_class": "malicious_output",
+      "expected_decision": "human_pending",
+      "fixture": "cases/malicious_output/instruction-inject.json"
+    },
+    {
+      "id": "premium_unavailable_degraded",
+      "failure_class": "premium_unavailable",
+      "expected_decision": "scout",
+      "fixture": "cases/premium_unavailable/both-unavailable.json"
+    },
+    {
+      "id": "cross_family_disagreement",
+      "failure_class": "cross_family_disagreement",
+      "expected_decision": "human_pending",
+      "fixture": "cases/cross_family_disagreement/gpt-claude-conflict.json"
+    },
+    {
+      "id": "false_stuck_new_evidence",
+      "failure_class": "false_stuck_trigger",
+      "expected_decision": "retry",
+      "fixture": "cases/false_stuck_trigger/new-evidence-false-stuck.json"
+    }
+  ]
+}

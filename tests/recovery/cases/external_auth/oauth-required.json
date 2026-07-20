@@ -1,0 +1,10 @@
+{
+  "failure_kind": "external_auth",
+  "auth_required": true,
+  "credential_store_forbidden": true,
+  "normalized_signature": "sig-oauth-block",
+  "previous_signature": "sig-oauth-block",
+  "evidence_delta": [],
+  "is_stuck": true,
+  "expected_tag": "human-unblock"
+}

@@ -1,0 +1,10 @@
+{
+  "environment_hash": "env-node20-win",
+  "baseline_environment_hash": "env-node18-win",
+  "hash_drift": true,
+  "normalized_signature": "sig-env-drift-v2",
+  "previous_signature": "sig-env-drift-v2",
+  "evidence_delta": [],
+  "is_stuck": true,
+  "expected_tag": "environment-blocker"
+}

@@ -332,6 +332,8 @@ if ($Mode -eq "Full") {
         "templates\hooks",
         "scripts\validate-living-evals.ps1",
         "tests\living-eval",
+        "scripts\validate-recovery.ps1",
+        "tests\recovery",
         ".cursor\skills",
         ".cursor\rules",
         ".cursor\agents",

@@ -31,14 +31,14 @@
 | Consumers | Evidence from **≥2** bootstrapped product repos (not toolkit-only) |
 | False-deny review | Human signoff that deny/ask paths did not block legitimate work (or documented exceptions) |
 | Dry-run | `scripts/dry-run-strict-hooks.ps1` exit 0; injection/destructive/malformed cases pass |
-| Living-eval | All 8 domains green via `validate-living-evals.ps1 -SelfTest` |
+| Living-eval | All 12 domains green via `validate-living-evals.ps1 -SelfTest` |
 | Active hooks | Merge `hooks.strict.example.json` **only after** explicit human approval per product |
 
 Workflow: `/review-harness-evidence` → checklist → human decision → manual merge (never agent auto-merge).
 
 ---
 
-## Living-eval domains (8)
+## Living-eval domains (12)
 
 | Domain id | Policy focus |
 |-----------|--------------|
@@ -50,8 +50,14 @@ Workflow: `/review-harness-evidence` → checklist → human decision → manual
 | `destructive_mcp` | Deny token-anchored destructive `tool_name` — `(^|[_-])(delete|drop|destroy|force[-_]?push|rm|rmdir)($|[_-])`; nested destructive verbs under action/command/operation/method/verb keys in `tool_input` |
 | `production_action` | Deny production host/mutation without Human Gate |
 | `stage_context` | Bounded session-start stage injection |
+| `recovery_trigger_precision` | Deny **false** stuck claims (new evidence / diff signature); allow recognizing **true** stuck when NL-only + empty delta + same signature |
+| `recovery_duplicate_hypothesis` | Deny parallel experiment on duplicate hypothesis fingerprint |
+| `recovery_provider_outage` | Premium unavailable → degraded mode + `require-human`; no silent substitution |
+| `recovery_no_oracle` | No oracle → deny tournament/experiment auto-DONE |
 
 Manifest: `tests/living-eval/manifest.json` · validator: `scripts/validate-living-evals.ps1`
+
+**Recovery R0a promotion** (separate from strict hooks): see [recovery-escalation.md](recovery-escalation.md) — ≥10 stuck cases, ≥2 projects, papercut tags, explicit human approval before R0b auto-integration.
 
 ---
 

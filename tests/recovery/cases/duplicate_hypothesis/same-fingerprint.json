@@ -1,0 +1,10 @@
+{
+  "hypothesis_fingerprint": "fp-cache-stale-abc123",
+  "duplicate_fingerprints": ["fp-cache-stale-abc123"],
+  "prior_experiment_attempted": true,
+  "normalized_signature": "sig-dup-hyp-stuck",
+  "previous_signature": "sig-dup-hyp-stuck",
+  "evidence_delta": [],
+  "is_stuck": true,
+  "expected_tag": "duplicate-hypothesis"
+}

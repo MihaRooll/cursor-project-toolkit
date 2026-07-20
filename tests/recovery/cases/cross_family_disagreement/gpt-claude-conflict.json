@@ -1,0 +1,11 @@
+{
+  "openai_verdict": "approve",
+  "claude_verdict": "reject",
+  "cross_family_conflict": true,
+  "fable_deep_required_explicit": true,
+  "deep_mode_invoked": false,
+  "normalized_signature": "sig-cross-family",
+  "previous_signature": "sig-cross-family",
+  "evidence_delta": [],
+  "is_stuck": true
+}

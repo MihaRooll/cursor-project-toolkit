@@ -37,7 +37,7 @@ my-new-app/             (продукт + скопированный harness)
 | Режим | Что копируется |
 |-------|----------------|
 | Essential | product rules/skills + hooks + papercuts + ключевые docs + Essential prompting/roles/subagents |
-| Full | + весь docs/SOURCES/папки toolkit + все skills/rules + `templates/mcp` + `templates/cursor` + `templates/hooks` (opt-in) + `tests/living-eval` + `validate-living-evals.ps1` + `validate-mcp-profiles.ps1` |
+| Full | + весь docs/SOURCES/папки toolkit + все skills/rules + `templates/mcp` + `templates/cursor` + `templates/hooks` (opt-in) + `tests/living-eval` + `validate-living-evals.ps1` + `validate-mcp-profiles.ps1` + `validate-recovery.ps1` + `tests/recovery` |
 | `-WithSubmodule` | + `git submodule add` → `vendor/cursor-project-toolkit` (нужен git init в target) |
 
 ---

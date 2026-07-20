@@ -193,7 +193,16 @@ $mustAbsent = @(
     ".cursor\BUGBOT.md",
     "templates\hooks",
     "scripts\validate-living-evals.ps1",
-    "tests\living-eval"
+    "tests\living-eval",
+    ".cursor\skills\recovery-escalation",
+    ".cursor\agents\recovery-orchestrator.md",
+    ".cursor\agents\reproducer.md",
+    ".cursor\agents\recovery-arbiter-openai.md",
+    ".cursor\agents\recovery-arbiter-claude.md",
+    ".cursor\agents\recovery-arbiter-fable.md",
+    "scripts\validate-recovery.ps1",
+    "tests\recovery",
+    "docs\recovery-escalation.md"
 )
 
 Write-Host ""
@@ -330,7 +339,11 @@ try {
         "templates\hooks",
         "scripts\validate-mcp-profiles.ps1",
         "scripts\validate-living-evals.ps1",
-        "tests\living-eval\manifest.json"
+        "tests\living-eval\manifest.json",
+        "scripts\validate-recovery.ps1",
+        "tests\recovery\manifest.json",
+        "docs\recovery-escalation.md",
+        ".cursor\skills\recovery-escalation\SKILL.md"
     )
     foreach ($rel in $fullMustExist) {
         Assert-True (Test-Path (Join-Path $fullTarget $rel)) "Full has $rel"

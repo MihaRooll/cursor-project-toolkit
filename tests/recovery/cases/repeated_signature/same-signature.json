@@ -1,0 +1,10 @@
+{
+  "tier": "T2",
+  "attempt": 2,
+  "normalized_signature": "sig-lint-exit1",
+  "previous_signature": "sig-lint-exit1",
+  "evidence_delta": [],
+  "remaining_budget": { "evidence_retries": 0, "readonly_scouts": 3, "experiments": 1 },
+  "is_stuck": true,
+  "nl_progress_claim": false
+}

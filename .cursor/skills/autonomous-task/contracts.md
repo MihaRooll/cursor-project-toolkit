@@ -192,3 +192,130 @@ notes: compact optional context
 | Verification Record | verifier; Main for T0 and T4 action-only | verification return |
 | Final Report | Main | user-facing response |
 | Docs Impact Record | implementer / Main | task return when docs touched |
+
+## 9. FailureRecord
+
+Normalized failure for stuck detection and recovery packets. Natural-language progress is not evidence.
+
+```yaml
+contract_id: task-slug
+failure_id: F-1
+normalized_signature: stable hash or slug of failure class + command + key output tokens
+reproduction:
+  cmd: exact command
+  cwd: optional path
+  exit_code: non-zero int
+expected: compact expected outcome
+actual: compact actual outcome (capped; no raw log dump)
+environment_hash: hash of toolchain versions + relevant env keys (no secrets)
+timestamp: ISO8601
+```
+
+## 10. EvidenceRecord
+
+Immutable command/path evidence. Model opinion, consensus, or narrative progress is **not** evidence.
+
+```yaml
+evidence_id: E-1
+contract_id: task-slug
+path: repo-relative file (optional)
+hash: SHA256 of file or artifact (optional)
+command: exact command run (optional)
+exit_code: int
+base_sha: git HEAD at capture time
+summary: bounded output excerpt (<=500 chars)
+captured_at: ISO8601
+```
+
+## 11. HypothesisRecord
+
+Mechanism under test; duplicate fingerprints must not spawn competing experiments in R0.
+
+```yaml
+hypothesis_id: H-1
+contract_id: task-slug
+mechanism: root-cause claim (<=300 chars)
+prediction: falsifiable outcome if mechanism is true
+disconfirming_test: command or observation that would refute mechanism
+fingerprint: deterministic hash of normalized mechanism + prediction + disconfirming_test
+status: open|confirmed|refuted|duplicate
+```
+
+## 12. RecoverySnapshot
+
+Point-in-time recovery state; tracks budget consumption.
+
+```yaml
+contract_id: task-slug
+attempt: int
+evidence_delta: list of new evidence_id since last snapshot (empty = no new evidence)
+duplicate_fingerprints: [H-fingerprint, ...]
+remaining_budget:
+  evidence_retries: int
+  readonly_scouts: int
+  experiments: int
+  premium_reviews: int
+last_failure_signature: normalized_signature or null
+```
+
+## 13. ChallengePacket
+
+Bounded recovery handoff for scouts, premium arbiters, or one experiment. Target **≤12k tokens**; no raw logs, secrets, chain-of-thought, or tool JSON dumps.
+
+```yaml
+contract_id: task-slug
+tier: T0|T1|T2|T3
+bounded_task_contract:
+  goal: compact
+  owned_files: []
+  verify_commands: []
+  forbidden: []
+invariants:
+  - id: INV-R1
+    text: must remain true during recovery
+hypotheses: [H-1, ...]
+evidence_refs: [E-1, ...]
+oracle:
+  available: true|false
+  description: what counts as pass/fail oracle (null if unavailable)
+availability:
+  premium_openai: runtime-check|available|unavailable
+  premium_claude: runtime-check|available|unavailable
+  premium_fable: runtime-check|available|unavailable
+scope_summary: compact context (<=1000 chars)
+remaining_budget:
+  evidence_retries: int
+  readonly_scouts: int
+  experiments: int
+  premium_reviews: int
+```
+
+## 14. RecoveryDecision
+
+Closed enum — recovery orchestrator output only; Main remains user-facing completion owner.
+
+```yaml
+contract_id: task-slug
+decision: retry|scout|premium|experiment|blocked|human_pending
+rationale: compact evidence-based reason (<=500 chars)
+next_owner: Main|recovery-orchestrator|reproducer|implementer|human
+hypothesis_refs: []
+evidence_refs: []
+budget_after:
+  evidence_retries: int
+  readonly_scouts: int
+  experiments: int
+  premium_reviews: int
+```
+
+### Recovery budgets (R0)
+
+| Tier | Evidence retries | Readonly scouts | Experiments | Competing worktrees |
+|------|------------------|-----------------|-------------|---------------------|
+| T0 | 1 | max 3 distinct contours | 1 | **none in R0** |
+| T1–T3 | max 2 | max 3 distinct contours | 1 | **none in R0** |
+
+- Stuck predicate: same `normalized_signature` **or** empty `evidence_delta`; NL progress ≠ evidence.
+- Premium path (T3/security/architecture): GPT Sol + Claude Opus blind review when both `available`; Fable only explicit `deep` after unresolved cross-family conflict.
+- No reliable oracle → no experiment tournament and no `DONE` from recovery alone.
+- Unavailable premium model → degraded-mode record; never silent substitution.

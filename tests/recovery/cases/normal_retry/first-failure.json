@@ -1,0 +1,10 @@
+{
+  "tier": "T1",
+  "attempt": 1,
+  "normalized_signature": "sig-test-fail-v1",
+  "previous_signature": "sig-test-fail-v0",
+  "evidence_delta": ["E-1"],
+  "remaining_budget": { "evidence_retries": 2, "readonly_scouts": 3, "experiments": 1 },
+  "is_stuck": false,
+  "nl_progress_claim": false
+}

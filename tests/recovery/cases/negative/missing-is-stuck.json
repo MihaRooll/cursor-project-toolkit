@@ -1,0 +1,6 @@
+{
+  "normalized_signature": "sig-no-is-stuck",
+  "previous_signature": "sig-no-is-stuck-prev",
+  "evidence_delta": [],
+  "expected_failure_reason": "missing_is_stuck"
+}

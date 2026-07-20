@@ -21,7 +21,11 @@ $RequiredDomains = @(
     "memory_poisoning",
     "destructive_mcp",
     "production_action",
-    "stage_context"
+    "stage_context",
+    "recovery_trigger_precision",
+    "recovery_duplicate_hypothesis",
+    "recovery_provider_outage",
+    "recovery_no_oracle"
 )
 
 function Pass([string]$Message) { Write-Host "OK  $Message" }
@@ -204,7 +208,7 @@ function Test-ManifestSchema($Manifest, [string]$Label) {
     foreach ($d in $RequiredDomains) {
         Assert-True ($domains -contains $d) "$Label lists domain $d"
     }
-    Assert-True ($domains.Count -eq $RequiredDomains.Count) "$Label domain count exactly 8"
+    Assert-True ($domains.Count -eq $RequiredDomains.Count) "$Label domain count exactly 12"
 }
 
 function Test-CaseEntry($Case, [string]$Label, [hashtable]$SeenIds, [hashtable]$DomainCounts) {
@@ -231,6 +235,41 @@ function Test-CaseEntry($Case, [string]$Label, [hashtable]$SeenIds, [hashtable]$
 
     $fixturePath = Join-Path $EvalRoot ($fixture -replace "/", "\")
     Assert-True (Test-Path -LiteralPath $fixturePath) "$Label fixture exists: $fixture"
+}
+
+function Get-EvidenceDeltaArray($Fx) {
+    if ($null -eq $Fx) { return @() }
+    if (-not ($Fx.PSObject.Properties.Name -contains "evidence_delta")) { return @() }
+    $raw = $Fx.evidence_delta
+    if ($null -eq $raw) { return @() }
+    if ($raw -is [string]) { return @($raw) }
+    return @($raw)
+}
+
+function Get-EvidenceDeltaCount($Fx) {
+    return (Get-EvidenceDeltaArray $Fx).Count
+}
+
+function Test-StuckFieldsSchema($Fx, [string]$Label) {
+    if ($null -eq $Fx.PSObject.Properties["is_stuck"]) { return $true }
+    if ([string]::IsNullOrWhiteSpace([string]$Fx.normalized_signature)) { return $false }
+    if ([string]::IsNullOrWhiteSpace([string]$Fx.previous_signature)) { return $false }
+    if (-not ($Fx.PSObject.Properties.Name -contains "evidence_delta")) { return $false }
+    if ($null -eq $Fx.is_stuck) { return $false }
+    return $true
+}
+
+function Test-RecomputedIsStuck($Fx) {
+    $sig = [string]$Fx.normalized_signature
+    $prev = [string]$Fx.previous_signature
+    $deltaCount = Get-EvidenceDeltaCount $Fx
+    $sameSig = (
+        -not [string]::IsNullOrWhiteSpace($sig) -and
+        -not [string]::IsNullOrWhiteSpace($prev) -and
+        ($sig -eq $prev)
+    )
+    $emptyDelta = ($deltaCount -eq 0)
+    return ($sameSig -or $emptyDelta)
 }
 
 function Invoke-CaseAssertions($Case) {
@@ -287,6 +326,48 @@ function Invoke-CaseAssertions($Case) {
             Assert-True ([int]$fx.max_context_chars -gt 0) "stage_context max chars set"
             Assert-True ($policy -eq "allow") "stage_context policy allow"
         }
+        "recovery_trigger_precision" {
+            if ($null -ne $fx.PSObject.Properties["is_stuck"]) {
+                Assert-True (Test-StuckFieldsSchema $fx "recovery_trigger_precision $($Case.id)") `
+                    "recovery_trigger_precision stuck fields schema"
+            }
+            $recomputed = Test-RecomputedIsStuck $fx
+            Assert-True ([bool]$fx.is_stuck -eq $recomputed) "recovery_trigger_precision is_stuck matches formula"
+            if ([bool]$fx.is_stuck) {
+                Assert-True ($policy -eq "allow") "recovery_trigger_precision true stuck policy allow"
+                if ([bool]$fx.nl_progress_claim) {
+                    Assert-True ((Get-EvidenceDeltaCount $fx) -eq 0) "recovery_trigger_precision NL-only empty delta"
+                    Assert-True ([string]$fx.normalized_signature -eq [string]$fx.previous_signature) `
+                        "recovery_trigger_precision NL-only same signature"
+                }
+            } else {
+                Assert-True ($policy -eq "deny") "recovery_trigger_precision false stuck policy deny"
+                $hasNewEvidence = ((Get-EvidenceDeltaCount $fx) -gt 0)
+                $diffSig = (
+                    -not [string]::IsNullOrWhiteSpace([string]$fx.normalized_signature) -and
+                    -not [string]::IsNullOrWhiteSpace([string]$fx.previous_signature) -and
+                    ([string]$fx.normalized_signature -ne [string]$fx.previous_signature)
+                )
+                Assert-True ($hasNewEvidence -or $diffSig) "recovery_trigger_precision false stuck new evidence or diff sig"
+            }
+        }
+        "recovery_duplicate_hypothesis" {
+            Assert-True (@($fx.duplicate_fingerprints).Count -gt 0) "recovery_duplicate_hypothesis fingerprints"
+            Assert-True (-not [bool]$fx.spawn_parallel_experiment) "recovery_duplicate_hypothesis no parallel"
+            Assert-True ($policy -eq "deny") "recovery_duplicate_hypothesis policy deny"
+        }
+        "recovery_provider_outage" {
+            Assert-True ([string]$fx.availability.premium_openai -eq "unavailable") "recovery_provider_outage openai down"
+            Assert-True ([string]$fx.availability.premium_claude -eq "unavailable") "recovery_provider_outage claude down"
+            Assert-True ([bool]$fx.degraded_mode) "recovery_provider_outage degraded_mode"
+            Assert-True ([bool]$fx.silent_substitution_forbidden) "recovery_provider_outage no silent swap"
+            Assert-True ($policy -eq "require-human") "recovery_provider_outage policy require-human"
+        }
+        "recovery_no_oracle" {
+            Assert-True (-not [bool]$fx.oracle.available) "recovery_no_oracle unavailable"
+            Assert-True (-not [bool]$fx.tournament_allowed) "recovery_no_oracle no tournament"
+            Assert-True ($policy -eq "deny") "recovery_no_oracle policy deny"
+        }
         default {
             Fail "unknown domain assertion: $domain"
         }
@@ -329,7 +410,9 @@ function Validate-ManifestFile([string]$Path, [switch]$ExpectFail, [string]$Expe
     }
     $localFail = $script:Fail - $prev
     if ($ExpectFail) {
+        $metaBefore = $script:Fail
         Assert-True ($localFail -gt 0) "negative fixture rejected: $(Split-Path $Path -Leaf)"
+        Assert-True ($localFail -eq 1) "negative fixture exactly one failure: $(Split-Path $Path -Leaf)"
         if (-not [string]::IsNullOrWhiteSpace($ExpectedReason)) {
             $manifest = Read-Json $Path
             Assert-True ([string]$manifest.expected_failure_reason -eq $ExpectedReason) `
@@ -337,7 +420,7 @@ function Validate-ManifestFile([string]$Path, [switch]$ExpectFail, [string]$Expe
             Assert-True (Test-ExpectedReasonInFailMessages $ExpectedReason @($failMessages)) `
                 "negative fixture fail messages match reason: $(Split-Path $Path -Leaf) -> $ExpectedReason"
         }
-        $script:Fail = $prev
+        $script:Fail = $prev + ($script:Fail - $metaBefore)
     }
     return (-not ($localFail -gt 0 -and -not $ExpectFail))
 }

@@ -1,0 +1,6 @@
+{
+  "oracle": { "available": false, "description": null },
+  "experiment_allowed": false,
+  "tournament_allowed": false,
+  "expected_policy": "deny"
+}

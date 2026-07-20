@@ -1,0 +1,30 @@
+{
+  "contract_id": "nested-forbidden-negative",
+  "tier": "T2",
+  "bounded_task_contract": {
+    "goal": "test",
+    "owned_files": ["a.ps1"],
+    "verify_commands": ["echo ok"],
+    "forbidden": ["secrets"]
+  },
+  "invariants": [{ "id": "INV-1", "text": "hold" }],
+  "hypotheses": ["H-1"],
+  "evidence_refs": [
+    "E-1",
+    { "ref": "E-2", "Raw_Logs": "must not appear as key" }
+  ],
+  "oracle": { "available": true, "description": "exit 0" },
+  "availability": {
+    "premium_openai": "runtime-check",
+    "premium_claude": "runtime-check",
+    "premium_fable": "runtime-check"
+  },
+  "scope_summary": "nested forbidden key negative",
+  "remaining_budget": {
+    "evidence_retries": 1,
+    "readonly_scouts": 3,
+    "experiments": 1,
+    "premium_reviews": 1
+  },
+  "expected_forbidden_key": "Raw_Logs"
+}

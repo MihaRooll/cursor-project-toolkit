@@ -1,0 +1,14 @@
+{
+  "availability": {
+    "premium_openai": "unavailable",
+    "premium_claude": "unavailable",
+    "premium_fable": "runtime-check"
+  },
+  "silent_substitution_forbidden": true,
+  "degraded_mode": true,
+  "normalized_signature": "sig-premium-down",
+  "previous_signature": "sig-premium-down",
+  "evidence_delta": [],
+  "is_stuck": true,
+  "expected_tag": "premium-escalation"
+}

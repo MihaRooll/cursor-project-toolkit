@@ -36,6 +36,7 @@
 | SRC-028 | [cursor/mcp-servers](https://github.com/cursor/mcp-servers) | GitHub repo | Curated MCP list; pin + provenance for profiles | [docs/mcp-security.md](docs/mcp-security.md) · [templates/mcp/](templates/mcp/) | — | 2026-07-20 |
 | SRC-029 | [Cursor Cloud Agents](https://cursor.com/docs/cloud-agent) · [Hooks](https://cursor.com/docs/hooks) | Cursor docs | Surfaces matrix; session-start context; doctor/stage injection; strict hook templates (Full opt-in) | [docs/project-environment.md](docs/project-environment.md) · [docs/project-state.md](docs/project-state.md) · [docs/harness-evidence-and-enforcement.md](docs/harness-evidence-and-enforcement.md) | — | 2026-07-20 |
 | SRC-030 | [Agent permissions](https://cursor.com/docs/agent/permissions) · [Sandbox](https://cursor.com/docs/agent/sandbox) · [Browser](https://cursor.com/docs/agent/browser) | Cursor docs | Native controls opt-in templates; Browser Human Gate | [docs/cursor-native-controls.md](docs/cursor-native-controls.md) · [templates/cursor/](templates/cursor/) | — | 2026-07-20 |
+| SRC-031 | [Worktrees](https://cursor.com/docs/configuration/worktrees) · [Models & pricing](https://cursor.com/docs/models-and-pricing) | Cursor docs | Isolated git checkouts; `/worktree` and `/best-of-n` IDE commands; model runtime slugs — reference only for deferred R1 recovery; R0a forbids auto tournaments | [docs/recovery-escalation.md](docs/recovery-escalation.md) · [docs/autonomous-agent-orchestration.md](docs/autonomous-agent-orchestration.md) | — | 2026-07-20 |
 
 ## Когда копировать в `archive/`
 

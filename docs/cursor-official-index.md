@@ -30,7 +30,7 @@ Package       → Plugins (marketplace / team marketplace)
 
 Docs: [Rules](https://cursor.com/docs/rules) · [Skills](https://cursor.com/docs/skills) · [Plugins](https://cursor.com/docs/plugins) · [Hooks](https://cursor.com/docs/hooks) · [MCP](https://cursor.com/docs/mcp) · [Subagents](https://cursor.com/docs/subagents)
 
-On-disk autonomous routing: [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) (SRC-023/024). Environment surfaces: [project-environment.md](project-environment.md) (SRC-029). Native controls: [cursor-native-controls.md](cursor-native-controls.md) (SRC-030). Harness evidence / strict hooks: [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md) (SRC-029). MCP opt-in: [mcp-security.md](mcp-security.md) (SRC-025/028) + skill `configure-project-integrations`. Memory authority: [memory-and-obsidian.md](memory-and-obsidian.md) (SRC-026/027).
+On-disk autonomous routing: [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) (SRC-023/024). Recovery R0a (manual/experimental): [recovery-escalation.md](recovery-escalation.md) (SRC-031). Environment surfaces: [project-environment.md](project-environment.md) (SRC-029). Native controls: [cursor-native-controls.md](cursor-native-controls.md) (SRC-030). Harness evidence / strict hooks: [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md) (SRC-029). MCP opt-in: [mcp-security.md](mcp-security.md) (SRC-025/028) + skill `configure-project-integrations`. Memory authority: [memory-and-obsidian.md](memory-and-obsidian.md) (SRC-026/027).
 
 ---
 

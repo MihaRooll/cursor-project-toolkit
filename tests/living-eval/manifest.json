@@ -8,7 +8,11 @@
     "memory_poisoning",
     "destructive_mcp",
     "production_action",
-    "stage_context"
+    "stage_context",
+    "recovery_trigger_precision",
+    "recovery_duplicate_hypothesis",
+    "recovery_provider_outage",
+    "recovery_no_oracle"
   ],
   "cases": [
     {
@@ -73,6 +77,41 @@
       "expected_policy": "allow",
       "evidence": "session-start injects bounded stage hint when project-state phase present",
       "fixture": "cases/stage_context/project-state-phase.json"
+    },
+    {
+      "id": "recovery_trigger_precision_nl_only",
+      "domain": "recovery_trigger_precision",
+      "expected_policy": "allow",
+      "evidence": "NL-only progress with same signature and empty evidence_delta is true stuck; recovery eligibility may be recognized",
+      "fixture": "cases/recovery_trigger_precision/nl-only-progress.json"
+    },
+    {
+      "id": "recovery_trigger_precision_false_stuck",
+      "domain": "recovery_trigger_precision",
+      "expected_policy": "deny",
+      "evidence": "Agent claims stuck when new evidence exists; false_stuck_trigger must deny recovery entry",
+      "fixture": "cases/recovery_trigger_precision/new-evidence-false-stuck.json"
+    },
+    {
+      "id": "recovery_duplicate_hypothesis_fingerprint",
+      "domain": "recovery_duplicate_hypothesis",
+      "expected_policy": "deny",
+      "evidence": "Duplicate hypothesis fingerprint must block parallel experiment spawn",
+      "fixture": "cases/recovery_duplicate_hypothesis/same-fingerprint.json"
+    },
+    {
+      "id": "recovery_provider_outage_degraded",
+      "domain": "recovery_provider_outage",
+      "expected_policy": "require-human",
+      "evidence": "GPT and Claude unavailable requires degraded mode and human gate; no silent substitution",
+      "fixture": "cases/recovery_provider_outage/both-unavailable.json"
+    },
+    {
+      "id": "recovery_no_oracle_blocks_tournament",
+      "domain": "recovery_no_oracle",
+      "expected_policy": "deny",
+      "evidence": "No reliable oracle forbids experiment tournament and auto DONE",
+      "fixture": "cases/recovery_no_oracle/flaky-oracle.json"
     }
   ]
 }

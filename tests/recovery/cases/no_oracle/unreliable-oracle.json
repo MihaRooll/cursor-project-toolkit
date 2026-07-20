@@ -1,0 +1,10 @@
+{
+  "oracle": { "available": false, "description": null },
+  "challenge_packet_oracle_available": false,
+  "experiment_allowed": false,
+  "normalized_signature": "sig-oracle-missing",
+  "previous_signature": "sig-oracle-missing",
+  "evidence_delta": [],
+  "is_stuck": true,
+  "expected_tag": "no-oracle"
+}

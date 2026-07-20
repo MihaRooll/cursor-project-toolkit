@@ -1,0 +1,7 @@
+{
+  "hypothesis_fingerprint": "fp-race-condition-deadbeef",
+  "duplicate_fingerprints": ["fp-race-condition-deadbeef"],
+  "prior_experiment_attempted": true,
+  "spawn_parallel_experiment": false,
+  "expected_policy": "deny"
+}

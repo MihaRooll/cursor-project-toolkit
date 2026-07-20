@@ -67,6 +67,7 @@
 | [reme-agent-memory.md](reme-agent-memory.md) | ReMe agent memory | SRC-021 | Markdown memory layer; CLI/MCP; vs continual-learning; opt-in |
 | [security-in-session-cursor-vs-claude.md](security-in-session-cursor-vs-claude.md) | In-session security: Claude vs Cursor | SRC-022 | Bugbot `/review-security`, thermos, Semgrep hooks; нет 1:1 plugin |
 | [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Autonomous T0–T4 routing: Grok/Composer/Sol | SRC-023/024 | Один change/build/fix запрос; subagents, gates, evidence, stop policy |
+| [recovery-escalation.md](recovery-escalation.md) | Recovery R0a shadow/manual protocol | SRC-031 | Explicit `/recovery-escalation`; stuck predicates; promotion gate R0b |
 | [wsl-windows-stability.md](wsl-windows-stability.md) | Стабильный WSL2 на Windows | — | .wslconfig, когда использовать WSL |
 | [cursor-official-index.md](cursor-official-index.md) | Карта всего official Cursor | SRC-004…009 | Старт: найти plugin/docs/blog |
 | [cursor-agent-best-practices.md](cursor-agent-best-practices.md) | Операционный manual агента | SRC-005 | Plan, context, rules/skills, workflows |

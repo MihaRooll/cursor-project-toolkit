@@ -1,0 +1,8 @@
+{
+  "nl_progress_claim": true,
+  "evidence_delta": [],
+  "normalized_signature": "sig-flaky-test",
+  "previous_signature": "sig-flaky-test",
+  "is_stuck": true,
+  "expected_policy": "allow"
+}

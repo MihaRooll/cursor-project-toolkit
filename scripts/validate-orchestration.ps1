@@ -254,6 +254,8 @@ Assert-True ($bootstrapText.Contains('"templates\cursor"')) "Full copies templat
 Assert-True ($bootstrapText.Contains('"templates\hooks"')) "Full copies templates/hooks"
 Assert-True ($bootstrapText.Contains('"scripts\validate-living-evals.ps1"')) "Full copies validate-living-evals.ps1"
 Assert-True ($bootstrapText.Contains('"tests\living-eval"')) "Full copies tests/living-eval"
+Assert-True ($bootstrapText.Contains('"scripts\validate-recovery.ps1"')) "Full copies validate-recovery.ps1"
+Assert-True ($bootstrapText.Contains('"tests\recovery"')) "Full copies tests/recovery"
 Assert-True ($bootstrapText.Contains('"scripts\validate-mcp-profiles.ps1"')) "Full copies validate-mcp-profiles.ps1"
 Assert-True (-not $essentialText.Contains('"templates\hooks"')) "Essential excludes templates/hooks"
 Assert-True (-not $essentialText.Contains('"tests\living-eval"')) "Essential excludes tests/living-eval"
@@ -341,6 +343,76 @@ Test-Contains (Join-Path $Root "scripts\smoke-bootstrap.ps1") "test-session-star
 Test-Contains (Join-Path $Root "templates\cursor\environment.json.example") '"env"' "environment example has env key"
 Assert-True (-not (Read-Text (Join-Path $Root "templates\cursor\environment.json.example")).Contains('"$schema"')) "environment example no schema"
 Test-Contains (Join-Path $Root "templates\project-rules\product-core.mdc") "autonomous-task" "product-core points to skill"
+
+# Recovery R0a static presence (toolkit-only; not in orchestration manifest agents[]).
+$recoverySkillPath = Join-Path $Root ".cursor\skills\recovery-escalation\SKILL.md"
+$recoveryDocPath = Join-Path $Root "docs\recovery-escalation.md"
+$recoveryValidatorPath = Join-Path $Root "scripts\validate-recovery.ps1"
+$recoveryTestsPath = Join-Path $Root "tests\recovery\manifest.json"
+Assert-True (Test-Path $recoverySkillPath) "recovery skill exists (R0a)"
+Assert-True (Test-Path $recoveryDocPath) "recovery doc exists (R0a)"
+Assert-True (Test-Path $recoveryValidatorPath) "validate-recovery.ps1 exists (R0a)"
+Assert-True (Test-Path $recoveryTestsPath) "tests/recovery manifest exists (R0a)"
+$recoveryAgents = @(
+    "recovery-orchestrator.md", "reproducer.md",
+    "recovery-arbiter-openai.md", "recovery-arbiter-claude.md", "recovery-arbiter-fable.md"
+)
+foreach ($raf in $recoveryAgents) {
+    Assert-True (Test-Path (Join-Path $Root ".cursor\agents\$raf")) "recovery agent exists: $raf"
+}
+if (Test-Path $recoverySkillPath) {
+    try {
+        $recoveryFm = Get-Frontmatter $recoverySkillPath
+        $recoveryLines = @(Get-Content $recoverySkillPath -Encoding UTF8).Count
+        $recoveryDisabled = (
+            $recoveryFm.ContainsKey("disable-model-invocation") -and
+            $recoveryFm["disable-model-invocation"] -match "^true\b"
+        )
+        Assert-True ($recoveryFm["name"] -eq "recovery-escalation") "recovery skill name"
+        Assert-True ($recoveryFm["description"] -match "\p{IsCyrillic}") "recovery skill Cyrillic description"
+        Assert-True $recoveryDisabled "recovery skill disable-model-invocation true"
+        Assert-True ($recoveryLines -le 500) "recovery skill line cap 500"
+    } catch {
+        Fail "recovery skill frontmatter: $($_.Exception.Message)"
+    }
+}
+if (Test-Path $contractsPath) {
+    foreach ($token in @(
+        "## 9. FailureRecord", "## 10. EvidenceRecord", "## 11. HypothesisRecord",
+        "## 12. RecoverySnapshot", "## 13. ChallengePacket", "## 14. RecoveryDecision"
+    )) {
+        Assert-True ($contracts.Contains($token)) "contracts recovery schema: $token"
+    }
+}
+Test-Contains (Join-Path $Root "docs\README.md") "recovery-escalation.md" "docs index includes recovery"
+Test-Contains (Join-Path $Root "SOURCES.md") "SRC-031" "SRC-031 registered"
+Assert-True (-not (Test-Path (Join-Path $pluginRoot "skills\recovery-escalation"))) "plugin excludes recovery skill"
+foreach ($raf in $recoveryAgents) {
+    Assert-True (-not (Test-Path (Join-Path $pluginRoot "agents\$raf"))) "plugin excludes recovery agent $raf"
+}
+Assert-True (-not (Test-Path (Join-Path $pluginRoot "scripts\validate-recovery.ps1"))) "plugin excludes validate-recovery.ps1"
+Assert-True (-not (Test-Path (Join-Path $pluginRoot "tests\recovery"))) "plugin excludes tests/recovery"
+Assert-True (-not $essentialText.Contains('".cursor\skills\recovery-escalation"')) "Essential excludes recovery skill"
+foreach ($raf in $recoveryAgents) {
+    Assert-True (-not $essentialText.Contains('"' + $raf + '"')) "Essential excludes recovery agent $raf"
+}
+Assert-True (-not $essentialText.Contains('"scripts\validate-recovery.ps1"')) "Essential excludes validate-recovery.ps1"
+Assert-True (-not $essentialText.Contains('"tests\recovery"')) "Essential excludes tests/recovery"
+Assert-True (-not $essentialText.Contains('"docs\recovery-escalation.md"')) "Essential excludes recovery doc"
+$recoveryMustAbsent = @(
+    ".cursor\skills\recovery-escalation",
+    ".cursor\agents\recovery-orchestrator.md",
+    ".cursor\agents\reproducer.md",
+    ".cursor\agents\recovery-arbiter-openai.md",
+    ".cursor\agents\recovery-arbiter-claude.md",
+    ".cursor\agents\recovery-arbiter-fable.md",
+    "scripts\validate-recovery.ps1",
+    "tests\recovery",
+    "docs\recovery-escalation.md"
+)
+foreach ($token in $recoveryMustAbsent) {
+    Assert-True ($mustAbsentText.Contains('"' + $token + '"')) "smoke mustAbsent lists recovery $token"
+}
 
 # Routing fixtures: execute hard overrides; soft tiers only verify documented tokens.
 $overrides = Get-Content (Join-Path $testsRoot "hard-overrides.json") -Raw -Encoding UTF8 | ConvertFrom-Json

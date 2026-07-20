@@ -17,7 +17,7 @@ credentials.json
 .cursor/**/*.log
 
 # Plans may contain private notes — commit only if intentional
-# .cursor/plans/
+.cursor/plans/
 
 # Dependencies / build (future)
 node_modules/

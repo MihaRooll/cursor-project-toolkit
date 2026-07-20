@@ -1,0 +1,30 @@
+{
+  "id": "prod-non-collision-fixture",
+  "status": "eligible",
+  "provenance": "curated",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "npm",
+    "value": "@myprod/tools@1.0.0"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": true,
+  "prod_hosts": ["prod.example.com"],
+  "mcp_fragment": {
+    "mcpServers": {
+      "prod-non-collision-fixture": {
+        "command": "npx",
+        "args": ["-y", "@myprod/tools@1.0.0"],
+        "env": {
+          "NOTES": "scoped package @myprod/tools must not collide with prod host token"
+        }
+      }
+    }
+  }
+}

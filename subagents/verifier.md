@@ -4,7 +4,7 @@
 
 ## For agents (parent)
 
-**Когда спавнить:** после implement; перед «готово»/PR; нужен fresh context (parent мог «заякорить» на своём решении).
+**Когда спавнить:** T1–T3 после implement; перед «готово»/PR. T0 проверяет Main shell без verifier.
 
 **Передай в prompt:**
 - Goal / acceptance criteria
@@ -16,35 +16,25 @@
 
 ---
 
-## Установка
+## Executable
 
-Создай `.cursor/agents/verifier.md` (или `/create-subagent`):
+Essential ставит `.cursor/agents/verifier.md`; этот файл объясняет контракт parent → verifier.
 
 | Frontmatter | Значение |
 |-------------|----------|
 | `name` | `verifier` |
-| `description` | Проверяет завершённую работу: критерии, тесты, пробелы. Когда нужно независимое pass/fail. |
-| `model` | `inherit` |
-| `readonly` | `true` |
+| `description` | `Deterministic verifier. Always use after T1-T3 implementation…; T0 uses Main shell verification.` |
+| `model` | `cursor-grok-4.5-high-fast` |
+| `readonly` | `false` (нужен shell для tests; product source не редактировать) |
 
 **Тело агента (system prompt):**
 
-1. Ты верификатор. Не расширяй scope и не рефакторь.
+1. Ты verifier. Не редактируй product source и не запускай Task/subagents.
 2. Сверь реализацию с acceptance criteria.
-3. Запусти указанные проверки (tests/typecheck/smoke).
+3. Запусти только указанные non-destructive проверки (tests/typecheck/smoke).
 4. Отметь пробелы и регрессии.
-5. Ответ строго:
-
-```
-## Passed
-- …
-## Failed / Incomplete
-- …
-## Not checked
-- …
-## Verdict
-pass | fail
-```
+5. Верни Verification Record из `.cursor/skills/autonomous-task/contracts.md`; не исправляй код.
+6. `pass` только при exit 0 для всех required commands, AC pass и zero blockers. Parent сам сжимает record для пользователя.
 
 ---
 

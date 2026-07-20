@@ -1,0 +1,27 @@
+{
+  "id": "docker-readonly-fixture",
+  "status": "proposal-only",
+  "provenance": "curated",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "docker",
+    "value": "ghcr.io/example/mcp-server@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "docker-readonly-fixture": {
+        "command": "docker",
+        "args": ["run", "-i", "--rm", "ghcr.io/example/mcp-server@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "bad-prod-host-match",
+  "status": "eligible",
+  "provenance": "vendor",
+  "risk_override": false,
+  "transport": "http",
+  "pin": {
+    "kind": "http",
+    "value": "https://app.prod.example.com/mcp"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": true,
+  "prod_hosts": ["prod.example.com"],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-prod-host-match": {
+        "url": "https://app.prod.example.com/mcp"
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "bad-prod-forbidden-host-equals",
+  "status": "eligible",
+  "provenance": "curated",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "npm",
+    "value": "@example/hostmeta@1.0.0"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": true,
+  "prod_hosts": ["api.production.example.com"],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-prod-forbidden-host-equals": {
+        "command": "npx",
+        "args": ["-y", "@example/hostmeta@1.0.0"],
+        "env": {
+          "API_CONFIG": "host=api.production.example.com;port=443"
+        }
+      }
+    }
+  }
+}

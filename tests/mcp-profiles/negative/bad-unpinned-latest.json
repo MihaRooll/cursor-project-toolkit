@@ -1,0 +1,27 @@
+{
+  "id": "bad-unpinned-latest",
+  "status": "eligible",
+  "provenance": "curated",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "npm",
+    "value": "@example/latest@1.0.0"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-unpinned-latest": {
+        "command": "npx",
+        "args": ["-y", "@example/latest@latest"]
+      }
+    }
+  }
+}

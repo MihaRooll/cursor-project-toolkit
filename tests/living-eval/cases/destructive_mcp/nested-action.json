@@ -1,0 +1,5 @@
+{
+  "tool_name": "run_workflow",
+  "tool_input": "{\"payload\":{\"action\":\"delete repository\"}}",
+  "url": "https://api.example.com/v1/workflows"
+}

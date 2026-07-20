@@ -1,0 +1,6 @@
+{
+  "preferred": "mcp_profile",
+  "profile_id": "context7-docs",
+  "shell_equivalent": "curl https://api.example.com/docs",
+  "mutation_tools_empty": true
+}

@@ -1,0 +1,5 @@
+{
+  "network": "restricted",
+  "filesystem": "workspace",
+  "notes": "Opt-in example — copy to .cursor/sandbox.json after user approval"
+}

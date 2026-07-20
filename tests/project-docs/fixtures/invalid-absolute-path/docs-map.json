@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "path": "C:\\Windows\\System32\\notepad.exe",
+      "title": "Absolute path",
+      "status": "active",
+      "owners": ["team"]
+    }
+  ]
+}

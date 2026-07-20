@@ -18,6 +18,7 @@
 | CI / PR / ship / deslop / verify harness | `cursor-team-kit` |
 | Память prefs/фактов из чатов → AGENTS.md | `continual-learning` |
 | Жёсткий security/quality review ветки | `thermos` |
+| In-session / pre-push security (≠ Claude auto) | Bugbot `/review-security` · см. [security-in-session-cursor-vs-claude.md](security-in-session-cursor-vs-claude.md) |
 | Параллельные cloud agents на большую цель | `orchestrate` |
 | Свой plugin для команды | `create-plugin` |
 | «Доки врут / агент не стартует» аудит | `agent-compatibility` |
@@ -32,6 +33,7 @@
 
 ### continual-learning
 - Hook `stop` → skill → subagent `agents-memory-updater`
+- Для file-based long-term wiki/memory (не только AGENTS.md) см. [reme-agent-memory.md](reme-agent-memory.md) (SRC-021) — opt-in, не замена этому plugin
 - Пишет только `## Learned User Preferences` и `## Learned Workspace Facts` (plain bullets)
 - Cadence (default): ≥10 turns, ≥120 min, transcript mtime advanced
 - State: `.cursor/hooks/state/continual-learning*.json`
@@ -40,6 +42,7 @@
 ### thermos
 - Thermo-nuclear branch review: security/correctness, harsh rubrics, parallel subagents, optional merge-ready PR
 - Близок по духу к thermo-nuclear skill из Team Kit, но как отдельный review pack
+- Claude Code has always-on [security-guidance](https://code.claude.com/docs/en/security-guidance); Cursor closest stack = thermos + Bugbot `/review*` + optional Semgrep hooks — [map](security-in-session-cursor-vs-claude.md)
 
 ### orchestrate
 - Fan-out через Cursor SDK: planners → workers → verifiers, handoffs на disk/git

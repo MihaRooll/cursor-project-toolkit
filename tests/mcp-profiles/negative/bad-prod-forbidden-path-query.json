@@ -1,0 +1,26 @@
+{
+  "id": "bad-prod-forbidden-path-query",
+  "status": "eligible",
+  "provenance": "curated",
+  "risk_override": false,
+  "transport": "http",
+  "pin": {
+    "kind": "http",
+    "value": "https://cdn.example.com/mcp?redirect=https://api.production.example.com/v1"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": true,
+  "prod_hosts": ["api.production.example.com"],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-prod-forbidden-path-query": {
+        "url": "https://cdn.example.com/mcp?redirect=https://api.production.example.com/v1"
+      }
+    }
+  }
+}

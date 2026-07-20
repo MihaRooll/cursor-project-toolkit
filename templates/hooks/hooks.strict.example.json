@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File templates/hooks/strict-before-shell.ps1",
+        "timeout": 10,
+        "failClosed": true
+      }
+    ],
+    "beforeMCPExecution": [
+      {
+        "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File templates/hooks/strict-before-mcp.ps1",
+        "timeout": 10,
+        "failClosed": true
+      }
+    ]
+  }
+}

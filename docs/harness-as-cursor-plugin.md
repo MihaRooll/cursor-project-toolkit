@@ -6,11 +6,12 @@
 
 **Когда читать:** install plugin; сравнить bootstrap vs plugin; обновить verdict.
 
-**Вердикт сейчас:** plugin **scaffolded и установлен локально** (`cursor-project-harness` v0.1.0). Bootstrap Essential остаётся default для on-disk файлов (prompting, `scripts/papercuts.ps1`, merge AGENTS/hooks). Marketplace submit — когда человек готов.
+**Вердикт сейчас:** plugin scaffold в repo — `cursor-project-harness` v0.5.0 с autonomous-task, maintain-project-docs, configure-project-integrations, browser-verify, setup-project-environment, model-pinned agents. Локальная копия может быть старее: после update запусти installer и reload Cursor. Bootstrap Essential остаётся default для on-disk docs/scripts/AGENTS merge; native control **templates** и MCP templates только Full.
 
 **Применяй:**
-- Новый продукт → `bootstrap-into-project.ps1 -Mode Essential`
-- Rules/skills/hooks из Cursor → `scripts/install-harness-plugin.ps1` (или reload после copy в `~/.cursor/plugins/local/`)
+- Greenfield (новый продукт) → `scripts/new-project.ps1` / `.cmd` / skill `bootstrap-project`
+- Уже есть папка → `scripts/bootstrap-into-project.ps1 -TargetPath … -Mode Essential`
+- Rules/skills/hooks в Cursor → `scripts/install-harness-plugin.ps1` (или reload после copy в `~/.cursor/plugins/local/`)
 - Consumers: [harness-consumers.md](harness-consumers.md)
 
 **Не делай:** форкать Team Kit; класть `ship-toolkit` / `add-source` в plugin.
@@ -24,7 +25,7 @@
 | Essential smoke на Windows | done |
 | Product vs toolkit skills | done |
 | ≥2 реальных продукта | done (TG_BOT_PRO, inkavrio_ru) |
-| Semver в plugin.json | done (`0.1.0`) |
+| Repo semver в plugin.json | done (`0.5.0`); live install проверяй после installer |
 | Hooks проверены вне toolkit | done (merge в inkavrio + TG_BOT) |
 | Marketplace publish | optional / human |
 
@@ -37,10 +38,17 @@ plugin/cursor-project-harness/
   .cursor-plugin/plugin.json
   rules/product-core.mdc
   rules/skills-ru-description.mdc
+  rules/autonomous-orchestration.mdc
+  rules/project-docs-lifecycle.mdc
   skills/review-papercuts/
+  skills/autonomous-task/
+  skills/maintain-project-docs/
+  skills/configure-project-integrations/
+  skills/browser-verify/
+  skills/setup-project-environment/
   hooks/hooks.json
   scripts/*.ps1  (hooks + papercuts shim)
-  agents/verifier.md
+  agents/  (orchestrator, implementer, reviewer, verifier, Sol arbiter)
   commands/install-harness-scripts.md
   README.md
 ```

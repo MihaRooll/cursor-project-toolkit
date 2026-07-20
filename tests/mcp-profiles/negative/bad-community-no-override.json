@@ -1,0 +1,27 @@
+{
+  "id": "bad-community-no-override",
+  "status": "eligible",
+  "provenance": "community",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "npm",
+    "value": "community-mcp@1.0.0"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-community-no-override": {
+        "command": "npx",
+        "args": ["-y", "community-mcp@1.0.0"]
+      }
+    }
+  }
+}

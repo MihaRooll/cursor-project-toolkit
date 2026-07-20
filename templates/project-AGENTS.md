@@ -9,9 +9,18 @@ This project was bootstrapped with **cursor-project-toolkit** — an AI-agent ha
 3. Docs are **AI-first** when present under `docs/`.
 4. Patterns: `prompting/`, roles in `roles/`, isolation briefs in `subagents/`.
 
+## Autonomous work
+
+- One change/build/fix request should route through `.cursor/skills/autonomous-task` automatically.
+- T0/T1: implement/verify without plan artifact; T2/T3: internal reviewed plan, then implement/verify without routine approval.
+- T4, destructive actions, external writes, secrets, deploy/publish/push: stop with a compact Human Gate Packet.
+- Never claim done without acceptance criteria + deterministic checks + no open blocker.
+
 ## Papercuts (automatic + manual)
 
 - Failed shell commands may be **auto-logged** by `.cursor/hooks` into `.papercuts.jsonl`.
+- Session start may inject phase/doctor summary from `docs/project-state.md` via `scripts/project-doctor.ps1`.
+- Cross-PC setup: read `@docs/project-state.md` and invoke `/setup-project-environment` (no silent installs).
 - If you hit friction the hook missed (bad docs, wrong cwd, missing tool):
 
 ```powershell

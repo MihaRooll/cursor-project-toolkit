@@ -1,0 +1,29 @@
+{
+  "id": "bad-multiple-servers",
+  "status": "eligible",
+  "provenance": "official",
+  "risk_override": false,
+  "transport": "http",
+  "pin": {
+    "kind": "none",
+    "value": ""
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-multiple-servers-a": {
+        "url": "https://api.example.com/mcp/a"
+      },
+      "bad-multiple-servers-b": {
+        "url": "https://api.example.com/mcp/b"
+      }
+    }
+  }
+}

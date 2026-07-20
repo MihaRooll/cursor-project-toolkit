@@ -1,0 +1,37 @@
+{
+  "plugin_version": "0.5.0",
+  "skill_max_lines": 500,
+  "rule_max_lines": 30,
+  "agents": [
+    {
+      "file": "operational-orchestrator.md",
+      "name": "operational-orchestrator",
+      "model": "cursor-grok-4.5-high-fast",
+      "readonly": "false"
+    },
+    {
+      "file": "implementer.md",
+      "name": "implementer",
+      "model": "composer-2.5-fast",
+      "readonly": "false"
+    },
+    {
+      "file": "adversarial-reviewer.md",
+      "name": "adversarial-reviewer",
+      "model": "cursor-grok-4.5-high-fast",
+      "readonly": "true"
+    },
+    {
+      "file": "verifier.md",
+      "name": "verifier",
+      "model": "cursor-grok-4.5-high-fast",
+      "readonly": "false"
+    },
+    {
+      "file": "principal-arbiter.md",
+      "name": "principal-arbiter",
+      "model": "gpt-5.6-sol-medium",
+      "readonly": "true"
+    }
+  ]
+}

@@ -40,13 +40,16 @@ description: Кратко по-русски что делает. Когда пр
 
 ## Примеры (canonical)
 
+Полный каталог ниже относится к toolkit. После Essential bootstrap product видит только установленные product skills (`autonomous-task`, `review-papercuts`); не вызывай отсутствующие toolkit-only skills.
+
 | name | description (RU) |
 |------|------------------|
 | `add-source` | Добавить внешний ресурс в toolkit… |
 | `distill-doc` | Сделать или переписать документ AI-first… |
 | `ship-toolkit` | Закоммитить и запушить изменения toolkit… |
 | `review-papercuts` | Разобрать backlog papercuts… |
-| `bootstrap-project` | Развернуть harness toolkit в новый проект… |
+| `bootstrap-project` | Создать новый продукт («новый проект имя: цель» → new-project.ps1) или накатить harness на существующую папку… |
+| `autonomous-task` | Автономно выполнить правку, баг, модуль или крупную фичу: выбрать T0–T4, нужных субагентов, реализовать и проверить… |
 
 Живые файлы: [`.cursor/skills/`](../.cursor/skills/).
 

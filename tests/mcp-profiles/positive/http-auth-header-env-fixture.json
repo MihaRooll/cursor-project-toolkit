@@ -1,0 +1,29 @@
+{
+  "id": "http-auth-header-env-fixture",
+  "status": "eligible",
+  "provenance": "vendor",
+  "risk_override": false,
+  "transport": "http",
+  "pin": {
+    "kind": "http",
+    "value": "https://api.vendor.example/mcp/v2"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": ["AUTH_HEADER"],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "http-auth-header-env-fixture": {
+        "url": "https://api.vendor.example/mcp/v2",
+        "headers": {
+          "Authorization": "${env:AUTH_HEADER}"
+        }
+      }
+    }
+  }
+}

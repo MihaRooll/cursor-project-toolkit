@@ -1,0 +1,27 @@
+{
+  "id": "bad-allowlist-exact-mutating",
+  "status": "proposal-only",
+  "provenance": "curated",
+  "risk_override": true,
+  "transport": "stdio",
+  "pin": {
+    "kind": "npm",
+    "value": "mutating-mcp@2.0.0"
+  },
+  "placement": "local",
+  "default_scopes": ["read", "write"],
+  "mutation_tools": ["create_item"],
+  "mcp_allowlist": ["bad-allowlist-exact-mutating:create_item"],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-allowlist-exact-mutating": {
+        "command": "npx",
+        "args": ["-y", "mutating-mcp@2.0.0"]
+      }
+    }
+  }
+}

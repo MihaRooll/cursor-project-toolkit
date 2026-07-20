@@ -8,8 +8,9 @@ This repo is a **bootstrap scaffold** for AI-agent development environments.
 - It is **copied/bootstrapped into new product projects** so work does not start in a bare folder.
 - Docs are **AI-first, human-second**.
 
-New product → skill **`bootstrap-project`** / `scripts/bootstrap-into-project.ps1`.  
-Details: `docs/bootstrap-scaffold.md`.
+Greenfield → skill **`bootstrap-project`** / `scripts/new-project.ps1` (phrase: «новый проект name: цель»).
+Existing folder → `scripts/bootstrap-into-project.ps1`.
+Details: `docs/bootstrap-scaffold.md` · `project-workflow/new-project-bootstrap.md`.
 
 ## Read first
 
@@ -26,7 +27,7 @@ Details: `docs/bootstrap-scaffold.md`.
 | Source registry | `SOURCES.md` | Every borrow → ID |
 | Archive | `archive/` | Full copies only if needed |
 | Live harness | `.cursor/rules|skills|hooks` | Executes in this repo and after bootstrap |
-| Bootstrap | `scripts/bootstrap-into-project.ps1`, `templates/` | Seed new projects |
+| Bootstrap | `scripts/new-project.ps1` / `.cmd`, `scripts/bootstrap-into-project.ps1`, `templates/` | Greenfield vs re-seed |
 
 Do **not** load `archive/` unless a doc points there.
 
@@ -81,6 +82,7 @@ Review: `/review-papercuts`. Details: `docs/papercuts.md`.
 - Windows: `$env:HOME = $env:USERPROFILE` for papercuts; prefer git repo cwd or `--file`
 - Hooks live in `.cursor/hooks.json` (PowerShell)
 - Essential bootstrap = product surface only; toolkit skills stay in this repo
-- After harness/.ps1 edits: `scripts/parse-check-ps1.ps1` then `scripts/smoke-bootstrap.ps1`
+- After harness/.ps1 edits: `scripts/parse-check-ps1.ps1` then `scripts/smoke-bootstrap.ps1` (Essential + new-project sections)
+- Greenfield: `scripts/new-project.ps1` / `.cmd` (not in product Essential surface)
 - Local plugin: `plugin/cursor-project-harness` via `scripts/install-harness-plugin.ps1`
 - Live consumers: TG_BOT_PRO, inkavrio_ru — see `docs/harness-consumers.md`

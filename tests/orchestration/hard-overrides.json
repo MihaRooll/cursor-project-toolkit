@@ -1,0 +1,39 @@
+{
+  "rules": [
+    {
+      "id": "destructive-external",
+      "patterns": [
+        "\\bforce[- ]push\\b",
+        "\\bproduction deploy\\b",
+        "\\bdrop database\\b",
+        "\\bgit push\\b",
+        "\\b(?:run|execute|perform)\\s+(?:npm\\s+)?publish\\b",
+        "\\bpublish (?:the )?(?:package|release) now\\b",
+        "\\b(?:rotate|replace|change|expose|store)\\b.{0,40}\\b(?:production\\s+)?(?:api\\s+)?(?:secrets?|credentials?)\\b",
+        "\\b(?:add|change|implement|execute|process)\\b.{0,40}\\b(?:payments?|billing|refunds?)\\b",
+        "\\bmerge (?:the )?(?:pr|pull request) (?:to|into) (?:main|master)\\b",
+        "\\brelease (?:version |v)?[0-9]",
+        "удали прод",
+        "боевую базу"
+      ],
+      "exclude_patterns": [
+        "\\b(?:do not|don't|never|without)\\b.{0,20}\\b(?:force[- ]push|git push|production\\s+deploy|publish|deploy|merge|release)\\b"
+      ],
+      "tier": "T4",
+      "gate": "human_packet"
+    },
+    {
+      "id": "security-api",
+      "patterns": [
+        "\\b(?:change|implement|fix|modify|replace|add)\\b.{0,40}\\b(?:oauth|authentication|authorization|security-sensitive|public api|concurrency)\\b",
+        "(?:измени|реализуй|исправь|добавь).{0,40}(?:авторизац|аутентификац|безопасност|публичн.{0,10}api)"
+      ],
+      "exclude_patterns": [
+        "\\b(?:do not|don't|never|without)\\b.{0,40}\\b(?:change|implement|fix|modify|replace|add)\\b",
+        "\\b(?:fix|change|update)\\s+(?:a\\s+)?(?:typo|wording)\\b.{0,40}\\b(?:docs?|documentation|readme)\\b"
+      ],
+      "tier": "T3",
+      "gate": "sol_before_write"
+    }
+  ]
+}

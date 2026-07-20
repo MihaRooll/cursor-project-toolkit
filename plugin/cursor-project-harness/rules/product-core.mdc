@@ -11,5 +11,6 @@ alwaysApply: true
 - Friction: hooks auto-log failed shells; otherwise `papercuts add` / `scripts/papercuts.ps1` (`docs/papercuts.md`).
 - Do not commit secrets, `.env`, or credentials.
 - Prefer small reviewable changes; no force-push to `main`.
+- For change/build/fix, follow `.cursor/skills/autonomous-task` automatically; T4/destructive/external writes require human approval.
 - Prompt/role patterns (if present): `prompting/`, `roles/`; isolation → `subagents/` + Cursor Subagents docs.
 - Optional plugins: `/add-plugin cursor-team-kit`, `/add-plugin continual-learning`.

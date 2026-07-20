@@ -1,0 +1,5 @@
+{
+  "tool_name": "delete_repository",
+  "tool_input": "{}",
+  "url": "https://api.example.com/v1/repos"
+}

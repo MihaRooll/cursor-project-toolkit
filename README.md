@@ -6,15 +6,9 @@
 
 Его **накатывают на новый проект**, чтобы не начинать в голой папке, а сразу работать в настроенном harness (агент знает правила, умеет логировать friction, видит AI-first docs).
 
-```text
-toolkit (этот репо)  --bootstrap-->  my-app (продукт + harness)
-```
-
-```powershell
-.\scripts\bootstrap-into-project.ps1 -TargetPath C:\work\my-app -Mode Essential
-```
-
-Skill: `/bootstrap-project` · гайд: [`docs/bootstrap-scaffold.md`](docs/bootstrap-scaffold.md)
+**Новый проект (happy path):** из клона toolkit — `.\scripts\new-project.cmd -Name <name> -Goal "<цель>"` (или в чате: «новый проект \<name\>: \<цель\>») → Open Folder → вставить `docs/first-chat.md` → `/add-plugin cursor-team-kit`.
+**Уже есть папка (advanced):** `.\scripts\bootstrap-into-project.ps1 -TargetPath <path> -Mode Essential` — только harness, без brief.
+**Подробнее:** skill `/bootstrap-project` · [`project-workflow/new-project-bootstrap.md`](project-workflow/new-project-bootstrap.md) · [`docs/bootstrap-scaffold.md`](docs/bootstrap-scaffold.md) (в продуктах скрипт `new-project` не ожидается).
 
 ## Аудитория docs
 
@@ -28,7 +22,7 @@ Skill: `/bootstrap-project` · гайд: [`docs/bootstrap-scaffold.md`](docs/boo
 | Rules / skills | [`.cursor/rules/`](.cursor/rules/) · [`.cursor/skills/`](.cursor/skills/) |
 | Hooks (авто) | [`.cursor/hooks.json`](.cursor/hooks.json) — sessionStart, failed-shell → papercuts, stop nudge |
 | Papercuts | CLI или [`scripts/papercuts.ps1`](scripts/papercuts.ps1) · [`docs/papercuts.md`](docs/papercuts.md) |
-| Bootstrap | [`scripts/bootstrap-into-project.ps1`](scripts/bootstrap-into-project.ps1) |
+| Bootstrap | [`scripts/new-project.ps1`](scripts/new-project.ps1) / `.cmd` (greenfield) · [`scripts/bootstrap-into-project.ps1`](scripts/bootstrap-into-project.ps1) (existing) |
 | WSL stabilize | [`scripts/stabilize-wsl.ps1`](scripts/stabilize-wsl.ps1) · [`docs/wsl-windows-stability.md`](docs/wsl-windows-stability.md) |
 | Workflow | [`project-workflow/`](project-workflow/) |
 
@@ -72,6 +66,7 @@ Skill: `/bootstrap-project` · гайд: [`docs/bootstrap-scaffold.md`](docs/boo
 
 ```
 cursor-project-toolkit/
+├── scripts/new-project.ps1 / .cmd   # greenfield
 ├── scripts/bootstrap-into-project.ps1
 ├── templates/project-AGENTS.md
 ├── AGENTS.md / SOURCES.md

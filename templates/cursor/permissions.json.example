@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "allow": [
+    "Shell(*)",
+    "Read(*)",
+    "Write(src/**)"
+  ],
+  "deny": [
+    "Write(.env*)",
+    "Write(**/secrets/**)"
+  ]
+}

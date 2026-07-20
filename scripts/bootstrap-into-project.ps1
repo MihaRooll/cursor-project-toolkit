@@ -16,7 +16,13 @@ param(
     [switch]$Force,
 
     # Optional: also add toolkit as git submodule at vendor/cursor-project-toolkit
-    [switch]$WithSubmodule
+    [switch]$WithSubmodule,
+
+    # When set (e.g. from new-project.ps1), skip trailing "Done. Next:" handoff block
+    [switch]$SkipNext,
+
+    # Skip User-scope HOME mutation (portability smoke / isolated runs)
+    [switch]$SkipUserHome
 )
 
 $ErrorActionPreference = "Stop"
@@ -44,6 +50,56 @@ function Copy-Path($Rel) {
     } else {
         Copy-Item -Path $src -Destination $dst -Force
     }
+    Write-Host "copied $Rel"
+}
+
+function Merge-CopyPath($Rel) {
+    $src = Join-Path $ToolkitRoot $Rel
+    $dst = Join-Path $Target $Rel
+    if (-not (Test-Path $src)) { Write-Warning "skip missing: $Rel"; return }
+    if (Test-Path $src -PathType Container) {
+        if (-not (Test-Path $dst)) {
+            Copy-Item -Path $src -Destination $dst -Recurse -Force
+            Write-Host "copied $Rel"
+            return
+        }
+        if ($Force) {
+            Remove-Item -Recurse -Force $dst
+            Copy-Item -Path $src -Destination $dst -Recurse -Force
+            Write-Host "overwrote $Rel (-Force)"
+            return
+        }
+        $merged = 0
+        Get-ChildItem -Path $src -Recurse -Force | ForEach-Object {
+            $relChild = $_.FullName.Substring($src.Length).TrimStart('\', '/')
+            if ($_.PSIsContainer -and $relChild -match '(?i)(^|\\)state$') {
+                $children = @(Get-ChildItem -LiteralPath $_.FullName -Force -ErrorAction SilentlyContinue)
+                if ($children.Count -eq 0) {
+                    return
+                }
+            }
+            $targetItem = Join-Path $dst $relChild
+            if (-not (Test-Path -LiteralPath $targetItem)) {
+                if ($_.PSIsContainer) {
+                    New-Item -ItemType Directory -Force -Path $targetItem | Out-Null
+                } else {
+                    $parent = Split-Path -Parent $targetItem
+                    if ($parent) { New-Item -ItemType Directory -Force -Path $parent | Out-Null }
+                    Copy-Item -LiteralPath $_.FullName -Destination $targetItem -Force
+                }
+                $merged++
+            }
+        }
+        Write-Host "merged $Rel ($merged new item(s))"
+        return
+    }
+    $dstDir = Split-Path -Parent $dst
+    if ($dstDir) { New-Item -ItemType Directory -Force -Path $dstDir | Out-Null }
+    if ((Test-Path $dst) -and -not $Force) {
+        Write-Host "exists (use -Force to overwrite): $Rel"
+        return
+    }
+    Copy-Item -Path $src -Destination $dst -Force
     Write-Host "copied $Rel"
 }
 
@@ -210,18 +266,45 @@ $essentialFiles = @(
     "docs\cursor-agent-best-practices.md",
     "docs\cursor-primitives.md",
     "docs\bootstrap-scaffold.md",
+    "docs\living-documentation.md",
+    "docs\docs-map-schema.md",
+    "docs\project-integrations.md",
+    "docs\autonomous-agent-orchestration.md",
     "prompting\README.md",
     "prompting\plan-then-build.md",
     "prompting\context-hygiene.md",
     "prompting\verify-loop.md",
+    "prompting\lean-prompts-autonomy.md",
     "roles\README.md",
     "roles\implementer.md",
     "roles\reviewer.md",
     "subagents\README.md",
-    "subagents\verifier.md"
+    "subagents\verifier.md",
+    ".cursor\skills\autonomous-task",
+    ".cursor\skills\maintain-project-docs",
+    ".cursor\skills\browser-verify",
+    ".cursor\skills\setup-project-environment",
+    "scripts\project-doctor.ps1",
+    "scripts\validate-project-docs.ps1",
+    "docs\project-environment.md",
+    "docs\cursor-native-controls.md",
+    "docs\project-state.md",
+    ".cursor\rules\autonomous-orchestration.mdc",
+    ".cursor\rules\project-docs-lifecycle.mdc",
+    ".cursor\agents\operational-orchestrator.md",
+    ".cursor\agents\implementer.md",
+    ".cursor\agents\adversarial-reviewer.md",
+    ".cursor\agents\verifier.md",
+    ".cursor\agents\principal-arbiter.md"
 )
 
-foreach ($p in $essentialFiles) { Copy-Path $p }
+foreach ($p in $essentialFiles) {
+    if ($p -eq "docs\project-state.md") {
+        Copy-FileTo "templates\project-state.md" "docs\project-state.md"
+        continue
+    }
+    Copy-Path $p
+}
 
 Copy-Path ".cursor\skills\review-papercuts"
 Copy-Path ".cursor\rules\skills-ru-description.mdc"
@@ -243,12 +326,19 @@ if ($Mode -eq "Full") {
         "scripts\install-rust-papercuts.ps1",
         "scripts\smoke-bootstrap.ps1",
         "scripts\parse-check-ps1.ps1",
+        "scripts\validate-mcp-profiles.ps1",
+        "templates\mcp",
+        "templates\cursor",
+        "templates\hooks",
+        "scripts\validate-living-evals.ps1",
+        "tests\living-eval",
         ".cursor\skills",
         ".cursor\rules",
+        ".cursor\agents",
         ".cursor\hooks.json",
         ".cursor\hooks"
     )
-    foreach ($p in $full) { Copy-Path $p }
+    foreach ($p in $full) { Merge-CopyPath $p }
 }
 
 if ($WithSubmodule) {
@@ -256,7 +346,7 @@ if ($WithSubmodule) {
     if (Test-Path $vendor) {
         Write-Host "exists: vendor/cursor-project-toolkit (skip submodule)"
     } else {
-        Push-Location $Target
+        Push-Location -LiteralPath $Target
         try {
             if (-not (Test-Path (Join-Path $Target ".git"))) {
                 Write-Warning "WithSubmodule: target is not a git repo; init first or add submodule manually"
@@ -274,9 +364,14 @@ if ($WithSubmodule) {
     }
 }
 
-if (-not [Environment]::GetEnvironmentVariable("HOME", "User")) {
-    [Environment]::SetEnvironmentVariable("HOME", $env:USERPROFILE, "User")
-    Write-Host "Set User HOME=$env:USERPROFILE (new terminals will see it)"
+$skipUserHome = $SkipUserHome -or ($env:CPTK_PORTABILITY_SMOKE -eq "1")
+if (-not $skipUserHome) {
+    if (-not [Environment]::GetEnvironmentVariable("HOME", "User")) {
+        [Environment]::SetEnvironmentVariable("HOME", $env:USERPROFILE, "User")
+        Write-Host "Set User HOME=$env:USERPROFILE (new terminals will see it)"
+    }
+} else {
+    Write-Host "Skip User-scope HOME (SkipUserHome or CPTK_PORTABILITY_SMOKE=1)"
 }
 
 $ga = Join-Path $Target ".gitattributes"
@@ -292,14 +387,19 @@ if (Test-Path $ga) {
     Write-Host "created .gitattributes"
 }
 
-Write-Host ""
-Write-Host "Done. Next:"
-Write-Host "  1. cd `"$Target`""
-Write-Host "  2. Open folder in Cursor"
-Write-Host "  3. Optional: cargo install papercuts  (or use scripts/papercuts.ps1)"
-Write-Host "  4. /add-plugin cursor-team-kit"
-Write-Host "  5. Optional local harness plugin: plugin/cursor-project-harness (see docs/harness-as-cursor-plugin.md)"
-Write-Host "  6. Start building - hooks auto-log failed shells to .papercuts.jsonl"
-if ($WithSubmodule) {
-    Write-Host "  7. Toolkit reference: vendor/cursor-project-toolkit (submodule)"
+if (-not $SkipNext) {
+    Write-Host ""
+    Write-Host "Done. Next:"
+    Write-Host "  1. cd `"$Target`""
+    Write-Host "  2. Open folder in Cursor"
+    Write-Host "  3. Optional: cargo install papercuts  (or use scripts/papercuts.ps1)"
+    Write-Host "  4. /add-plugin cursor-team-kit"
+    Write-Host "  5. Optional local harness plugin: plugin/cursor-project-harness (see docs/harness-as-cursor-plugin.md)"
+    Write-Host "  6. Start building - hooks auto-log failed shells to .papercuts.jsonl"
+    if ($WithSubmodule) {
+        Write-Host "  7. Toolkit reference: vendor/cursor-project-toolkit (submodule)"
+    }
+} else {
+    Write-Host ""
+    Write-Host "Bootstrap $Mode done (SkipNext)."
 }

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "path": "docs/[wave4b]-unicode-sample.md",
+      "title": "Bracket Unicode sample",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["fixture", "wave4b"]
+    }
+  ],
+  "rules": {
+    "update_on_change": true,
+    "validate_on_commit": false
+  }
+}

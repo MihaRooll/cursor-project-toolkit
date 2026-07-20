@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "path": "docs/living-documentation.md",
+      "title": "Living documentation",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["docs", "living"]
+    },
+    {
+      "path": "docs/docs-map-schema.md",
+      "title": "docs-map.json schema",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["docs", "schema"]
+    },
+    {
+      "path": "docs/project-integrations.md",
+      "title": "Project integrations",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["integrations", "bootstrap"]
+    },
+    {
+      "path": "docs/bootstrap-scaffold.md",
+      "title": "Bootstrap scaffold",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["bootstrap", "portability"]
+    },
+    {
+      "path": "docs/project-environment.md",
+      "title": "Project environment surfaces",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["environment", "wave3", "portability"]
+    },
+    {
+      "path": "docs/cursor-native-controls.md",
+      "title": "Cursor native controls",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["cursor", "permissions", "wave3"]
+    },
+    {
+      "path": "docs/project-state.md",
+      "title": "Project state",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["state", "wave3"]
+    },
+    {
+      "path": "docs/memory-and-obsidian.md",
+      "title": "Memory and Obsidian authority",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["memory", "obsidian", "wave2"]
+    },
+    {
+      "path": "docs/mcp-security.md",
+      "title": "MCP security and placement",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["mcp", "security", "wave2", "final-mcp-fix"]
+    },
+    {
+      "path": "docs/harness-evidence-and-enforcement.md",
+      "title": "Harness evidence and enforcement",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["harness", "hooks", "wave4b", "final-mcp-fix"]
+    }
+  ],
+  "rules": {
+    "update_on_change": true,
+    "validate_on_commit": false
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "approvalMode": "manual",
+  "sandbox": true,
+  "notes": "Opt-in CLI defaults — adjust per project"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "pypi-readonly-fixture",
+  "status": "eligible",
+  "provenance": "curated",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "pypi",
+    "value": "mcp_server_fixture==1.2.3"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": ["FIXTURE_TOKEN"],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "pypi-readonly-fixture": {
+        "command": "python",
+        "args": ["-m", "mcp_server_fixture==1.2.3"],
+        "env": {
+          "FIXTURE_TOKEN": "${env:FIXTURE_TOKEN}"
+        }
+      }
+    }
+  }
+}

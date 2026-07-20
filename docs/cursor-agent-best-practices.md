@@ -7,7 +7,9 @@
 **Когда читать:** любая нетривиальная задача в Cursor; настройка workflow проекта.
 
 **Применяй:**
-- Сложная фича → **Plan Mode** (`Shift+Tab`): research → вопросы → план → approve → код
+- Явный запрос «сначала только план» → **Plan Mode** (`Shift+Tab`): research → вопросы → план → approve → код
+- T4 change/build/fix → Human Gate Packet в autonomous-task, не UI Plan Mode
+- Change/build/fix → `autonomous-task`: T0/T1 без plan artifact; T2/T3 internal reviewed plan → код → verify без routine approval
 - Планы сохраняй в `.cursor/plans/` (resume + контекст для следующих агентов)
 - Если результат мимо — **revert + уточнить план**, не латать длинной перепиской
 - Контекст: агент сам ищет файлы; `@file` только если точно знаешь; не засоряй irrelevant файлами
@@ -41,7 +43,7 @@ Cursor тюнит harness под каждую frontier-модель — пром
 
 Plans = editable Markdown. Save to workspace → `.cursor/plans/`.
 
-Быстрые однотипные правки — можно без плана.
+Это UI Plan Mode. Workspace `.cursor/plans/` также используется как internal artifact автономного T2/T3 workflow, но не означает human approval. Быстрые правки — без plan; change/build/fix T0–T3 следует `autonomous-task`.
 
 ---
 

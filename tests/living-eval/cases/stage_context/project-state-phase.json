@@ -1,0 +1,5 @@
+{
+  "project_state": "## phase\nimplement",
+  "expect_stage_prefix": "Stage: implement",
+  "max_context_chars": 1200
+}

@@ -1,0 +1,5 @@
+# Opt-in: rename to .cursorindexingignore at repo root
+node_modules/
+dist/
+coverage/
+.papercuts.jsonl

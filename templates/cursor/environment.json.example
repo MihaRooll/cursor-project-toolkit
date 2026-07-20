@@ -1,0 +1,7 @@
+{
+  "env": {
+    "NODE_ENV": "development",
+    "API_BASE_URL": "${env:API_BASE_URL}"
+  },
+  "notes": "No secrets — use ${env:VAR} for runtime values; never commit tokens"
+}

@@ -8,6 +8,7 @@ Bootstrapped from **cursor-project-toolkit** (product Essential). Project rules 
 - Manual: `scripts/papercuts.ps1 add "<friction + fix>" -Tag tooling` (Windows: `$env:HOME = $env:USERPROFILE` if needed).
 - Review: `/review-papercuts` or `papercuts list --format md`.
 - Patterns: `prompting/`, `roles/`, `subagents/` when relevant.
-- Optional: `/add-plugin cursor-team-kit`, `/add-plugin cursor-project-harness` (local plugin).
+- Change/build/fix: apply `.cursor/skills/autonomous-task` automatically; T0–T3 proceed autonomously, T4/destructive/external writes stop for human approval.
+- Optional: `/add-plugin cursor-team-kit`; local `cursor-project-harness` installs via toolkit `scripts/install-harness-plugin.ps1`, not `/add-plugin`.
 
 <!-- /cursor-project-toolkit-harness -->

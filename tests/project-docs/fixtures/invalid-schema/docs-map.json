@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "path": "docs/sample.md",
+      "title": "Sample",
+      "status": "invalid-status",
+      "owners": ["team"]
+    }
+  ]
+}

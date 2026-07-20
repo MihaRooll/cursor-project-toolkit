@@ -1,0 +1,26 @@
+{
+  "id": "context7-docs",
+  "status": "proposal-only",
+  "provenance": "vendor",
+  "risk_override": false,
+  "transport": "http",
+  "pin": {
+    "kind": "none",
+    "value": ""
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": ["native-docs", "@Docs"],
+  "required_env": [],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "context7-docs": {
+        "url": "https://mcp.context7.com/mcp"
+      }
+    }
+  }
+}

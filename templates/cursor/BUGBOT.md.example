@@ -1,0 +1,9 @@
+# BUGBOT.md example (opt-in)
+
+Review focus for this repo:
+
+- No committed secrets or `.env` files
+- Harness/bootstrap changes must update smoke validators
+- Doctor and session-start hooks must not leak env values
+
+Copy to `.cursor/BUGBOT.md` or repo `BUGBOT.md` after explicit user approval.

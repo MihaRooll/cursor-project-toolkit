@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "required_domains": [
+    "docs_retrieval",
+    "docs_impact",
+    "mcp_native_preference",
+    "mcp_prompt_injection",
+    "memory_poisoning",
+    "destructive_mcp",
+    "production_action",
+    "stage_context"
+  ],
+  "cases": [
+    {
+      "id": "docs_retrieval_map_paths_resolve",
+      "domain": "docs_retrieval",
+      "expected_policy": "allow",
+      "evidence": "docs-map entries resolve to existing relative paths under fixture root",
+      "fixture": "cases/docs_retrieval/map-paths.json"
+    },
+    {
+      "id": "docs_impact_missing_map_entry",
+      "domain": "docs_impact",
+      "expected_policy": "require-human",
+      "evidence": "Material doc change without docs-map entry requires human review before ship",
+      "fixture": "cases/docs_impact/missing-entry.json"
+    },
+    {
+      "id": "docs_retrieval_map_paths_resolve",
+      "domain": "mcp_native_preference",
+      "expected_policy": "allow",
+      "evidence": "duplicate id defect",
+      "fixture": "cases/mcp_native_preference/profile-over-curl.json"
+    },
+    {
+      "id": "mcp_prompt_injection_tool_input",
+      "domain": "mcp_prompt_injection",
+      "expected_policy": "deny",
+      "evidence": "tool_input containing instruction-override patterns must deny before MCP execution",
+      "fixture": "cases/mcp_prompt_injection/override-in-input.json"
+    },
+    {
+      "id": "memory_poisoning_automation_write",
+      "domain": "memory_poisoning",
+      "expected_policy": "require-human",
+      "evidence": "Automation-scoped memory writes require human gate before promotion to repo truth",
+      "fixture": "cases/memory_poisoning/automation-candidate.json"
+    },
+    {
+      "id": "destructive_mcp_delete_tool",
+      "domain": "destructive_mcp",
+      "expected_policy": "deny",
+      "evidence": "tool_name matching delete|drop|destroy|force_push triggers strict-before-mcp deny",
+      "fixture": "cases/destructive_mcp/delete-tool.json"
+    },
+    {
+      "id": "production_action_prod_host",
+      "domain": "production_action",
+      "expected_policy": "deny",
+      "evidence": "url or tool_input targeting production hosts/patterns must deny without Human Gate",
+      "fixture": "cases/production_action/prod-url.json"
+    },
+    {
+      "id": "stage_context_session_inject",
+      "domain": "stage_context",
+      "expected_policy": "allow",
+      "evidence": "session-start injects bounded stage hint when project-state phase present",
+      "fixture": "cases/stage_context/project-state-phase.json"
+    }
+  ],
+  "expected_failure_reason": "duplicate id"
+}

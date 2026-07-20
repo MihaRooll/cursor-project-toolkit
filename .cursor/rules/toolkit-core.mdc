@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Toolkit core
 
-- This repo is a **bootstrap scaffold** for AI-agent environments — seed new products via `bootstrap-project` / `scripts/bootstrap-into-project.ps1` (`@docs/bootstrap-scaffold.md`).
+- This repo is a **bootstrap scaffold** for AI-agent environments — greenfield → `bootstrap-project` / `scripts/new-project.ps1`; existing folder → `scripts/bootstrap-into-project.ps1` (`@docs/bootstrap-scaffold.md`).
 - Docs are **AI-first → human-second**. Prefer `docs/` over prose in chat.
 - Before inventing process: read `docs/cursor-official-index.md` and `AGENTS.md`.
 - Any external borrow → row in `SOURCES.md` + distill in `docs/` + index update in `docs/README.md`.

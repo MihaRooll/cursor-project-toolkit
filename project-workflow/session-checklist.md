@@ -4,9 +4,9 @@
 
 ## Before coding
 
-- [ ] Non-trivial? Plan Mode / short plan in `.cursor/plans/` or chat
+- [ ] Change/build/fix? `autonomous-task`: T0–T3 internal plan as needed; T4 Human Gate; UI Plan Mode only for plan-only
 - [ ] Read `AGENTS.md` + relevant `docs/` (not whole archive)
-- [ ] Right skill? (`add-source`, `distill-doc`, `ship-toolkit`)
+- [ ] Right product skill? (`autonomous-task`, `review-papercuts`)
 
 ## During
 
@@ -17,13 +17,13 @@
 
 ## Before done
 
-- [ ] If new external material → SRC + docs + index
+- [ ] If this repo has `SOURCES.md` and new external material → SRC + docs + index
 - [ ] If process repeated twice → rule or skill (compound)
 - [ ] New/edited skill → `description` на русском (`docs/skills-russian-descriptions.md`)
-- [ ] Harness/.ps1 changed → `scripts/parse-check-ps1.ps1` + `scripts/smoke-bootstrap.ps1`
-- [ ] Essential still product-only (no `ship-toolkit` in product bootstrap)
+- [ ] If harness validator scripts exist and harness/.ps1 changed → run parse + validator + smoke
+- [ ] If editing toolkit bootstrap → Essential still product-only
 - [ ] No secrets staged
-- [ ] Ship only if user asked (`/ship-toolkit`)
+- [ ] Commit/push/PR only if user asked; use this product's own ship workflow
 
 ## Optional plugins
 

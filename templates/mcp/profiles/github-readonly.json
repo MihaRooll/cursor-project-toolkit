@@ -1,0 +1,30 @@
+{
+  "id": "github-readonly",
+  "status": "eligible",
+  "provenance": "curated",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "npm",
+    "value": "@modelcontextprotocol/server-github@0.6.2"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": ["native-github"],
+  "required_env": ["GITHUB_PERSONAL_ACCESS_TOKEN"],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "github-readonly": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-github@0.6.2"],
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+        }
+      }
+    }
+  }
+}

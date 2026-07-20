@@ -9,6 +9,7 @@
 **Применяй:**
 - Built-in (авто): **Explore**, **Bash**, **Browser** — не дублируй их плагинами
 - Custom: файлы в `.cursor/agents/*.md` (YAML frontmatter + prompt) — см. official docs
+- Essential уже ставит executable agents: `operational-orchestrator`, `implementer`, `adversarial-reviewer`, `verifier`, `principal-arbiter`
 - Parent **передаёт весь нужный контекст** в prompt: у subagent нет истории чата
 - Простая one-shot процедура → **skill**, не subagent
 
@@ -24,7 +25,7 @@
 | [explorer.md](explorer.md) | Исследование кодовой базы → краткий отчёт | Full |
 | [parallel-worker.md](parallel-worker.md) | Параллельный кусок работы | Full |
 
-Создание: `/create-subagent` или вручную по [доке](https://cursor.com/docs/subagents).
+Executable source: `.cursor/agents/`; файлы здесь — briefs/объяснения. Создание вручную: `/create-subagent` или по [доке](https://cursor.com/docs/subagents).
 
 ---
 

@@ -30,6 +30,8 @@ Package       → Plugins (marketplace / team marketplace)
 
 Docs: [Rules](https://cursor.com/docs/rules) · [Skills](https://cursor.com/docs/skills) · [Plugins](https://cursor.com/docs/plugins) · [Hooks](https://cursor.com/docs/hooks) · [MCP](https://cursor.com/docs/mcp) · [Subagents](https://cursor.com/docs/subagents)
 
+On-disk autonomous routing: [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) (SRC-023/024). Environment surfaces: [project-environment.md](project-environment.md) (SRC-029). Native controls: [cursor-native-controls.md](cursor-native-controls.md) (SRC-030). Harness evidence / strict hooks: [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md) (SRC-029). MCP opt-in: [mcp-security.md](mcp-security.md) (SRC-025/028) + skill `configure-project-integrations`. Memory authority: [memory-and-obsidian.md](memory-and-obsidian.md) (SRC-026/027).
+
 ---
 
 ## Официальные plugins (author: Cursor)
@@ -73,7 +75,7 @@ Marketplace: https://cursor.com/marketplace
 |------|--------|
 | [cursor/plugins](https://github.com/cursor/plugins) | Source official plugins + plugin spec |
 | [cursor/cookbook](https://github.com/cursor/cookbook) | Примеры hooks, SDK, self-hosted agents |
-| [cursor/mcp-servers](https://github.com/cursor/mcp-servers) | Курируемый список MCP |
+| [cursor/mcp-servers](https://github.com/cursor/mcp-servers) | Курируемый список MCP | [mcp-security.md](mcp-security.md) · SRC-028 |
 | [agentskills.io](https://agentskills.io) | Open standard Agent Skills |
 
 ---
@@ -86,6 +88,7 @@ Marketplace: https://cursor.com/marketplace
 | `/add-plugin cursor-team-kit` | Ежедневный ship/CI |
 | `/add-plugin continual-learning` | Память prefs → AGENTS.md |
 | По задаче: thermos / orchestrate / create-plugin | Review / scale / packaging |
+| In-session security как у Claude? | [security-in-session-cursor-vs-claude.md](security-in-session-cursor-vs-claude.md) (Bugbot `/review-security`, hooks partners) |
 | Держать toolkit в `docs/` AI-first | Не раздувать always-on rules |
 
 ---

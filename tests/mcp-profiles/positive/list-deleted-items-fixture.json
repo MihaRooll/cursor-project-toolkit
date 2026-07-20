@@ -1,0 +1,27 @@
+{
+  "id": "list-deleted-items-fixture",
+  "status": "eligible",
+  "provenance": "curated",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "npm",
+    "value": "readonly-mcp@1.0.0"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": ["server:list_deleted_items"],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "list-deleted-items-fixture": {
+        "command": "npx",
+        "args": ["-y", "readonly-mcp@1.0.0"]
+      }
+    }
+  }
+}

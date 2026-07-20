@@ -1,0 +1,5 @@
+{
+  "changed_paths": ["docs/new-feature.md"],
+  "docs_map_paths": ["docs/living-documentation.md"],
+  "material_change": true
+}

@@ -1,0 +1,26 @@
+{
+  "id": "bad-prod-forbidden-empty-hosts",
+  "status": "eligible",
+  "provenance": "vendor",
+  "risk_override": false,
+  "transport": "http",
+  "pin": {
+    "kind": "none",
+    "value": ""
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": true,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-prod-forbidden-empty-hosts": {
+        "url": "https://dev.example.com/mcp"
+      }
+    }
+  }
+}

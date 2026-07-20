@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "path": "docs/product-brief.md",
+      "title": "Product brief",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["day-0", "product"]
+    },
+    {
+      "path": "docs/first-chat.md",
+      "title": "First chat prompt",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["day-0", "onboarding"]
+    },
+    {
+      "path": "docs/project-state.md",
+      "title": "Project state",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["state", "environment"]
+    },
+    {
+      "path": "docs/project-environment.md",
+      "title": "Project environment",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["environment", "doctor"]
+    }
+  ],
+  "rules": {
+    "update_on_change": true,
+    "validate_on_commit": false
+  }
+}

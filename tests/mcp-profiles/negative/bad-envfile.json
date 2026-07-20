@@ -1,0 +1,28 @@
+{
+  "id": "bad-envfile",
+  "status": "eligible",
+  "provenance": "official",
+  "risk_override": false,
+  "transport": "stdio",
+  "pin": {
+    "kind": "npm",
+    "value": "@modelcontextprotocol/server-example@1.0.0"
+  },
+  "placement": "local",
+  "default_scopes": ["read"],
+  "mutation_tools": [],
+  "mcp_allowlist": [],
+  "redundant_if": [],
+  "required_env": [],
+  "prod_forbidden": false,
+  "prod_hosts": [],
+  "mcp_fragment": {
+    "mcpServers": {
+      "bad-envfile": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-example@1.0.0"],
+        "envFile": ".env"
+      }
+    }
+  }
+}

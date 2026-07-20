@@ -1,0 +1,8 @@
+{
+  "docs_map": {
+    "entries": [
+      { "path": "docs/sample.md", "title": "Sample" }
+    ]
+  },
+  "root_files": ["docs/sample.md"]
+}

@@ -19,7 +19,7 @@
 
 | Проект | Path | Bootstrap | Notes |
 |--------|------|-----------|-------|
-| TG_BOT_PRO | `C:\Users\katko\Desktop\Programms\TG_BOT_PRO` | Essential 2026-07-19 | Свой AGENTS (ponytail); snippet appended; hooks toolkit |
+| TG_BOT_PRO | `C:\Users\katko\Desktop\Programms\TG_BOT_PRO` | Essential 2026-07-19 | Свой AGENTS ([ponytail](ponytail.md) SRC-017); snippet appended; hooks toolkit |
 | inkavrio_ru | `C:\Users\katko\Desktop\Programms\inkavrio_ru` | Essential 2026-07-19 | Свой `.cursor` + hooks; papercuts events **merged**; snippet appended |
 
 Smoke-only (не consumer): `_toolkit-smoke-test`.

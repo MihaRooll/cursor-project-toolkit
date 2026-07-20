@@ -1,0 +1,6 @@
+{
+  "source": "automation",
+  "candidate_path": ".cursor/automation-memory.md",
+  "repo_truth_paths": ["docs/", "AGENTS.md"],
+  "requires_human_review": true
+}

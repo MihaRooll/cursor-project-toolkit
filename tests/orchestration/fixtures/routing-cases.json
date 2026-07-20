@@ -1,0 +1,74 @@
+{
+  "cases": [
+    {
+      "id": "t0-local",
+      "mode": "doc-token-only",
+      "prompt": "Fix one typo in README only",
+      "doc_must_mention": ["T0", "Composer"]
+    },
+    {
+      "id": "t2-multi",
+      "mode": "doc-token-only",
+      "prompt": "Refactor three modules and update tests",
+      "doc_must_mention": ["T2", "Grok orchestrator"]
+    },
+    {
+      "id": "t3-auth",
+      "mode": "hard-override",
+      "prompt": "Change OAuth token validation",
+      "expect_tier": "T3",
+      "expect_gate": "sol_before_write"
+    },
+    {
+      "id": "t4-production",
+      "mode": "hard-override",
+      "prompt": "production deploy and git push",
+      "expect_tier": "T4",
+      "expect_gate": "human_packet"
+    },
+    {
+      "id": "no-publish-docs",
+      "mode": "negative-hard-override",
+      "prompt": "Fix publish date formatting in README"
+    },
+    {
+      "id": "no-auth-rename",
+      "mode": "negative-hard-override",
+      "prompt": "Refactor auth helper variable names"
+    },
+    {
+      "id": "no-negated-push",
+      "mode": "negative-hard-override",
+      "prompt": "Do not git push yet"
+    },
+    {
+      "id": "no-negated-deploy",
+      "mode": "negative-hard-override",
+      "prompt": "Never production deploy without approval"
+    },
+    {
+      "id": "no-negated-oauth",
+      "mode": "negative-hard-override",
+      "prompt": "Do not change OAuth validation"
+    },
+    {
+      "id": "no-auth-doc-typo",
+      "mode": "negative-hard-override",
+      "prompt": "Fix typo in authentication docs"
+    },
+    {
+      "id": "t4-secrets-over-auth",
+      "mode": "hard-override",
+      "prompt": "Rotate production API secrets and change OAuth validation",
+      "expect_tier": "T4",
+      "expect_gate": "human_packet"
+    },
+    {
+      "id": "t4-payments",
+      "mode": "hard-override",
+      "prompt": "Implement payments billing mutation for refunds",
+      "expect_tier": "T4",
+      "expect_gate": "human_packet"
+    }
+  ]
+}

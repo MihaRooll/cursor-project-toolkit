@@ -1,7 +1,7 @@
 {
   "name": "cursor-project-harness",
-  "version": "0.1.0",
-  "description": "Product AI harness: papercuts hooks, product-core rule, review-papercuts skill. Pair with bootstrap scripts for on-disk shim.",
+  "version": "0.5.0",
+  "description": "Product AI harness: autonomous T0-T4 orchestration, browser-verify, setup-project-environment, doctor, MCP integration skill, model-pinned agents, papercuts hooks, and on-disk bootstrap integration.",
   "author": {
     "name": "MihaRooll"
   },

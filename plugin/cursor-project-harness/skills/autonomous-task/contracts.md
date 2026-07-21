@@ -9,6 +9,10 @@
 
 All artifacts share one stable `contract_id`.
 
+**T0/T1:** concise internal scope (goal, owned paths, verify commands, forbidden) + compact result; formal Task Contract / Plan / Finding / Verification Record **не обязательны**. Main may create a lightweight Verification Record when useful.
+
+**T2+:** formal Task Contract обязателен; Plan, Finding, Verification Record — когда соответствующий stage запущен.
+
 ## 1. Task Contract
 
 ```yaml
@@ -39,7 +43,7 @@ steps:
 sol_approved: true|false|null
 ```
 
-Persist before first T2/T3 product write. Cycle 3 steps cite blocker finding IDs.
+Required before first T3 product write. T2: persist when plan stage runs. Cycle 3 steps cite blocker finding IDs.
 
 ## 3. Principal Packet (T3)
 
@@ -133,9 +137,9 @@ There is no partial completion. Open should-fix/nit may be reported only when al
 ## State transitions
 
 ```text
-CONTRACT -> IMPLEMENT                         T0/T1
-CONTRACT -> PLAN -> IMPLEMENT                 T2
-CONTRACT -> PLAN -> PRINCIPAL -> IMPLEMENT    T3 approve
+SCOPE -> IMPLEMENT -> VERIFY                  T0/T1 Main-direct (formal CONTRACT optional)
+CONTRACT -> [EXPLORE] -> [PLAN] -> IMPLEMENT -> [REVIEW] -> [VERIFY]   T2 conditional stages
+CONTRACT -> PLAN -> PRINCIPAL -> IMPLEMENT -> REVIEW -> VERIFY         T3 approve
 PRINCIPAL -> PLAN -> PRINCIPAL                T3 reject on attempt 1
 PRINCIPAL -> BLOCKED                          T3 reject on attempt 2
 CONTRACT -> HUMAN -> HUMAN_PENDING            T4 awaiting decision
@@ -143,8 +147,8 @@ HUMAN_PENDING -> BLOCKED                      T4 explicit human reject
 HUMAN_PENDING -> IMPLEMENT                    T4 approve + code-bearing task; Main dispatches reviewed T2 pipeline
 HUMAN_PENDING -> EXECUTE -> VERIFY            T4 approve + action-only task; Main executes exact approved action
 HUMAN_PENDING -> IMPLEMENT -> REVIEW -> EXECUTE -> VERIFY  T4 approve + code/action hybrid
-IMPLEMENT -> VERIFY                           T0/T1
-IMPLEMENT -> REVIEW -> VERIFY                 T2/T3/T4-approved-code
+IMPLEMENT -> VERIFY                           T0/T1 Main-direct or T2 when no separate verifier
+IMPLEMENT -> REVIEW -> VERIFY                 T2/T3/T4-approved-code when review stage runs
 REVIEW|VERIFY -> IMPLEMENT                    fixable failure, cycle < 3
 VERIFY -> DONE                                strict pass gate
 otherwise -> BLOCKED|HUMAN_PENDING|FAILED
@@ -184,14 +188,16 @@ notes: compact optional context
 
 | Artifact | Creator | Persistence |
 |----------|---------|-------------|
-| Task Contract | Main | chat/task packet |
-| Plan | operational-orchestrator | `.cursor/plans/<contract_id>.plan.md` |
+| Task Contract | Main (T2+ required; T0/T1 optional) | chat/task packet |
+| Plan | operational-orchestrator (T2 when plan stage runs; T3 required) | `.cursor/plans/<contract_id>.plan.md` |
 | Principal Packet | operational-orchestrator | compact task packet; no raw log |
 | Human Gate Packet | Main | chat until explicit decision |
-| Finding | adversarial-reviewer | review return |
-| Verification Record | verifier; Main for T0 and T4 action-only | verification return |
+| Finding | adversarial-reviewer (T2+ when review stage runs) | review return |
+| Verification Record | verifier when scheduled; Main for T0/T1 direct and T4 action-only | verification return |
 | Final Report | Main | user-facing response |
-| Docs Impact Record | implementer / Main | task return when docs touched |
+| Docs Impact Record | implementer when delegated; Main on T0/T1 direct | task return when docs touched |
+
+Main may write product paths on T0/T1 direct path. When implementer is delegated, implementer is the sole product writer.
 
 ## 9. FailureRecord
 

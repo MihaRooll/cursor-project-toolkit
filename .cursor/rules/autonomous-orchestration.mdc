@@ -7,9 +7,11 @@ alwaysApply: true
 
 - For `change` / `build` / `fix`, apply `autonomous-task` automatically; `/autonomous-task` is the fallback.
 - Main classifies once using `.cursor/skills/autonomous-task/tier-rubric.md` and declares user-facing completion.
-- Evaluate T4 overrides first, then Minimum T3 signs, then choose the lowest T0–T2 tier. T0/T1 skip Grok orchestration; T2/T3 use `operational-orchestrator`; T4 stops with a Human Gate Packet.
-- T3: obtain `principal-arbiter` approval before production writes. T4/destructive/external writes require explicit human approval.
-- Only `implementer` writes owned product paths. Main and orchestrator do not compete with it.
+- T0/T1: Main may research, write owned paths, and verify directly — no required Task Contract, implementer, verifier, or plan.
+- T2: use `operational-orchestrator` when staged work is needed; stages (explore/plan/implement/review/verify) are conditional, not a fixed chain.
+- T3: use `operational-orchestrator`; plan artifact required; `principal-arbiter` approval before production writes; implementer + independent review + verification required (not conditional).
+- T4/destructive/external writes require explicit human approval via Human Gate Packet.
+- When delegated, only `implementer` writes owned product paths; no concurrent writers.
 - Nesting limit: Main -> L1 -> L2. L2 agents never spawn Task/subagents.
 - Findings require path, lines, requirement reference, and reproducible evidence. Model votes are not evidence.
 - Never claim done without all acceptance criteria passing, required commands exiting 0, and no open blocker.

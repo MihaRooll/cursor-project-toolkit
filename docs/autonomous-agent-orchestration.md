@@ -8,12 +8,16 @@
 
 **Применяй:**
 
-1. Main классифицирует по `.cursor/skills/autonomous-task/tier-rubric.md`.
-2. T0/T1 идут напрямую в agent `implementer` (Composer); T2/T3 — через `operational-orchestrator` (Grok); T4 — human packet.
-3. Production writer один. Параллельны только read-only Explore scouts.
-4. Completion = acceptance + deterministic checks + zero blockers.
+1. Main классифицирует по `.cursor/skills/autonomous-task/tier-rubric.md`. **Число файлов само по себе не повышает tier.**
+2. T0/T1: Main direct — research, edit, verify; formal Task Contract/plan/implementer не обязательны.
+3. T1 mechanical multi-file с низким blast/ambiguity/coupling и сильным oracle остаётся T1.
+4. T2/T3 — через `operational-orchestrator` когда нужны staged agents; T2 stages conditional (explore/plan/implement/review/verify).
+5. T3: Sol Principal Packet до product writes; independent review + verification обязательны.
+6. T4: Human Gate Packet.
+7. Production writer один **когда delegated**; Main may write on T0/T1 direct path. Параллельны только read-only Explore scouts.
+8. Completion = acceptance + deterministic checks + zero blockers.
 
-**Не делай:** считать auto-routing, model pin, Sol gate или T4 stop платформенной гарантией; отправлять premium-модели raw logs; путать official `/add-plugin orchestrate` с этим on-disk policy harness.
+**Не делай:** считать auto-routing, model pin, Sol gate или T4 stop платформенной гарантией; отправлять premium-модели raw logs; путать official `/add-plugin orchestrate` с этим on-disk policy harness; повышать tier только из-за file count.
 
 ---
 
@@ -21,11 +25,11 @@
 
 | Tier | Путь | Human |
 |------|------|-------|
-| T0 | Main → `implementer` (Composer) → shell verify | нет |
-| T1 | Main → `implementer` (Composer) → verifier | нет |
-| T2 | Main → Grok L1 → Explore/Composer/reviewer/verifier L2 | нет |
-| T3 | T2 + Sol Principal Packet до product writes | нет, если Sol approve |
-| T4 | Human Gate Packet; без implementer | да |
+| T0 | Main direct: research → edit → shell verify | нет |
+| T1 | Main direct по умолчанию; implementer/verifier опционально | нет |
+| T2 | Main → Grok L1; conditional explore/plan/implement/review/verify L2 | нет |
+| T3 | T2 + Sol Principal Packet до product writes + review + verify | нет, если Sol approve |
+| T4 | Human Gate Packet; без implementer до approval | да |
 
 Main — единственный classifier и user-facing completion owner. L2 agents не делегируют. Composer не запускает reviewer/verifier.
 
@@ -34,9 +38,9 @@ Main — единственный classifier и user-facing completion owner. L2
 | Agent | Model | Permission |
 |-------|-------|------------|
 | operational-orchestrator | `cursor-grok-4.5-high-fast` | пишет только `.cursor/plans/**` |
-| implementer | `composer-2.5-fast` | единственный product writer |
-| adversarial-reviewer | `cursor-grok-4.5-high-fast` | readonly |
-| verifier | `cursor-grok-4.5-high-fast` | shell checks; product source readonly по prompt |
+| implementer | `composer-2.5-fast` | sole product writer **when delegated**; Main writes T0/T1 direct |
+| adversarial-reviewer | `cursor-grok-4.5-high-fast` | readonly; T2 conditional, T3 required |
+| verifier | `cursor-grok-4.5-high-fast` | shell checks; T2+ default when verify needed |
 | principal-arbiter | `gpt-5.6-sol-medium` | readonly, T3 only |
 
 Cursor может заменить configured model из-за plan/admin/Max restrictions. Pin = intent, не абсолютная гарантия. Grok/Composer расходуют включённый Cursor pool; Sol подключается только для T3.
@@ -45,7 +49,7 @@ Cursor может заменить configured model из-за plan/admin/Max res
 
 - UI Plan Mode: пользователь явно попросил сначала только план → человек нажимает Build/approve.
 - T4 change/build/fix: Human Gate Packet в обычном workflow; это не UI Plan Mode.
-- Internal plan artifact: T2/T3 change/build/fix → `.cursor/plans/<contract_id>.plan.md`, workflow продолжает автономно.
+- Internal plan artifact: T3 **обязателен**; T2 **conditional** → `.cursor/plans/<contract_id>.plan.md`.
 - T0/T1 plan artifact не нужен.
 
 ## Evidence protocol
@@ -66,7 +70,7 @@ Done строго:
 - каждый acceptance criterion = pass;
 - каждый required command exit code = 0;
 - open blockers = 0;
-- Main relays Verification Record и создаёт короткий Final Report; VR создаёт verifier, кроме T0/T4 action-only.
+- Main relays Verification Record и создаёт короткий Final Report; VR создаёт verifier when scheduled, иначе Main (T0/T1 direct, T4 action-only).
 
 Полные schemas: [contracts.md](../.cursor/skills/autonomous-task/contracts.md).
 

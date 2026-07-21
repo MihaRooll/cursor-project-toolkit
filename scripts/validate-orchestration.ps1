@@ -67,9 +67,28 @@ function Test-AgentContract($Frontmatter, $Expected) {
         $Frontmatter["name"] -eq [string]$Expected.name -and
         $Frontmatter["model"] -eq [string]$Expected.model -and
         $Frontmatter["readonly"] -eq [string]$Expected.readonly -and
-        $Frontmatter["is_background"] -eq "false" -and
-        $Frontmatter["description"] -match "Always use"
+        $Frontmatter["is_background"] -eq "false"
     )
+}
+
+function Test-AgentDescription($Frontmatter) {
+    $name = [string]$Frontmatter["name"]
+    $desc = [string]$Frontmatter["description"]
+    if ([string]::IsNullOrWhiteSpace($desc)) { return $false }
+
+    if ($name -eq "principal-arbiter") {
+        return ($desc -match "Always use")
+    }
+
+    $forbidden = @(
+        "Always use to implement",
+        "Always use for multi-file",
+        "Always use after T1"
+    )
+    foreach ($pattern in $forbidden) {
+        if ($desc -match [regex]::Escape($pattern)) { return $false }
+    }
+    return ($desc.Length -ge 20)
 }
 
 function Test-SkillAutoInvocable($Frontmatter, [string]$Text) {
@@ -110,7 +129,7 @@ foreach ($agent in $manifest.agents) {
             Assert-True ($fm["model"] -eq [string]$agent.model) "$($agent.file) model"
             Assert-True ($fm["readonly"] -eq [string]$agent.readonly) "$($agent.file) readonly"
             Assert-True ($fm["is_background"] -eq "false") "$($agent.file) foreground"
-            Assert-True ($fm["description"] -match "Always use") "$($agent.file) proactive description"
+            Assert-True (Test-AgentDescription $fm) "$($agent.file) when-to-use description"
             Assert-True (Test-AgentContract $fm $agent) "$($agent.file) complete contract"
         } catch {
             Fail "$($agent.file) frontmatter: $($_.Exception.Message)"
@@ -314,6 +333,7 @@ Assert-True ($mustAbsentText.Contains('"docs\docs-map.json"')) "smoke mustAbsent
 Assert-True ($smokeText -match '(?s)foreach\s*\(\$rel\s+in\s+\$mustAbsent\).*?Test-Path') "smoke enforces mustAbsent paths"
 
 $docPath = Join-Path $Root "docs\autonomous-agent-orchestration.md"
+$docText = if (Test-Path $docPath) { Read-Text $docPath } else { "" }
 Assert-True (Test-Path $docPath) "orchestration doc exists"
 Test-Contains (Join-Path $Root "docs\living-documentation.md") "## For agents" "living-documentation For agents"
 Test-Contains (Join-Path $Root "docs\memory-and-obsidian.md") "## For agents" "memory-and-obsidian For agents"
@@ -446,6 +466,53 @@ function Resolve-HardOverride([string]$Prompt, $Rules) {
     return $best
 }
 
+function Get-PolicySourceText([string]$SourceKey) {
+    switch ($SourceKey) {
+        "tier-rubric" { return $rubric }
+        "skill" {
+            if (Test-Path $skillPath) { return (Read-Text $skillPath) }
+            return ""
+        }
+        "contracts" {
+            if (Test-Path $contractsPath) { return (Read-Text $contractsPath) }
+            return ""
+        }
+        "rule" {
+            if (Test-Path $rulePath) { return (Read-Text $rulePath) }
+            return ""
+        }
+        "doc" { return $docText }
+        default { return "" }
+    }
+}
+
+function Test-StageExpectations($Case) {
+    $combined = ""
+    foreach ($src in @($Case.doc_sources)) {
+        $combined += (Get-PolicySourceText ([string]$src))
+        $combined += "`n"
+    }
+    if ([string]$Case.expect_tier) {
+        Assert-True ($combined -match [regex]::Escape([string]$Case.expect_tier)) "routing $($Case.id) tier token $($Case.expect_tier)"
+    }
+    $matchedAny = $false
+    foreach ($pattern in @($Case.require_any)) {
+        if ($combined -match [string]$pattern) {
+            $matchedAny = $true
+            break
+        }
+    }
+    Assert-True $matchedAny "routing $($Case.id) require_any policy match"
+    foreach ($pattern in @($Case.forbid_any)) {
+        Assert-True (-not ($combined -match [string]$pattern)) "routing $($Case.id) forbid_any '$pattern'"
+    }
+    if ($Case.PSObject.Properties.Name -contains "expect_stages") {
+        foreach ($stage in @($Case.expect_stages)) {
+            Assert-True ($combined -match [regex]::Escape([string]$stage)) "routing $($Case.id) stage $stage"
+        }
+    }
+}
+
 foreach ($case in $cases.cases) {
     if ($case.mode -eq "hard-override") {
         $match = Resolve-HardOverride ([string]$case.prompt) $overrides.rules
@@ -457,6 +524,8 @@ foreach ($case in $cases.cases) {
     } elseif ($case.mode -eq "negative-hard-override") {
         $match = Resolve-HardOverride ([string]$case.prompt) $overrides.rules
         Assert-True ($null -eq $match) "routing $($case.id) avoids hard override"
+    } elseif ($case.mode -eq "stage-expectations") {
+        Test-StageExpectations $case
     } else {
         if (Test-Path $rubricPath) {
             foreach ($token in $case.doc_must_mention) {
@@ -474,7 +543,7 @@ if ($SelfTest) {
         New-Item -ItemType Directory -Force -Path $temp | Out-Null
         $badAgent = Join-Path $temp "implementer.md"
         Set-Content -LiteralPath $badAgent -Encoding UTF8 -Value @(
-            "---", "name: implementer", "description: Always use bad", "model: wrong-model",
+            "---", "name: implementer", "description: Always use to implement bad", "model: wrong-model",
             "readonly: true", "is_background: false", "---", "bad"
         )
         $badFm = Get-Frontmatter $badAgent
@@ -484,6 +553,7 @@ if ($SelfTest) {
             readonly = "false"
         }
         Assert-True (-not (Test-AgentContract $badFm $expectedAgent)) "self-test rejects bad agent contract"
+        Assert-True (-not (Test-AgentDescription $badFm)) "self-test rejects Always-use implementer description"
 
         $badSkill = Join-Path $temp "SKILL.md"
         Set-Content -LiteralPath $badSkill -Encoding UTF8 -Value @(

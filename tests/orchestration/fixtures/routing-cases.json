@@ -1,16 +1,130 @@
 {
   "cases": [
     {
-      "id": "t0-local",
-      "mode": "doc-token-only",
+      "id": "t0-direct",
+      "mode": "stage-expectations",
       "prompt": "Fix one typo in README only",
-      "doc_must_mention": ["T0", "Composer"]
+      "expect_tier": "T0",
+      "expect_path": "main_direct",
+      "require_any": [
+        "Main direct",
+        "Main-direct",
+        "Main: research",
+        "без implementer",
+        "без.*implementer",
+        "formal Task Contract не обязателен",
+        "formal Task Contract.*не обязат"
+      ],
+      "forbid_any": [
+        "one local file",
+        "multi-file.*T2",
+        "Always use to implement"
+      ],
+      "doc_sources": ["tier-rubric", "skill", "contracts", "rule", "doc"]
     },
     {
-      "id": "t2-multi",
-      "mode": "doc-token-only",
-      "prompt": "Refactor three modules and update tests",
-      "doc_must_mention": ["T2", "Grok orchestrator"]
+      "id": "t1-strong-oracle-direct",
+      "mode": "stage-expectations",
+      "prompt": "Fix failing unit test with clear repro",
+      "expect_tier": "T1",
+      "expect_path": "main_direct",
+      "require_any": [
+        "Main direct",
+        "Main-direct",
+        "implementer.*опционально",
+        "implementer и/или verifier опционально",
+        "strong oracle",
+        "сильный oracle"
+      ],
+      "forbid_any": [
+        "Task Contract.*обязат.*T0",
+        "multi-file.*T2"
+      ],
+      "doc_sources": ["tier-rubric", "skill", "doc"]
+    },
+    {
+      "id": "t1-mechanical-multifile",
+      "mode": "stage-expectations",
+      "prompt": "Rename symbol across three files with tests",
+      "expect_tier": "T1",
+      "expect_path": "main_direct",
+      "require_any": [
+        "mechanical bounded multi-file",
+        "mechanical multi-file",
+        "Число файлов",
+        "file count",
+        "не повышает tier",
+        "остаётся T1",
+        "may stay T1"
+      ],
+      "forbid_any": [
+        "multi-file.*T2",
+        "Multi-file/module/refactor"
+      ],
+      "doc_sources": ["tier-rubric", "skill", "doc"]
+    },
+    {
+      "id": "t2-weak-oracle-conditional",
+      "mode": "stage-expectations",
+      "prompt": "Refactor module with flaky integration tests",
+      "expect_tier": "T2",
+      "expect_path": "orchestrator_conditional",
+      "require_any": [
+        "conditional",
+        "stages conditional",
+        "не фиксированная цепочка",
+        "weak oracle",
+        "operational-orchestrator"
+      ],
+      "forbid_any": [
+        "Always use for multi-file",
+        "фиксированная цепочка"
+      ],
+      "doc_sources": ["tier-rubric", "skill", "contracts", "rule", "doc"]
+    },
+    {
+      "id": "t2-full-stages",
+      "mode": "stage-expectations",
+      "prompt": "Cross-module refactor with ambiguous API boundaries",
+      "expect_tier": "T2",
+      "expect_path": "orchestrator_conditional",
+      "require_any": [
+        "explore",
+        "plan",
+        "implementer",
+        "adversarial-reviewer",
+        "verifier",
+        "conditional"
+      ],
+      "forbid_any": [
+        "Always use for multi-file"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "t3-principal-stages",
+      "mode": "stage-expectations",
+      "prompt": "Change OAuth token validation across auth module",
+      "expect_tier": "T3",
+      "expect_path": "orchestrator_required_stages",
+      "require_any": [
+        "plan artifact required",
+        "T3 plan required",
+        "plan обязателен",
+        "principal-arbiter",
+        "PRINCIPAL",
+        "CONTRACT → PLAN → PRINCIPAL",
+        "adversarial-reviewer",
+        "independent review \\+ verification",
+        "verification required \\(not conditional\\)",
+        "T3 — required chain",
+        "required chain"
+      ],
+      "forbid_any": [
+        "T2/T3: use.*conditional",
+        "T2/T3.*are conditional, not a fixed chain"
+      ],
+      "doc_sources": ["tier-rubric", "skill", "contracts", "rule", "doc"]
     },
     {
       "id": "t3-auth",

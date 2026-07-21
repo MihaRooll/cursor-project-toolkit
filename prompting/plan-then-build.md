@@ -4,16 +4,16 @@
 
 ## For agents
 
-**Когда:** нетривиальная фича; >2–3 файлов; неочевидные trade-offs; пользователь не дал точный diff-plan.
+**Когда:** material ambiguity, coupling, blast radius, weak oracle, или неочевидные trade-offs — **не** автоматически из-за числа файлов. Смотри `.cursor/skills/autonomous-task/tier-rubric.md`.
 
 **Применяй:**
 1. Research (поиск в репо) → уточняющие вопросы при дырах
-2. План: цели, файлы, шаги, риски, out-of-scope
+2. План: цели, файлы, шаги, риски, out-of-scope — **T2 conditional; T3 required; T0/T1 no plan**
 3. Если пользователь просил только plan — жди approval (UI Plan Mode / явный OK)
-4. Если пользователь просил change/build/fix: `autonomous-task` ведёт T0/T1 без plan artifact, а T2/T3 — через internal reviewed plan без routine approval; T4 ждёт человека
+4. Если пользователь просил change/build/fix: `autonomous-task` ведёт T0/T1 Main-direct без plan artifact; T2 — internal plan when plan stage runs; T3 — plan required; T4 ждёт человека
 5. Если мимо — revert/уточнить план, не латать длинной перепиской
 
-**Не делай:** писать код при materially ambiguous scope; путать workspace `.cursor/plans/` artifact с UI Plan Mode; «план» без путей файлов.
+**Не делай:** писать код при materially ambiguous scope; путать workspace `.cursor/plans/` artifact с UI Plan Mode; «план» без путей файлов; считать >2–3 файлов автоматическим триггером plan/T2.
 
 ---
 
@@ -21,12 +21,12 @@
 
 | Ситуация | План? |
 |----------|-------|
-| Однотипная правка 1 файла | Нет |
+| T0/T1 однозначный diff, сильный oracle (в т.ч. mechanical multi-file T1) | Нет |
 | Баг с ясным repro + местом | Опционально короткий |
-| Новая фича / рефактор / API | Да |
+| Material ambiguity / weak oracle / high coupling | Да (T2+) |
 | Неясные требования | Да + вопросы |
 
-Для автономного change/build/fix план T2/T3 согласуется внутренним review pipeline. Approval человека нужен для T4/destructive/external writes или явного запроса «сначала план».
+Для автономного change/build/fix план T2 conditional, T3 required. Approval человека нужен для T4/destructive/external writes или явного запроса «сначала план».
 
 ---
 
@@ -45,6 +45,6 @@
 ## Чеклист
 
 - [ ] Вопросы заданы (или scope ясен)
-- [ ] План с путями файлов
+- [ ] План с путями файлов (T2+ when plan stage runs)
 - [ ] Approval получен для UI Plan Mode; T4 использует отдельный Human Gate Packet; иначе internal plan reviewed
 - [ ] Реализация = план; отклонения зафиксированы

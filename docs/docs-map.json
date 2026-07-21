@@ -77,6 +77,13 @@
       "status": "active",
       "owners": ["team"],
       "tags": ["recovery", "orchestration", "wave-r0a", "experimental"]
+    },
+    {
+      "path": "docs/autonomous-agent-orchestration.md",
+      "title": "Autonomous agent orchestration",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["orchestration"]
     }
   ],
   "rules": {

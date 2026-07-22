@@ -55,7 +55,7 @@ my-new-app/             (продукт + скопированный harness)
 
 Шаблон rule: `templates/project-rules/product-core.mdc`.
 
-Автономный change/build/fix routing: [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md). Living docs: [living-documentation.md](living-documentation.md). T0–T3 продолжают без routine approval; T4/destructive/external writes human-gated.
+Автономный change/build/fix routing: [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) (delegation-first: Main control plane, Composer product writes T0–T3). Living docs: [living-documentation.md](living-documentation.md). T0–T3 продолжают без routine approval; T4/destructive/external writes human-gated.
 
 ---
 

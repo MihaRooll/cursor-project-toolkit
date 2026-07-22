@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cursor-project-toolkit.local/tests/orchestration/evidence-schema.json",
+  "title": "Orchestration shadow evidence row",
+  "description": "Toolkit-only shadow evidence for delegation-first routing eval. Not shipped in Essential bootstrap. No strict-hook auto-promotion.",
+  "type": "object",
+  "required": [
+    "tier",
+    "wall_clock",
+    "model_role_calls",
+    "first_verify_pass",
+    "cycles",
+    "main_product_writes",
+    "false_escalation"
+  ],
+  "properties": {
+    "contract_id": {
+      "type": "string",
+      "description": "Stable task identifier"
+    },
+    "consumer_repo": {
+      "type": "string",
+      "description": "Bootstrapped product repo name (≥2 distinct repos in corpus)"
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["T0", "T1", "T2", "T3", "T4"]
+    },
+    "wall_clock": {
+      "type": "number",
+      "minimum": 0,
+      "description": "End-to-end seconds for bounded workflow"
+    },
+    "model_role_calls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "model"],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["main", "implementer", "operational-orchestrator", "adversarial-reviewer", "verifier", "principal-arbiter"]
+          },
+          "model": { "type": "string" },
+          "count": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "description": "Ordered or summarized role/model invocations"
+    },
+    "first_verify_pass": {
+      "type": "boolean",
+      "description": "True if first scheduled verification passed without rework cycle"
+    },
+    "cycles": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "Implement/review/verify rework cycles used"
+    },
+    "main_product_writes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count of Main product-path writes (expect 0 for T0-T3)"
+    },
+    "false_escalation": {
+      "type": "boolean",
+      "description": "True if tier was raised without rubric evidence"
+    }
+  },
+  "additionalProperties": false
+}

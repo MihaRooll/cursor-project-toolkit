@@ -1,65 +1,75 @@
 {
   "cases": [
     {
-      "id": "t0-direct",
+      "id": "t0-composer-targeted",
       "mode": "stage-expectations",
       "prompt": "Fix one typo in README only",
       "expect_tier": "T0",
-      "expect_path": "main_direct",
+      "expect_path": "composer_implementer",
       "require_any": [
-        "Main direct",
-        "Main-direct",
-        "Main: research",
-        "без implementer",
-        "без.*implementer",
-        "formal Task Contract не обязателен",
-        "formal Task Contract.*не обязат"
+        "Composer.*implementer",
+        "Composer `implementer`",
+        "targeted deterministic checks",
+        "targeted checks",
+        "WORK_PACKET → IMPLEMENT → VERIFY\\(targeted\\)",
+        "no separate verifier",
+        "Main never product-writes"
       ],
       "forbid_any": [
-        "one local file",
-        "multi-file.*T2",
-        "Always use to implement"
+        "Main direct",
+        "Main-direct",
+        "Main may research, write owned paths",
+        "Main may write",
+        "T0.*plan artifact required",
+        "T0.*Grok `verifier`",
+        "T0.*principal-arbiter",
+        "principal-arbiter.*T0",
+        "operational-orchestrator.*T0"
       ],
       "doc_sources": ["tier-rubric", "skill", "contracts", "rule", "doc"]
     },
     {
-      "id": "t1-strong-oracle-direct",
+      "id": "t1-composer-grok-verifier",
       "mode": "stage-expectations",
       "prompt": "Fix failing unit test with clear repro",
       "expect_tier": "T1",
-      "expect_path": "main_direct",
+      "expect_path": "composer_grok_verifier",
       "require_any": [
+        "Composer.*implementer",
+        "Grok `verifier`",
+        "Grok verifier",
+        "VERIFY\\(verifier\\)",
+        "no plan",
+        "plan artifact не нужен",
+        "Main never product-writes"
+      ],
+      "forbid_any": [
         "Main direct",
         "Main-direct",
         "implementer.*опционально",
-        "implementer и/или verifier опционально",
-        "strong oracle",
-        "сильный oracle"
+        "verifier опционально"
       ],
-      "forbid_any": [
-        "Task Contract.*обязат.*T0",
-        "multi-file.*T2"
-      ],
-      "doc_sources": ["tier-rubric", "skill", "doc"]
+      "doc_sources": ["tier-rubric", "skill", "contracts", "rule", "doc"]
     },
     {
       "id": "t1-mechanical-multifile",
       "mode": "stage-expectations",
       "prompt": "Rename symbol across three files with tests",
       "expect_tier": "T1",
-      "expect_path": "main_direct",
+      "expect_path": "composer_grok_verifier",
       "require_any": [
         "mechanical bounded multi-file",
         "mechanical multi-file",
         "Число файлов",
         "file count",
         "не повышает tier",
-        "остаётся T1",
-        "may stay T1"
+        "may stay T1",
+        "остаётся T1"
       ],
       "forbid_any": [
         "multi-file.*T2",
-        "Multi-file/module/refactor"
+        "Multi-file/module/refactor",
+        "file count.*T2"
       ],
       "doc_sources": ["tier-rubric", "skill", "doc"]
     },
@@ -73,12 +83,15 @@
         "conditional",
         "stages conditional",
         "не фиксированная цепочка",
+        "Stages не фиксированная",
         "weak oracle",
         "operational-orchestrator"
       ],
       "forbid_any": [
         "Always use for multi-file",
-        "фиксированная цепочка"
+        "(?<!не )фиксированная цепочка",
+        "mandatory T2 stage chain",
+        "обязательн.*цепочк.*T2"
       ],
       "doc_sources": ["tier-rubric", "skill", "contracts", "rule", "doc"]
     },
@@ -97,7 +110,8 @@
         "conditional"
       ],
       "forbid_any": [
-        "Always use for multi-file"
+        "Always use for multi-file",
+        "mandatory T2 stage chain"
       ],
       "doc_sources": ["skill", "contracts", "doc"]
     },
@@ -115,9 +129,8 @@
         "PRINCIPAL",
         "CONTRACT → PLAN → PRINCIPAL",
         "adversarial-reviewer",
-        "independent review \\+ verification",
-        "verification required \\(not conditional\\)",
-        "T3 — required chain",
+        "independent review",
+        "verification required",
         "required chain"
       ],
       "forbid_any": [
@@ -183,6 +196,266 @@
       "prompt": "Implement payments billing mutation for refunds",
       "expect_tier": "T4",
       "expect_gate": "human_packet"
+    },
+    {
+      "id": "neg-main-product-writes",
+      "mode": "stage-expectations",
+      "prompt": "Any T0-T3 task",
+      "require_any": [
+        "Main never product-writes",
+        "Main never product-writes T0",
+        "never product-writes T0–T3",
+        "Main never writes owned product paths"
+      ],
+      "forbid_any": [
+        "Main may write product paths",
+        "Main may research, write owned paths",
+        "Main direct.*edit",
+        "Main writes T0"
+      ],
+      "doc_sources": ["skill", "contracts", "rule", "doc"]
+    },
+    {
+      "id": "neg-premium-misuse-t0-t2",
+      "mode": "stage-expectations",
+      "prompt": "T0-T2 task",
+      "require_any": [
+        "T3-only",
+        "T3 only",
+        "never use for T0-T2",
+        "Не вызывай Sol"
+      ],
+      "forbid_any": [
+        "principal-arbiter.*T0",
+        "principal-arbiter.*T1",
+        "principal-arbiter.*T2",
+        "Sol approve.*T0",
+        "Sol approve.*T1",
+        "Sol approve.*T2"
+      ],
+      "doc_sources": ["skill", "contracts", "rule", "doc"]
+    },
+    {
+      "id": "neg-parallel-writers",
+      "mode": "stage-expectations",
+      "prompt": "Delegated task",
+      "require_any": [
+        "one product writer",
+        "sole product writer",
+        "no concurrent writers",
+        "only `implementer` writes",
+        "Никогда не запускай parallel writers",
+        "Production writer один"
+      ],
+      "forbid_any": [
+        "(?i)allow parallel writers",
+        "(?i)enable parallel writers",
+        "Main and implementer both write",
+        "(?i)multiple product writers"
+      ],
+      "doc_sources": ["skill", "contracts", "rule", "doc"]
+    },
+    {
+      "id": "neg-t0-t1-plan-overhead",
+      "mode": "stage-expectations",
+      "prompt": "Simple T0 T1 fix",
+      "require_any": [
+        "T0/T1 plan artifact не нужен",
+        "plan artifact не нужен",
+        "no plan",
+        "formal Task Contract.*не обязат"
+      ],
+      "forbid_any": [
+        "T0.*plan required",
+        "T1.*plan required",
+        "T0.*plan artifact required",
+        "T1.*plan artifact required"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "neg-root-evidence-logs",
+      "mode": "stage-expectations",
+      "prompt": "Verification stage",
+      "require_any": [
+        "_v_\\*\\.txt",
+        "temp evidence in product root",
+        "must not create.*_v_",
+        "Не создавай.*_v_"
+      ],
+      "forbid_any": [
+        "create _v_.* in product root",
+        "write verification logs to repo root"
+      ],
+      "doc_sources": ["skill", "contracts", "rule", "doc"]
+    },
+    {
+      "id": "context-budget-work-scope",
+      "mode": "stage-expectations",
+      "prompt": "Work/Scope Packet cap",
+      "require_any": [
+        "Work/Scope Packet.*≤2k"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "context-budget-l2-spawn",
+      "mode": "stage-expectations",
+      "prompt": "L2 Spawn Packet cap",
+      "require_any": [
+        "L2 Spawn Packet.*≤8k",
+        "L2 Spawn.*≤8k"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "context-budget-scout-return",
+      "mode": "stage-expectations",
+      "prompt": "Scout return cap",
+      "require_any": [
+        "Scout return.*≤4k",
+        "Scout.*≤4k"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "context-budget-final-report",
+      "mode": "stage-expectations",
+      "prompt": "Final Report cap",
+      "require_any": [
+        "Final Report.*≤1\\.5k"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "context-packet-exclude-raw-logs",
+      "mode": "stage-expectations",
+      "prompt": "Packet exclusion raw logs",
+      "require_any": [
+        "Forbidden in packets.*raw logs",
+        "Запрещено в packets.*raw logs"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "context-packet-exclude-full-files",
+      "mode": "stage-expectations",
+      "prompt": "Packet exclusion full files",
+      "require_any": [
+        "Forbidden in packets.*full files",
+        "Запрещено в packets.*full files"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "context-packet-exclude-chat-history",
+      "mode": "stage-expectations",
+      "prompt": "Packet exclusion chat history",
+      "require_any": [
+        "Forbidden in packets.*chat history",
+        "Запрещено в packets.*chat history"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "context-packet-exclude-tool-json",
+      "mode": "stage-expectations",
+      "prompt": "Packet exclusion tool JSON dumps",
+      "require_any": [
+        "Forbidden in packets.*tool JSON dumps",
+        "Запрещено в packets.*tool JSON dumps"
+      ],
+      "doc_sources": ["skill", "contracts", "doc"]
+    },
+    {
+      "id": "pin-implementer-composer",
+      "mode": "stage-expectations",
+      "prompt": "Implementer model pin",
+      "require_any": [
+        "composer-2.5-fast"
+      ],
+      "doc_sources": ["skill", "doc"]
+    },
+    {
+      "id": "pin-grok-roles",
+      "mode": "stage-expectations",
+      "prompt": "Grok role model pins",
+      "require_any": [
+        "cursor-grok-4.5-high-fast"
+      ],
+      "doc_sources": ["skill", "doc"]
+    },
+    {
+      "id": "pin-principal-sol",
+      "mode": "stage-expectations",
+      "prompt": "Principal model pin",
+      "require_any": [
+        "gpt-5.6-sol-medium"
+      ],
+      "doc_sources": ["skill", "doc"]
+    },
+    {
+      "id": "pin-best-effort-wording",
+      "mode": "stage-expectations",
+      "prompt": "Model pin best-effort intent",
+      "require_any": [
+        "best-effort",
+        "Pin = intent"
+      ],
+      "doc_sources": ["skill", "doc"]
+    },
+    {
+      "id": "pin-not-platform-enforced",
+      "mode": "stage-expectations",
+      "prompt": "Model pins not platform-enforced",
+      "require_any": [
+        "не platform-enforced",
+        "not platform-enforced",
+        "не платформенн"
+      ],
+      "forbid_any": [
+        "platform-enforced routing",
+        "guaranteed model pin",
+        "hard-block IDE edits"
+      ],
+      "doc_sources": ["skill", "doc"]
+    },
+    {
+      "id": "t4-invariants-preserved",
+      "mode": "stage-expectations",
+      "prompt": "T4 gates",
+      "require_any": [
+        "Human Gate Packet",
+        "blockers_open=0",
+        "acceptance criteria passing",
+        "requirement_ref",
+        "reproducible evidence",
+        "path.*lines.*requirement"
+      ],
+      "forbid_any": [
+        "weaken T4 Human Gate",
+        "skip human approval T4",
+        "T4 without Human Gate"
+      ],
+      "doc_sources": ["skill", "contracts", "rule", "doc"]
+    },
+    {
+      "id": "shadow-evidence-toolkit-only",
+      "mode": "stage-expectations",
+      "prompt": "Shadow evidence",
+      "require_any": [
+        "toolkit-only",
+        "no strict-hook auto-promotion",
+        "never auto-enable",
+        "orchestration-evidence",
+        "evidence-schema"
+      ],
+      "forbid_any": [
+        "strict-hook auto-promotion from orchestration",
+        "auto-enable strict hooks from shadow evidence",
+        "Essential bootstrap.*evidence-schema"
+      ],
+      "doc_sources": ["doc", "contracts", "skill"]
     }
   ]
 }

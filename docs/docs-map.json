@@ -83,7 +83,14 @@
       "title": "Autonomous agent orchestration",
       "status": "active",
       "owners": ["team"],
-      "tags": ["orchestration"]
+      "tags": ["orchestration", "wave5", "delegation-first"]
+    },
+    {
+      "path": "docs/orchestration-evidence.md",
+      "title": "Orchestration shadow evidence",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["orchestration", "wave5", "toolkit-only", "evidence"]
     }
   ],
   "rules": {

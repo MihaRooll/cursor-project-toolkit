@@ -12,7 +12,7 @@
 
 ## phase
 
-wave4b — living-eval + strict hook templates + review1 polish
+wave5 — delegation-first orchestration (Composer sole writer T0–T3; Grok orch/verify; Sol T3-only)
 
 ## milestones
 
@@ -23,6 +23,7 @@ wave4b — living-eval + strict hook templates + review1 polish
 | Wave 3 environment/doctor/stage | done | browser-verify, setup skill, V-SESSION |
 | Wave 4 strict hooks + living-eval | done | Full-only templates; Essential mustAbsent evidence skill |
 | Wave 4b portability + validators | done | smoke-portability, manifest-driven plugin version |
+| Wave 5 delegation-first | in_progress | Main never product-writes T0–T3; shadow evidence schema |
 | Review1 fix (session/doctor/MCP/tests) | in_progress | capability-stack-review1-fix |
 | Marketplace plugin publish | pending | human gate |
 

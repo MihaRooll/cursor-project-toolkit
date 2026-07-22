@@ -7,12 +7,14 @@ alwaysApply: true
 
 - For `change` / `build` / `fix`, apply `autonomous-task` automatically; `/autonomous-task` is the fallback.
 - Main classifies once using `.cursor/skills/autonomous-task/tier-rubric.md` and declares user-facing completion.
-- T0/T1: Main may research, write owned paths, and verify directly — no required Task Contract, implementer, verifier, or plan.
-- T2: use `operational-orchestrator` when staged work is needed; stages (explore/plan/implement/review/verify) are conditional, not a fixed chain.
-- T3: use `operational-orchestrator`; plan artifact required; `principal-arbiter` approval before production writes; implementer + independent review + verification required (not conditional).
+- T0: Main compact Work Packet → Composer `implementer` → targeted deterministic checks; no plan/Grok review/Sol principal; Main never product-writes T0–T3.
+- T1: Main Work Packet → Composer → Grok `verifier`; no plan; mechanical bounded multi-file may stay T1.
+- T2: Main contract → Grok `operational-orchestrator` conditional explore/plan/review/verify → Composer sole writer.
+- T3: Main architecture brief → Grok required plan → Sol `principal-arbiter` pre-write → Composer → Grok review + verify.
 - T4/destructive/external writes require explicit human approval via Human Gate Packet.
 - When delegated, only `implementer` writes owned product paths; no concurrent writers.
 - Nesting limit: Main -> L1 -> L2. L2 agents never spawn Task/subagents.
 - Findings require path, lines, requirement reference, and reproducible evidence. Model votes are not evidence.
 - Never claim done without all acceptance criteria passing, required commands exiting 0, and no open blocker.
+- Verifier/reviewer must not create `_v_*.txt` or temp evidence in product root.
 - Routing, model pins, and policy gates are best-effort in normal Cursor chat; do not describe them as platform-enforced.

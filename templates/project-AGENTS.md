@@ -12,9 +12,11 @@ This project was bootstrapped with **cursor-project-toolkit** — an AI-agent ha
 ## Autonomous work
 
 - One change/build/fix request should route through `.cursor/skills/autonomous-task` automatically.
-- T0/T1: Main direct — research/edit/verify; mechanical multi-file may stay T1; no plan artifact required.
+- T0: Main Work Packet → Composer implementer → targeted checks; no plan artifact.
+- T1: Main Work Packet → Composer → Grok verifier; mechanical multi-file may stay T1.
 - T2: conditional stages (explore/plan/implement/review/verify) via orchestrator when risk/oracle warrants it — not file count.
 - T3: reviewed plan + principal approval before writes + independent review + verification.
+- Main never product-writes T0–T3.
 - T4, destructive actions, external writes, secrets, deploy/publish/push: stop with a compact Human Gate Packet.
 - Never claim done without acceptance criteria + deterministic checks + no open blocker.
 

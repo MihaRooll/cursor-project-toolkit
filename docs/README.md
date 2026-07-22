@@ -66,7 +66,8 @@
 | [mattpocock-skills.md](mattpocock-skills.md) | Matt Pocock skills | SRC-020 | Grill/CONTEXT/TDD/tickets; composable; selective, не Essential |
 | [reme-agent-memory.md](reme-agent-memory.md) | ReMe agent memory | SRC-021 | Markdown memory layer; CLI/MCP; vs continual-learning; opt-in |
 | [security-in-session-cursor-vs-claude.md](security-in-session-cursor-vs-claude.md) | In-session security: Claude vs Cursor | SRC-022 | Bugbot `/review-security`, thermos, Semgrep hooks; нет 1:1 plugin |
-| [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Autonomous T0–T4 routing: Grok/Composer/Sol | SRC-023/024 | change/build/fix; T0/T1 Main-direct; mechanical multi-file may stay T1; T2 conditional stages; T3/T4 gates |
+| [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Delegation-first T0–T4: Main control plane, Composer writes, Grok orch/verify | SRC-023/024 | change/build/fix; Work Packet; no Main product writes T0–T3 |
+| [orchestration-evidence.md](orchestration-evidence.md) | Shadow evidence schema (toolkit-only) | — | Wave eval 10–20 tasks; no strict-hook auto-promotion |
 | [recovery-escalation.md](recovery-escalation.md) | Recovery R0a shadow/manual protocol | SRC-031 | Explicit `/recovery-escalation`; stuck predicates; promotion gate R0b |
 | [wsl-windows-stability.md](wsl-windows-stability.md) | Стабильный WSL2 на Windows | — | .wslconfig, когда использовать WSL |
 | [cursor-official-index.md](cursor-official-index.md) | Карта всего official Cursor | SRC-004…009 | Старт: найти plugin/docs/blog |

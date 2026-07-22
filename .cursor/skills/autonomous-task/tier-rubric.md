@@ -4,10 +4,10 @@
 
 | Tier | Признаки | Pipeline |
 |------|----------|----------|
-| T0 | Локальный обратимый однозначный diff, сильный deterministic oracle | Main: research → edit → verify напрямую |
-| T1 | Обычный bug/small feature **или** mechanical bounded multi-file (низкий blast/ambiguity/coupling, обратимость, сильный oracle) | Main direct по умолчанию; implementer/verifier опционально |
-| T2 | Material ambiguity **или** coupling **или** blast radius **или** weak oracle — не file count | operational-orchestrator; stages conditional |
-| T3 | Security/auth/public API/protocol/concurrency/архитектурная развилка | T2 + Sol pre-write + independent review + verify |
+| T0 | Локальный обратимый однозначный diff, сильный deterministic oracle | Main Work Packet → Composer implementer → targeted checks |
+| T1 | Обычный bug/small feature **или** mechanical bounded multi-file (низкий blast/ambiguity/coupling, обратимость, сильный oracle) | Main Work Packet → Composer implementer → Grok verifier |
+| T2 | Material ambiguity **или** coupling **или** blast radius **или** weak oracle — не file count | Main contract → Grok operational-orchestrator; stages conditional → Composer sole writer |
+| T3 | Security/auth/public API/protocol/concurrency/архитектурная развилка | T2 chain + Sol pre-write + independent review + verify |
 | T4 | Destructive/external/irreversible/high-impact human decision | Human gate |
 
 ## Score (tie-breaker)
@@ -43,4 +43,5 @@ Score только различает T0–T2. T3 требует признак�
 - Не повышай tier только потому, что доступно много дешёвых токенов.
 - Не повышай tier только из-за числа файлов — mechanical multi-file с низким риском и сильным oracle остаётся T1.
 - Не вызывай Sol «для уверенности» на T0–T2.
+- Main never product-writes T0–T3; Composer implementer — sole product writer.
 - Если требования materially ambiguous, Main задаёт один focused question; ambiguity не маскируется swarm’ом.

@@ -10,6 +10,7 @@
 - Run living-eval validator: `scripts/validate-living-evals.ps1 -SelfTest` → `EVAL_VALIDATE_PASS`
 - Strict templates live in `templates/hooks/` — **Full/opt-in only**; never merge `hooks.strict.example.json` into active `.cursor/hooks.json` or plugin
 - Promotion requires `/review-harness-evidence` human signoff — **never auto-enable** strict hooks
+- Orchestration shadow evidence (`docs/orchestration-evidence.md`, `tests/orchestration/evidence-schema.json`) is **toolkit-only** — also **never auto-promotes** strict hooks
 - Essential bootstrap **excludes** `templates/hooks`, `validate-living-evals.ps1`, `tests/living-eval`
 - Full bootstrap **includes** those paths for teams opting in after evidence review
 - Cloud Agents: `beforeShellExecution` runs **after** writable environment setup; `beforeMCPExecution` **unsupported** on Cloud — do not assume MCP gates there

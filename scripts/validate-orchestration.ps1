@@ -333,7 +333,9 @@ Assert-True ($mustAbsentText.Contains('"docs\docs-map.json"')) "smoke mustAbsent
 Assert-True ($smokeText -match '(?s)foreach\s*\(\$rel\s+in\s+\$mustAbsent\).*?Test-Path') "smoke enforces mustAbsent paths"
 
 $docPath = Join-Path $Root "docs\autonomous-agent-orchestration.md"
+$orchEvidencePath = Join-Path $Root "docs\orchestration-evidence.md"
 $docText = if (Test-Path $docPath) { Read-Text $docPath } else { "" }
+if (Test-Path $orchEvidencePath) { $docText += "`n" + (Read-Text $orchEvidencePath) }
 Assert-True (Test-Path $docPath) "orchestration doc exists"
 Test-Contains (Join-Path $Root "docs\living-documentation.md") "## For agents" "living-documentation For agents"
 Test-Contains (Join-Path $Root "docs\memory-and-obsidian.md") "## For agents" "memory-and-obsidian For agents"
@@ -503,8 +505,10 @@ function Test-StageExpectations($Case) {
         }
     }
     Assert-True $matchedAny "routing $($Case.id) require_any policy match"
-    foreach ($pattern in @($Case.forbid_any)) {
-        Assert-True (-not ($combined -match [string]$pattern)) "routing $($Case.id) forbid_any '$pattern'"
+    if ($Case.PSObject.Properties.Name -contains "forbid_any") {
+        foreach ($pattern in @($Case.forbid_any)) {
+            Assert-True (-not ($combined -match [string]$pattern)) "routing $($Case.id) forbid_any '$pattern'"
+        }
     }
     if ($Case.PSObject.Properties.Name -contains "expect_stages") {
         foreach ($stage in @($Case.expect_stages)) {
@@ -532,6 +536,33 @@ foreach ($case in $cases.cases) {
                 Assert-True ($rubric.Contains([string]$token)) "routing $($case.id) documented token $token"
             }
         }
+    }
+}
+
+# Shadow evidence schema (toolkit-only; INV-8).
+$evidenceSchemaPath = Join-Path $testsRoot "evidence-schema.json"
+if (Test-Path $evidenceSchemaPath) {
+    $schema = Get-Content $evidenceSchemaPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $requiredFields = @(
+        "tier", "wall_clock", "model_role_calls",
+        "first_verify_pass", "cycles", "main_product_writes", "false_escalation"
+    )
+    foreach ($field in $requiredFields) {
+        $found = $false
+        foreach ($req in @($schema.required)) {
+            if ([string]$req -eq $field) { $found = $true; break }
+        }
+        Assert-True $found "evidence-schema required field: $field"
+    }
+    Assert-True (Test-Path $orchEvidencePath) "orchestration-evidence doc exists"
+    if (Test-Path $orchEvidencePath) {
+        $orchEvidenceText = Read-Text $orchEvidencePath
+        Assert-True ($orchEvidenceText -match "toolkit-only") "orchestration-evidence toolkit-only wording"
+        Assert-True ($orchEvidenceText -match "no strict-hook auto-promotion|never auto-enable") "orchestration-evidence no auto-promotion"
+    }
+    foreach ($token in @("tests\orchestration\evidence-schema.json", "docs\orchestration-evidence.md")) {
+        Assert-True (-not $essentialText.Contains('"' + $token + '"')) "Essential excludes $token"
+        Assert-True (-not $mustExistText.Contains('"' + $token + '"')) "smoke mustExist excludes $token"
     }
 }
 

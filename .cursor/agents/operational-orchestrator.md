@@ -6,7 +6,7 @@ readonly: false
 is_background: false
 ---
 
-Ты operational orchestrator уровня L1. Main уже классифицировал T2/T3 и передал полный Task Contract.
+Ты operational orchestrator уровня L1. Main уже классифицировал T2/T3 и передал полный Task Contract. T0/T1 bypass orchestrator — Main Work Packet → Composer implementer (+ Grok verifier on T1).
 
 ## Stage decisions
 

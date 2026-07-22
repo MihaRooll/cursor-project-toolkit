@@ -9,7 +9,7 @@
 **Применяй:**
 - Явный запрос «сначала только план» → **Plan Mode** (`Shift+Tab`): research → вопросы → план → approve → код
 - T4 change/build/fix → Human Gate Packet в autonomous-task, не UI Plan Mode
-- Change/build/fix → `autonomous-task`: T0/T1 без plan artifact; T2/T3 internal reviewed plan → код → verify без routine approval
+- Change/build/fix → `autonomous-task`: T0/T1 Work Packet → Composer implementer (T1 + Grok verifier); T2/T3 internal plan when required → verify без routine approval
 - Планы сохраняй в `.cursor/plans/` (resume + контекст для следующих агентов)
 - Если результат мимо — **revert + уточнить план**, не латать длинной перепиской
 - Контекст: агент сам ищет файлы; `@file` только если точно знаешь; не засоряй irrelevant файлами

@@ -9,9 +9,38 @@
 
 All artifacts share one stable `contract_id`.
 
-**T0/T1:** concise internal scope (goal, owned paths, verify commands, forbidden) + compact result; formal Task Contract / Plan / Finding / Verification Record **не обязательны**. Main may create a lightweight Verification Record when useful.
+**T0/T1:** compact Work Packet (goal, owned paths, verify commands, forbidden) + compact result; formal Task Contract / Plan / Finding / Verification Record **не обязательны**. Main never product-writes T0–T3.
 
 **T2+:** formal Task Contract обязателен; Plan, Finding, Verification Record — когда соответствующий stage запущен.
+
+## Context budgets (best-effort)
+
+| Packet | Max tokens |
+|--------|------------|
+| Work/Scope Packet | ≤2k |
+| L2 Spawn Packet | ≤8k |
+| Scout return | ≤4k |
+| Final Report | ≤1.5k |
+
+Forbidden in packets: raw logs, full files, chat history, tool JSON dumps. Best-effort in normal Cursor chat — not platform-enforced.
+
+## 0. Work Packet (T0/T1 compact)
+
+Main creates compact Work Packet before spawning implementer:
+
+```yaml
+contract_id: task-slug
+tier: T0|T1
+goal: testable outcome
+acceptance_criteria:
+  - id: AC-1
+    text: observable result
+owned_files: []
+verify_commands: []
+forbidden: []
+```
+
+Main never writes owned product paths on T0–T3. T0: implementer runs targeted checks (no separate verifier). T1: Grok verifier required after implementer.
 
 ## 1. Task Contract
 
@@ -137,7 +166,8 @@ There is no partial completion. Open should-fix/nit may be reported only when al
 ## State transitions
 
 ```text
-SCOPE -> IMPLEMENT -> VERIFY                  T0/T1 Main-direct (formal CONTRACT optional)
+WORK_PACKET -> IMPLEMENT -> VERIFY(targeted)                           T0 implementer targeted checks
+WORK_PACKET -> IMPLEMENT -> VERIFY(verifier)                           T1 Grok verifier required
 CONTRACT -> [EXPLORE] -> [PLAN] -> IMPLEMENT -> [REVIEW] -> [VERIFY]   T2 conditional stages
 CONTRACT -> PLAN -> PRINCIPAL -> IMPLEMENT -> REVIEW -> VERIFY         T3 approve
 PRINCIPAL -> PLAN -> PRINCIPAL                T3 reject on attempt 1
@@ -147,7 +177,7 @@ HUMAN_PENDING -> BLOCKED                      T4 explicit human reject
 HUMAN_PENDING -> IMPLEMENT                    T4 approve + code-bearing task; Main dispatches reviewed T2 pipeline
 HUMAN_PENDING -> EXECUTE -> VERIFY            T4 approve + action-only task; Main executes exact approved action
 HUMAN_PENDING -> IMPLEMENT -> REVIEW -> EXECUTE -> VERIFY  T4 approve + code/action hybrid
-IMPLEMENT -> VERIFY                           T0/T1 Main-direct or T2 when no separate verifier
+IMPLEMENT -> VERIFY                           T0 targeted or T2 when no separate verifier
 IMPLEMENT -> REVIEW -> VERIFY                 T2/T3/T4-approved-code when review stage runs
 REVIEW|VERIFY -> IMPLEMENT                    fixable failure, cycle < 3
 VERIFY -> DONE                                strict pass gate
@@ -188,16 +218,17 @@ notes: compact optional context
 
 | Artifact | Creator | Persistence |
 |----------|---------|-------------|
-| Task Contract | Main (T2+ required; T0/T1 optional) | chat/task packet |
+| Work Packet | Main (T0/T1) | compact task packet |
+| Task Contract | Main (T2+ required) | chat/task packet |
 | Plan | operational-orchestrator (T2 when plan stage runs; T3 required) | `.cursor/plans/<contract_id>.plan.md` |
 | Principal Packet | operational-orchestrator | compact task packet; no raw log |
 | Human Gate Packet | Main | chat until explicit decision |
 | Finding | adversarial-reviewer (T2+ when review stage runs) | review return |
-| Verification Record | verifier when scheduled; Main for T0/T1 direct and T4 action-only | verification return |
-| Final Report | Main | user-facing response |
-| Docs Impact Record | implementer when delegated; Main on T0/T1 direct | task return when docs touched |
+| Verification Record | implementer T0 targeted; verifier T1+ when scheduled; Main T4 action-only | verification return |
+| Final Report | Main | user-facing response (≤1.5k) |
+| Docs Impact Record | implementer when docs touched; Main never product writer T0–T3 | task return when docs touched |
 
-Main may write product paths on T0/T1 direct path. When implementer is delegated, implementer is the sole product writer.
+Main never product-writes T0–T3. Only `implementer` writes owned product paths for T0–T3. Verifier/reviewer must not create `_v_*.txt` or temp evidence in product root.
 
 ## 9. FailureRecord
 

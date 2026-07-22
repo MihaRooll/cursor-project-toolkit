@@ -1,23 +1,25 @@
 # Autonomous agent orchestration
 
-> **AI-first.** Один change/build/fix запрос → минимальный достаточный multi-agent pipeline. Источники: Cursor docs + Anthropic/OpenAI engineering reports (toolkit registry: SRC-023/024).
+> **AI-first.** Delegation-first control plane: Main (intent/tier/architecture/T4/final) → Composer product writes T0–T3 → Grok explore/orchestrate/review/verify → Sol T3-only principal. Источники: Cursor docs + Anthropic/OpenAI engineering reports (toolkit registry: SRC-023/024).
 
 ## For agents
 
-**Когда читать:** выбрать T0–T4; делегировать Grok/Composer/Sol; спор о Plan Mode; нельзя заявлять done без evidence.
+**Когда читать:** выбрать T0–T4; делегировать Composer/Grok/Sol; спор о Plan Mode; нельзя заявлять done без evidence.
 
 **Применяй:**
 
 1. Main классифицирует по `.cursor/skills/autonomous-task/tier-rubric.md`. **Число файлов само по себе не повышает tier.**
-2. T0/T1: Main direct — research, edit, verify; formal Task Contract/plan/implementer не обязательны.
-3. T1 mechanical multi-file с низким blast/ambiguity/coupling и сильным oracle остаётся T1.
-4. T2/T3 — через `operational-orchestrator` когда нужны staged agents; T2 stages conditional (explore/plan/implement/review/verify).
-5. T3: Sol Principal Packet до product writes; independent review + verification обязательны.
-6. T4: Human Gate Packet.
-7. Production writer один **когда delegated**; Main may write on T0/T1 direct path. Параллельны только read-only Explore scouts.
-8. Completion = acceptance + deterministic checks + zero blockers.
+2. **Main never product-writes T0–T3** — Composer `implementer` sole writer.
+3. T0: Main Work Packet → Composer → targeted deterministic checks; no plan/Grok review/Sol.
+4. T1: Main Work Packet → Composer → Grok `verifier`; no plan; mechanical bounded multi-file may stay T1.
+5. T2: Main contract → Grok `operational-orchestrator` conditional stages (explore/plan/implement/review/verify).
+6. T3: Grok required plan → Sol Principal Packet до product writes → Composer → Grok review + verify.
+7. T4: Human Gate Packet.
+8. Production writer один (implementer); параллельны только read-only Explore scouts.
+9. Completion = acceptance + deterministic checks + zero blockers.
+10. Verifier/reviewer must not create `_v_*.txt` or temp evidence in product root.
 
-**Не делай:** считать auto-routing, model pin, Sol gate или T4 stop платформенной гарантией; отправлять premium-модели raw logs; путать official `/add-plugin orchestrate` с этим on-disk policy harness; повышать tier только из-за file count.
+**Не делай:** считать auto-routing, model pin, Sol gate или T4 stop платформенной гарантией; отправлять premium-модели raw logs; путать official `/add-plugin orchestrate` с on-disk policy harness; повышать tier только из-за file count; Main product writes на T0–T3.
 
 ---
 
@@ -25,25 +27,36 @@
 
 | Tier | Путь | Human |
 |------|------|-------|
-| T0 | Main direct: research → edit → shell verify | нет |
-| T1 | Main direct по умолчанию; implementer/verifier опционально | нет |
-| T2 | Main → Grok L1; conditional explore/plan/implement/review/verify L2 | нет |
+| T0 | Main Work Packet → Composer implementer → targeted checks | нет |
+| T1 | Main Work Packet → Composer → Grok verifier | нет |
+| T2 | Main contract → Grok L1 conditional explore/plan/implement/review/verify L2 | нет |
 | T3 | T2 + Sol Principal Packet до product writes + review + verify | нет, если Sol approve |
 | T4 | Human Gate Packet; без implementer до approval | да |
 
-Main — единственный classifier и user-facing completion owner. L2 agents не делегируют. Composer не запускает reviewer/verifier.
+Main — classifier и user-facing completion owner. L2 agents не делегируют. Composer не запускает reviewer/verifier.
+
+## Context budgets (best-effort)
+
+| Packet | Max tokens |
+|--------|------------|
+| Work/Scope Packet | ≤2k |
+| L2 Spawn Packet | ≤8k |
+| Scout return | ≤4k |
+| Final Report | ≤1.5k |
+
+Forbidden in packets: raw logs, full files, chat history, tool JSON dumps.
 
 ## Models
 
 | Agent | Model | Permission |
 |-------|-------|------------|
 | operational-orchestrator | `cursor-grok-4.5-high-fast` | пишет только `.cursor/plans/**` |
-| implementer | `composer-2.5-fast` | sole product writer **when delegated**; Main writes T0/T1 direct |
+| implementer | `composer-2.5-fast` | sole product writer T0–T3 |
 | adversarial-reviewer | `cursor-grok-4.5-high-fast` | readonly; T2 conditional, T3 required |
-| verifier | `cursor-grok-4.5-high-fast` | shell checks; T2+ default when verify needed |
+| verifier | `cursor-grok-4.5-high-fast` | shell checks; T1 required; T2+ when scheduled |
 | principal-arbiter | `gpt-5.6-sol-medium` | readonly, T3 only |
 
-Cursor может заменить configured model из-за plan/admin/Max restrictions. Pin = intent, не абсолютная гарантия. Grok/Composer расходуют включённый Cursor pool; Sol подключается только для T3.
+Pin = intent, не platform-enforced. Cursor может fallback из-за plan/admin/Max. Grok/Composer — included pool; Sol только T3.
 
 ## Plan Mode vs internal plan
 
@@ -63,16 +76,19 @@ requirement_ref: AC-1|INV-1
 evidence: reproducible observation
 ```
 
-Review ограничен тремя общими implement→review→verify циклами; цикл 3 — blocker-only. Sol reject разрешает максимум две версии Principal Packet.
+Review ограничен тремя общими implement→review→verify циклами; цикл 3 — blocker-only. Sol reject — максимум две версии Principal Packet.
 
 Done строго:
 
 - каждый acceptance criterion = pass;
 - каждый required command exit code = 0;
 - open blockers = 0;
-- Main relays Verification Record и создаёт короткий Final Report; VR создаёт verifier when scheduled, иначе Main (T0/T1 direct, T4 action-only).
+- Main relays Verification Record и создаёт короткий Final Report (≤1.5k);
+- VR: implementer T0 targeted; verifier T1+ when scheduled; Main T4 action-only.
 
 Полные schemas: [contracts.md](../.cursor/skills/autonomous-task/contracts.md).
+
+Shadow evidence (toolkit-only): [orchestration-evidence.md](orchestration-evidence.md) — no strict-hook auto-promotion.
 
 Только в clone самого toolkit: `scripts/validate-orchestration.ps1 -SelfTest`; локальный `scripts/smoke-bootstrap.ps1` запускает validator автоматически. В bootstrapped Essential/Full products validator и его repo fixtures намеренно отсутствуют.
 
@@ -89,7 +105,7 @@ Sol получает invariants, validation plan и короткие `{path, lin
 | Human approval policy | hard T4 filesystem/shell block |
 | `.cursor/plans/` artifacts | durable workflow state machine |
 
-Hard routing, budgets and mutation gates — следующий этап через hooks/SDK после eval 10–20 задач.
+Hard routing, budgets and mutation gates — следующий этап через hooks/SDK после eval 10–20 задач (см. orchestration-evidence).
 
 ## Official orchestrate plugin
 

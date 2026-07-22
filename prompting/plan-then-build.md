@@ -10,7 +10,7 @@
 1. Research (поиск в репо) → уточняющие вопросы при дырах
 2. План: цели, файлы, шаги, риски, out-of-scope — **T2 conditional; T3 required; T0/T1 no plan**
 3. Если пользователь просил только plan — жди approval (UI Plan Mode / явный OK)
-4. Если пользователь просил change/build/fix: `autonomous-task` ведёт T0/T1 Main-direct без plan artifact; T2 — internal plan when plan stage runs; T3 — plan required; T4 ждёт человека
+4. Если пользователь просил change/build/fix: `autonomous-task` — T0/T1 Work Packet → Composer (T1 + Grok verifier), без plan artifact; T2 — internal plan when plan stage runs; T3 — plan required; T4 ждёт человека
 5. Если мимо — revert/уточнить план, не латать длинной перепиской
 
 **Не делай:** писать код при materially ambiguous scope; путать workspace `.cursor/plans/` artifact с UI Plan Mode; «план» без путей файлов; считать >2–3 файлов автоматическим триггером plan/T2.

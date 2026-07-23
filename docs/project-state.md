@@ -44,6 +44,7 @@
 | Runtime coexistence protocol (Wave 4A) | done | tooling + TestOnly + live-first rollback |
 | Wave 4A plugin-only runtime (Human Gate) | done | Cursor 3.12.17; `runtime_verified=true`; profile plugin removed post-trial |
 | Wave 4A combined runtime | done (negative) | both sources recorded → `combined_unsupported`; Essential retained as workspace owner |
+| Wave 4B shadow shipping manifest | done | `shipping/manifest.v1.json` + validator vs live bootstrap arrays; bootstrap still array-driven |
 | Runtime coexistence in Cursor IDE (combined) | unsupported | defer until later coexistence design |
 | Marketplace plugin publish | pending | human gate |
 
@@ -53,7 +54,7 @@
 - [ ] Local completion: `scripts\verify-harness.ps1 -Profile Quick`
 - [ ] INV-7 checkpoint (same-SHA): `scripts\verify-harness.ps1 -Profile Full` — align local SHA with PR head before merge
 - [ ] Before merge: confirm PR #4 head matches green CI SHA
-- [ ] Wave 4A: optional `%TEMP%` RunRoot cleanup when trial windows closed (`cleanup_pending` non-profile only)
+- [ ] Wave 4B: after bootstrap array edits run `scripts\validate-shipping-manifest.ps1` (shadow manifest sync)
 - [ ] Waves 4–6: follow [fast-development-harness-plan.md](fast-development-harness-plan.md)
 
 ## toolchain_notes

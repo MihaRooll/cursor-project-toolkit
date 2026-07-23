@@ -43,7 +43,7 @@
 | [skills-russian-descriptions.md](skills-russian-descriptions.md) | RU descriptions для skills | — | Новый/правка `SKILL.md` |
 | [prompts-chat-verdict.md](prompts-chat-verdict.md) | prompts.chat — не bulk-ingest | SRC-010 | Предлагают скачать community prompts |
 | [papercuts.md](papercuts.md) | Papercuts CLI — жалобы агентов | SRC-011 | Friction, tooling footguns, triage backlog |
-| [bootstrap-scaffold.md](bootstrap-scaffold.md) | Toolkit → новый проект | — | Bootstrap harness в продукт |
+| [bootstrap-scaffold.md](bootstrap-scaffold.md) | Toolkit → новый проект; Wave 4B shadow shipping manifest | — | Bootstrap harness в продукт |
 | [living-documentation.md](living-documentation.md) | Living docs + docs-map index | — | Material doc change; validator; maintain skill |
 | [docs-map-schema.md](docs-map-schema.md) | Schema for docs/docs-map.json | — | Create/edit map; validator errors |
 | [project-integrations.md](project-integrations.md) | Essential vs day-0 living docs wiring | — | Bootstrap/plugin integration questions |

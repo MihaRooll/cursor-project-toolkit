@@ -12,8 +12,9 @@
 - Essential = **product** harness (не toolkit meta-skills); `product-brief` / `first-chat` / `docs-map.json` пишет только `new-project`, не Essential
 - Living docs assets (docs + `maintain-project-docs` + `project-docs-lifecycle`) копируются в Essential; map seed — day-0 only
 - Papercuts в авто: hooks логируют failed shells; ручной `add` — для всего остального
+- **Shadow shipping manifest (Wave 4B):** `shipping/manifest.v1.json` tracks every Essential/Full/plugin/toolkit-CI path + policy; `scripts/validate-shipping-manifest.ps1` compares live bootstrap/smoke/install arrays — **bootstrap remains array-driven** until a later switch
 
-**Не делай:** копировать `archive/` без нужды; затирать AGENTS без Force; тащить `ship-toolkit` / `add-source` в продукт; запускать `new-project.ps1` **внутри** уже bootstrapped продукта (скрипта там нет — только из клона toolkit).
+**Не делай:** копировать `archive/` без нужды; затирать AGENTS без Force; тащить `ship-toolkit` / `add-source` в продукт; запускать `new-project.ps1` **внутри** уже bootstrapped продукта (скрипта там нет — только из клона toolkit); treat manifest as production switch (shadow only).
 
 ---
 
@@ -39,6 +40,16 @@ my-new-app/             (продукт + скопированный harness)
 | Essential | product rules/skills + hooks + papercuts + ключевые docs + Essential prompting/roles/subagents |
 | Full | + весь docs/SOURCES/папки toolkit + все skills/rules + `templates/mcp` + `templates/cursor` + `templates/hooks` (opt-in) + `tests/living-eval` + `validate-living-evals.ps1` + `validate-mcp-profiles.ps1` + `validate-recovery.ps1` + `tests/recovery` |
 | `-WithSubmodule` | + `git submodule add` → `vendor/cursor-project-toolkit` (нужен git init в target) |
+
+### Shipping manifest (Wave 4B — shadow)
+
+| Artifact | Role |
+|----------|------|
+| `shipping/manifest.v1.json` | SSOT inventory: policy (`managed` \| `seed-only` \| `managed-block` \| `structural-merge` \| `plugin-only` \| `toolkit-ci-only`), surface, source, destination |
+| `scripts/validate-shipping-manifest.ps1` | Compare manifest vs live `$essentialFiles` / `$full` / smoke `$mustExist`/`$mustAbsent` / plugin install / toolkit-CI paths |
+| `tests/shipping/` | Schema, negative fixtures, deterministic test |
+
+Bootstrap/install **still use PowerShell arrays**; manifest is review/provenance shadow only. `scripts/verify-harness.ps1` stays **toolkit-ci-only** (not shipped).
 
 ---
 

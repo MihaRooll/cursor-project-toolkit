@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "provenance_version": "v1",
+  "description": "Local harness provenance report — status/diff only; never apply or update.",
+  "required_report_fields": [
+    "schema_version",
+    "artifact_id",
+    "surface_id",
+    "source_revision",
+    "managed_content_digest",
+    "installed_digest",
+    "dirty_relevance",
+    "completion_state",
+    "paths"
+  ],
+  "digest_line_format": "entry_id|destination|side|value",
+  "digest_sentinel_prefix": "sentinel:",
+  "forbidden_fields": [
+    "installed_at",
+    "username",
+    "hostname",
+    "absolute_path",
+    "private_path",
+    "private_remote",
+    "email",
+    "plugin_inventory"
+  ],
+  "forbidden_value_patterns": [
+    "@[^\\s]+\\.",
+    "\\\\Users\\\\",
+    "\\\\home\\\\",
+    "://[^/]*@",
+    "[A-Za-z]:\\\\"
+  ],
+  "known_policies": [
+    "managed",
+    "seed-only",
+    "managed-block",
+    "structural-merge",
+    "plugin-only",
+    "toolkit-ci-only"
+  ],
+  "completion_states": [
+    "success",
+    "partial",
+    "stale",
+    "dirty",
+    "legacy",
+    "missing_manifest",
+    "error"
+  ],
+  "non_success_completion_states": [
+    "partial",
+    "stale",
+    "dirty",
+    "legacy",
+    "missing_manifest",
+    "error"
+  ],
+  "path_strategies": [
+    "hash-compare",
+    "managed-block-marker",
+    "managed-block-native",
+    "managed-block-hash-compare",
+    "structural-merge-marker",
+    "seed-only-skip",
+    "plugin-only-skip",
+    "toolkit-ci-skip",
+    "missing-installed",
+    "missing-source"
+  ],
+  "path_results": [
+    "match",
+    "drift",
+    "missing",
+    "skipped",
+    "error"
+  ],
+  "path_entry_fields": [
+    "entry_id",
+    "policy",
+    "surface",
+    "destination",
+    "strategy",
+    "result",
+    "source_hash",
+    "installed_hash"
+  ],
+  "dirty_relevance_fields": [
+    "git_dirty",
+    "relevant_paths"
+  ],
+  "output_rules": [
+    "reject pre-existing OutputPath",
+    "reject reparse/symlink/junction on target and ancestors",
+    "default invocation-owned temp GUID path",
+    "console never prints absolute OutputPath"
+  ]
+}

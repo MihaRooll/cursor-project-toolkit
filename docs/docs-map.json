@@ -114,6 +114,13 @@
       "tags": ["harness", "plugin", "runtime", "wave4a", "coexistence", "live-evidence"]
     },
     {
+      "path": "docs/harness-provenance.md",
+      "title": "Harness provenance collector",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["harness", "provenance", "wave4c", "shipping-manifest", "doctor"]
+    },
+    {
       "path": "docs/session-handoff-2026-07-23.md",
       "title": "Session handoff 2026-07-23",
       "status": "active",

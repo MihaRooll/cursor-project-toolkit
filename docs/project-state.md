@@ -12,7 +12,7 @@
 
 ## phase
 
-`toolkit-fast-loop-v3` — SHIP-V2 close. Waves 0–3 implemented locally. **Wave 4 gate:** live `toolkit-verify` green on GitHub (see ship block); branch protection active on `main`. **Wave 4A runtime experiment:** Human-Gated trials complete; profile restored. **Waves 4–6** implementation pending beyond 4A.
+`toolkit-fast-loop-v3` — SHIP-V2 close. Waves 0–3 implemented locally. **Wave 4 gate:** live `toolkit-verify` green on GitHub (see ship block); branch protection active on `main`. **Wave 4A runtime experiment:** Human-Gated trials complete; profile restored. **Waves 4A/4B/4C done.** Remaining Wave 4+ / Waves 5–6 implementation pending.
 
 ## ship (open PR)
 
@@ -40,11 +40,12 @@
 | Wave 3B T3 boundary + scout policy | done | tier-rubric + operational-orchestrator |
 | Wave 3D hygiene | done | Program paths, living-eval 12/12, static vs runtime plugin claims |
 | Wave 4 CI gate (live GitHub) | done | run `29983360670` on SHA `5f8eb916…`; required check on `main` |
-| Waves 4–6 implementation | pending | beyond CI gate — not started |
+| Waves 4–6 implementation | pending | Wave 4A/4B/4C done; remaining Wave 4+ / 5–6 gated work |
 | Runtime coexistence protocol (Wave 4A) | done | tooling + TestOnly + live-first rollback |
 | Wave 4A plugin-only runtime (Human Gate) | done | Cursor 3.12.17; `runtime_verified=true`; profile plugin removed post-trial |
 | Wave 4A combined runtime | done (negative) | both sources recorded → `combined_unsupported`; Essential retained as workspace owner |
 | Wave 4B shadow shipping manifest | done | `shipping/manifest.v1.json` + validator vs live bootstrap arrays; bootstrap still array-driven |
+| Wave 4C harness provenance collector | done | `schemas/provenance.v1.json` + `collect-provenance.ps1` + doctor local drift; status/diff only |
 | Runtime coexistence in Cursor IDE (combined) | unsupported | defer until later coexistence design |
 | Marketplace plugin publish | pending | human gate |
 
@@ -55,6 +56,7 @@
 - [ ] INV-7 checkpoint (same-SHA): `scripts\verify-harness.ps1 -Profile Full` — align local SHA with PR head before merge
 - [ ] Before merge: confirm PR #4 head matches green CI SHA
 - [ ] Wave 4B: after bootstrap array edits run `scripts\validate-shipping-manifest.ps1` (shadow manifest sync)
+- [ ] Wave 4C: after provenance edits run `scripts\collect-provenance.ps1 -SelfTest` and `tests\provenance\test-collect-provenance.ps1`
 - [ ] Waves 4–6: follow [fast-development-harness-plan.md](fast-development-harness-plan.md)
 
 ## toolchain_notes

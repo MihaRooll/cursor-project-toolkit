@@ -168,5 +168,49 @@ foreach ($scope in @("Process", "User", "Machine")) {
 Write-DoctorLine "env: sensitive_vars=$sensitiveSet (names redacted)"
 Write-DoctorLine "env: other_vars=$nonSensitiveSet (names not enumerated)"
 
+$collectorPath = Join-Path $PSScriptRoot "collect-provenance.ps1"
+if (Test-Path -LiteralPath $collectorPath) {
+    $manifestPath = Join-Path $root "shipping\manifest.v1.json"
+    $toolkitRoot = ""
+    if (Test-Path -LiteralPath $manifestPath) {
+        $toolkitRoot = $root
+    }
+    if (-not [string]::IsNullOrWhiteSpace($toolkitRoot)) {
+        $provOut = Join-Path $env:TEMP ("cptk-doctor-prov-" + [guid]::NewGuid().ToString("n") + ".json")
+        try {
+            $prevEap = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            $provLines = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $collectorPath `
+                -ProjectRoot $root -ToolkitRoot $toolkitRoot -OutputPath $provOut 2>&1
+            $provCode = $LASTEXITCODE
+            $ErrorActionPreference = $prevEap
+            if ($provCode -ge 2) {
+                Write-DoctorLine "provenance: ERROR (collector failed)"
+                if ($exitCode -eq 0) { $exitCode = 1 }
+            } elseif (Test-Path -LiteralPath $provOut) {
+                $provRaw = Read-TextUtf8 $provOut
+                $provObj = $provRaw | ConvertFrom-Json
+                $driftCount = @($provObj.paths | Where-Object { [string]$_.result -eq "drift" }).Count
+                $missingCount = @($provObj.paths | Where-Object { [string]$_.result -eq "missing" }).Count
+                $state = [string]$provObj.completion_state
+                Write-DoctorLine ("provenance: local state=" + $state + " drift=" + $driftCount + " missing=" + $missingCount)
+                if ($provObj.dirty_relevance.git_dirty) {
+                    Write-DoctorLine ("provenance: local dirty paths=" + (@($provObj.dirty_relevance.relevant_paths).Count))
+                }
+                if ($state -ne "success" -and $exitCode -eq 0) { $exitCode = 1 }
+            } else {
+                Write-DoctorLine "provenance: ERROR (no report output)"
+                if ($exitCode -eq 0) { $exitCode = 1 }
+            }
+        } finally {
+            Remove-Item -LiteralPath $provOut -Force -ErrorAction SilentlyContinue
+        }
+    } else {
+        Write-DoctorLine "provenance: SKIP no local manifest (advisory)"
+    }
+} else {
+    Write-DoctorLine "provenance: SKIP collector missing (advisory)"
+}
+
 Write-DoctorLine "doctor_exit: $exitCode"
 exit $exitCode

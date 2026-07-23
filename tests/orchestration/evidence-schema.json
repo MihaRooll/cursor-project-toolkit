@@ -1,26 +1,51 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://cursor-project-toolkit.local/tests/orchestration/evidence-schema.json",
-  "title": "Orchestration shadow evidence row",
-  "description": "Toolkit-only shadow evidence for delegation-first routing eval. Not shipped in Essential bootstrap. No strict-hook auto-promotion.",
+  "title": "Orchestration evidence sidecar row",
+  "description": "Toolkit-only evidence sidecar for delegation-first routing and Fast A/B eval. Not shipped in Essential bootstrap. No strict-hook auto-promotion. No raw prompts/logs.",
   "type": "object",
   "required": [
+    "contract_id",
+    "task_id",
     "tier",
     "wall_clock",
-    "model_role_calls",
-    "first_verify_pass",
+    "verification_profile",
+    "verification_seconds",
     "cycles",
+    "first_verify_pass",
     "main_product_writes",
-    "false_escalation"
+    "false_escalation",
+    "intended_role",
+    "actual_role",
+    "intended_model",
+    "actual_model",
+    "model_role_calls",
+    "check_outcomes",
+    "protocol_violations",
+    "fast_mode_used",
+    "premium_calls",
+    "promotion_status"
   ],
   "properties": {
     "contract_id": {
       "type": "string",
-      "description": "Stable task identifier"
+      "minLength": 1,
+      "description": "Stable contract identifier"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Bounded task identifier within contract"
+    },
+    "run_fingerprint": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 64,
+      "description": "Deterministic run id (hex); one sidecar file per contract+run"
     },
     "consumer_repo": {
       "type": "string",
-      "description": "Bootstrapped product repo name (≥2 distinct repos in corpus)"
+      "description": "Bootstrapped product repo name (corpus >= 2 repos)"
     },
     "captured_at": {
       "type": "string",
@@ -35,6 +60,30 @@
       "minimum": 0,
       "description": "End-to-end seconds for bounded workflow"
     },
+    "verification_profile": {
+      "type": "string",
+      "enum": ["targeted", "affected", "checkpoint", "full", "quick"]
+    },
+    "verification_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "intended_role": {
+      "type": ["string", "null"],
+      "description": "Planned primary role; null or unknown when unavailable"
+    },
+    "actual_role": {
+      "type": ["string", "null"],
+      "description": "Observed primary role; null or unknown when unavailable"
+    },
+    "intended_model": {
+      "type": ["string", "null"],
+      "description": "Planned model slug; null or unknown when unavailable"
+    },
+    "actual_model": {
+      "type": ["string", "null"],
+      "description": "Observed model slug; null or unknown when unavailable"
+    },
     "model_role_calls": {
       "type": "array",
       "minItems": 1,
@@ -44,17 +93,40 @@
         "properties": {
           "role": {
             "type": "string",
-            "enum": ["main", "implementer", "operational-orchestrator", "adversarial-reviewer", "verifier", "principal-arbiter"]
+            "enum": [
+              "main",
+              "implementer",
+              "operational-orchestrator",
+              "adversarial-reviewer",
+              "verifier",
+              "principal-arbiter"
+            ]
           },
           "model": { "type": "string" },
           "count": { "type": "integer", "minimum": 1 }
-        }
-      },
-      "description": "Ordered or summarized role/model invocations"
+        },
+        "additionalProperties": false
+      }
+    },
+    "check_outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["check_id", "outcome"],
+        "properties": {
+          "check_id": { "type": "string", "minLength": 1 },
+          "outcome": {
+            "type": "string",
+            "enum": ["pass", "fail", "skip", "error"]
+          }
+        },
+        "additionalProperties": false
+      }
     },
     "first_verify_pass": {
       "type": "boolean",
-      "description": "True if first scheduled verification passed without rework cycle"
+      "description": "True if first scheduled verification passed without rework"
     },
     "cycles": {
       "type": "integer",
@@ -65,11 +137,39 @@
     "main_product_writes": {
       "type": "integer",
       "minimum": 0,
-      "description": "Count of Main product-path writes (expect 0 for T0-T3)"
+      "description": "Main product-path writes (expect 0 for T0-T3)"
     },
     "false_escalation": {
       "type": "boolean",
       "description": "True if tier was raised without rubric evidence"
+    },
+    "protocol_violations": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Bounded violation codes; empty array when none"
+    },
+    "fast_mode_used": {
+      "type": "boolean"
+    },
+    "premium_calls": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "premium_gate_reason": {
+      "type": ["string", "null"]
+    },
+    "scout_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "promotion_status": {
+      "type": "string",
+      "enum": ["evidence_pending", "eligible", "promoted", "rejected"],
+      "description": "Sidecar writer accepts evidence_pending only until corpus thresholds met"
+    },
+    "availability_defect": {
+      "type": "boolean",
+      "description": "True when model unavailable; separate from perf/Fast eval"
     }
   },
   "additionalProperties": false

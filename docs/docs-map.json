@@ -121,6 +121,13 @@
       "tags": ["harness", "provenance", "wave4c", "shipping-manifest", "doctor"]
     },
     {
+      "path": "docs/evidence-sidecar-ab-protocol.md",
+      "title": "Evidence sidecar and Fast A/B protocol",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["orchestration", "wave5a", "toolkit-only", "evidence", "fast-loop"]
+    },
+    {
       "path": "docs/session-handoff-2026-07-23.md",
       "title": "Session handoff 2026-07-23",
       "status": "active",

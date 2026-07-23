@@ -12,7 +12,7 @@
 
 ## phase
 
-`toolkit-fast-loop-v3` — SHIP-V2 close. Waves 0–3 implemented locally. **Wave 4 gate:** live `toolkit-verify` green on GitHub (see ship block); branch protection active on `main`. **Wave 4A runtime experiment:** Human-Gated trials complete; profile restored. **Waves 4A/4B/4C done.** Remaining Wave 4+ / Waves 5–6 implementation pending.
+`toolkit-fast-loop-v3` — SHIP-V2 close. Waves 0–3 implemented locally. **Wave 4 gate:** live `toolkit-verify` green on GitHub (see ship block); branch protection active on `main`. **Wave 4A runtime experiment:** Human-Gated trials complete; profile restored. **Waves 4A/4B/4C done.** **Wave 5A (in progress):** evidence sidecar + A/B protocol tooling. Remaining Wave 5+ / Waves 6 pending.
 
 ## ship (open PR)
 
@@ -46,6 +46,7 @@
 | Wave 4A combined runtime | done (negative) | both sources recorded → `combined_unsupported`; Essential retained as workspace owner |
 | Wave 4B shadow shipping manifest | done | `shipping/manifest.v1.json` + validator vs live bootstrap arrays; bootstrap still array-driven |
 | Wave 4C harness provenance collector | done | `schemas/provenance.v1.json` + `collect-provenance.ps1` + doctor local drift; status/diff only |
+| Wave 5A evidence sidecar + A/B protocol | in_progress | sidecar writer/validator + `ab-protocol.ps1`; toolkit-only; promotion evidence_pending |
 | Runtime coexistence in Cursor IDE (combined) | unsupported | defer until later coexistence design |
 | Marketplace plugin publish | pending | human gate |
 
@@ -57,6 +58,7 @@
 - [ ] Before merge: confirm PR #4 head matches green CI SHA
 - [ ] Wave 4B: after bootstrap array edits run `scripts\validate-shipping-manifest.ps1` (shadow manifest sync)
 - [ ] Wave 4C: after provenance edits run `scripts\collect-provenance.ps1 -SelfTest` and `tests\provenance\test-collect-provenance.ps1`
+- [ ] Wave 5A: after sidecar/A/B edits run `scripts\validate-evidence-sidecar.ps1 -SelfTest`, `scripts\write-evidence-sidecar.ps1 -SelfTest`, `scripts\ab-protocol.ps1 -SelfTest`, and `tests\orchestration\evidence\test-evidence-sidecar.ps1`
 - [ ] Waves 4–6: follow [fast-development-harness-plan.md](fast-development-harness-plan.md)
 
 ## toolchain_notes

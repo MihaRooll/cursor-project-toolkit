@@ -72,6 +72,7 @@
 | [security-in-session-cursor-vs-claude.md](security-in-session-cursor-vs-claude.md) | In-session security: Claude vs Cursor | SRC-022 | Bugbot `/review-security`, thermos, Semgrep hooks; нет 1:1 plugin |
 | [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Delegation-first T0–T4: Main control plane, Composer writes, Grok orch/verify | SRC-023/024 | change/build/fix; Work Packet; no Main product writes T0–T3 |
 | [orchestration-evidence.md](orchestration-evidence.md) | Shadow evidence schema (toolkit-only) | — | Wave eval 10–20 tasks; no strict-hook auto-promotion |
+| [evidence-sidecar-ab-protocol.md](evidence-sidecar-ab-protocol.md) | Wave 5A evidence sidecar + Fast A/B planner | — | Log task rows; seeded AB/BA plans; no pin promotion |
 | [recovery-escalation.md](recovery-escalation.md) | Recovery R0a shadow/manual protocol | SRC-031 | Explicit `/recovery-escalation`; stuck predicates; promotion gate R0b |
 | [wsl-windows-stability.md](wsl-windows-stability.md) | Стабильный WSL2 на Windows | — | .wslconfig, когда использовать WSL |
 | [cursor-official-index.md](cursor-official-index.md) | Карта всего official Cursor | SRC-004…009 | Старт: найти plugin/docs/blog |

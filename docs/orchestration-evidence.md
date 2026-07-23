@@ -13,7 +13,8 @@
 - Required fields: `tier`, `wall_clock`, `model_role_calls`, `first_verify_pass`, `cycles`, `main_product_writes`, `false_escalation`.
 - Optional: `contract_id`, `consumer_repo`, `captured_at`.
 - Expect `main_product_writes=0` for T0–T3 (Main never product-writes).
-- Store rows in toolkit-only corpus (not product root); never write `_v_*.txt` or temp evidence in product root.
+- Store rows in toolkit-only corpus (not product root); prefer `scripts/write-evidence-sidecar.ps1` → `.cursor/evidence-local/` (gitignored) or caller-owned path.
+- Extended sidecar schema: [evidence-sidecar-ab-protocol.md](evidence-sidecar-ab-protocol.md).
 - Promotion to strict hooks remains separate — see [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md); **never auto-enable** from this schema.
 
 **Do not:**

@@ -32,6 +32,8 @@
     "owner_verdict",
     "runtime_verified",
     "evidence_complete",
+    "cleanup_complete",
+    "cleanup_pending",
     "ide_attested"
   ],
   "forbidden_state_fields": [

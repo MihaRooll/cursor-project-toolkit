@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Rollback runtime coexistence invocation: restore live plugin from backup or remove invocation-owned install.
+  Rollback runtime coexistence invocation: restore live plugin first, then best-effort owned cleanup.
 #>
 [CmdletBinding()]
 param(
@@ -13,6 +13,8 @@ param(
 $ErrorActionPreference = "Stop"
 $LiveSurfaceId = "plugins/local/cursor-project-harness"
 $TestOnlyProfileRelative = "simulated_profile"
+$OwnedCleanupChildren = @("installed", "profile", "workspace")
+$RollbackPendingHash = "cleanup_pending"
 
 function Get-CoexistenceSha256HexFromString([string]$Text) {
     if ($null -eq $Text) { $Text = "" }
@@ -89,6 +91,18 @@ function Clear-OwnedSubtree {
     New-Item -ItemType Directory -Force -Path $target | Out-Null
 }
 
+function Clear-OwnedSubtreeBestEffort {
+    param([string]$ParentRoot, [string]$ChildName)
+    $target = Join-Path $ParentRoot $ChildName
+    if (-not (Test-Path -LiteralPath $target)) { return $true }
+    try {
+        Clear-OwnedSubtree -ParentRoot $ParentRoot -ChildName $ChildName
+        return $true
+    } catch {
+        return $false
+    }
+}
+
 function Resolve-LiveProfileRootFromState {
     param($State, [string]$RunRoot)
     if ([bool]$State.real_profile) { return Join-Path $env:USERPROFILE ".cursor" }
@@ -98,8 +112,56 @@ function Resolve-LiveProfileRootFromState {
     return $null
 }
 
+function Test-LiveRollbackTargetMet {
+    param(
+        [bool]$HadPrior,
+        [string]$PluginLive,
+        [string]$BackupDigest,
+        [string]$ExpectedLiveDigest
+    )
+    if ($HadPrior) {
+        if (-not (Test-Path -LiteralPath $PluginLive)) { return $false }
+        $digest = Get-TreeDigest $PluginLive
+        return ($digest -eq $BackupDigest -and $digest -eq $ExpectedLiveDigest)
+    }
+    return (-not (Test-Path -LiteralPath $PluginLive))
+}
+
+function Invoke-LivePluginRollback {
+    param(
+        [bool]$HadPrior,
+        [string]$PluginLive,
+        [string]$BackupPlugin,
+        [string]$BackupDigest
+    )
+    if ($HadPrior) {
+        if (Test-Path -LiteralPath $PluginLive) {
+            Remove-Item -LiteralPath $PluginLive -Recurse -Force
+        }
+        Copy-TreeExact -SourceRoot $backupPlugin -DestRoot $pluginLive
+        $restoredDigest = Get-TreeDigest $PluginLive
+        if ($restoredDigest -ne $BackupDigest) {
+            throw "live plugin digest mismatch after restore"
+        }
+        return $true
+    }
+    if (Test-Path -LiteralPath $PluginLive) {
+        Remove-Item -LiteralPath $PluginLive -Recurse -Force
+    }
+    if (Test-Path -LiteralPath $PluginLive) {
+        throw "no-prior rollback requires absent live plugin"
+    }
+    return $true
+}
+
 function Update-RollbackState {
-    param([string]$StatePath, $State, [bool]$EvidenceComplete)
+    param(
+        [string]$StatePath,
+        $State,
+        [bool]$EvidenceComplete,
+        [bool]$CleanupComplete,
+        [bool]$CleanupPending
+    )
     $json = @{
         phase = "rolled_back"
         invocation_marker = [string]$State.invocation_marker
@@ -132,9 +194,22 @@ function Update-RollbackState {
         owner_verdict = $State.owner_verdict
         runtime_verified = [bool]$State.runtime_verified
         evidence_complete = $EvidenceComplete
+        cleanup_complete = $CleanupComplete
+        cleanup_pending = $CleanupPending
         ide_attested = [bool]$State.ide_attested
     }
     ($json | ConvertTo-Json -Depth 10 -Compress) | Set-Content -LiteralPath $StatePath -Encoding UTF8 -NoNewline
+}
+
+function Invoke-OwnedCleanupBestEffort {
+    param([string]$RunRoot)
+    $allOk = $true
+    foreach ($child in $OwnedCleanupChildren) {
+        if (-not (Clear-OwnedSubtreeBestEffort -ParentRoot $RunRoot -ChildName $child)) {
+            $allOk = $false
+        }
+    }
+    return $allOk
 }
 
 function Write-RollbackEvent {
@@ -151,6 +226,34 @@ function Write-RollbackEvent {
         context_bytes = 0
     } | ConvertTo-Json -Compress)
     Add-Content -LiteralPath $JournalPath -Value $line -Encoding UTF8
+}
+
+function Write-RollbackEventBestEffort {
+    param([string]$JournalPath, [hashtable]$Event)
+    try {
+        Write-RollbackEvent -JournalPath $JournalPath -Event $Event
+    } catch {
+        # journal append must not invalidate successful live rollback
+    }
+}
+
+function Update-RollbackStateBestEffort {
+    param(
+        [string]$StatePath,
+        $State,
+        [bool]$EvidenceComplete,
+        [bool]$CleanupComplete,
+        [bool]$CleanupPending,
+        [switch]$Required
+    )
+    try {
+        Update-RollbackState -StatePath $StatePath -State $State -EvidenceComplete $EvidenceComplete `
+            -CleanupComplete $CleanupComplete -CleanupPending $CleanupPending
+        return $true
+    } catch {
+        if ($Required) { throw }
+        return $false
+    }
 }
 
 function Get-DigestPrefix([string]$Digest) {
@@ -181,9 +284,12 @@ $expectedLiveDigest = if ($null -ne $state.PSObject.Properties["expected_live_di
     [string]$state.expected_live_digest
 } else { $backupDigest }
 $hadPrior = [bool]$state.had_prior_plugin
-
 $liveProfileRoot = Resolve-LiveProfileRootFromState -State $state -RunRoot $RunRoot
-if ($null -ne $liveProfileRoot) {
+$evidenceComplete = $false
+$liveProofRequired = ($null -ne $liveProfileRoot)
+$liveRollbackSucceeded = $false
+
+if ($liveProofRequired) {
     Assert-TreeNoReparse -Root $liveProfileRoot -Label "live-profile"
     $pluginLive = Join-Path $liveProfileRoot $surfaceRel
     $backupPlugin = Join-Path $backupRoot $surfaceRel
@@ -198,60 +304,72 @@ if ($null -ne $liveProfileRoot) {
         }
     }
 
-    Clear-OwnedSubtree -ParentRoot $RunRoot -ChildName "installed"
-    Clear-OwnedSubtree -ParentRoot $RunRoot -ChildName "profile"
-    Clear-OwnedSubtree -ParentRoot $RunRoot -ChildName "workspace"
-
-    $postInstalledDigest = Get-TreeDigest (Join-Path $RunRoot "installed")
-    if ($postInstalledDigest -ne $expectedInstalledDigest) {
-        throw "installed staging digest mismatch after rollback"
+    $alreadyRestored = Test-LiveRollbackTargetMet -HadPrior $hadPrior -PluginLive $pluginLive `
+        -BackupDigest $backupDigest -ExpectedLiveDigest $expectedLiveDigest
+    if (-not $alreadyRestored) {
+        [void](Invoke-LivePluginRollback -HadPrior $hadPrior -PluginLive $pluginLive `
+            -BackupPlugin $backupPlugin -BackupDigest $backupDigest)
     }
+    if (-not (Test-LiveRollbackTargetMet -HadPrior $hadPrior -PluginLive $pluginLive `
+            -BackupDigest $backupDigest -ExpectedLiveDigest $expectedLiveDigest)) {
+        throw "live rollback proof failed"
+    }
+    $evidenceComplete = $true
 
+    Update-RollbackState -StatePath $statePath -State $state -EvidenceComplete $true `
+        -CleanupComplete $false -CleanupPending $true
+    $liveRollbackSucceeded = $true
+} else {
     $evidenceComplete = $false
-    if ($hadPrior) {
-        if (Test-Path -LiteralPath $pluginLive) {
-            Remove-Item -LiteralPath $pluginLive -Recurse -Force
-        }
-        Copy-TreeExact -SourceRoot $backupPlugin -DestRoot $pluginLive
-        $restoredDigest = Get-TreeDigest $pluginLive
-        if ($restoredDigest -ne $backupDigest) {
-            throw "live plugin digest mismatch after restore"
-        }
-        $evidenceComplete = $true
-    } else {
-        if (Test-Path -LiteralPath $pluginLive) {
-            Remove-Item -LiteralPath $pluginLive -Recurse -Force
-        }
-        if (Test-Path -LiteralPath $pluginLive) {
-            throw "no-prior rollback requires absent live plugin"
-        }
-        $evidenceComplete = $true
-    }
-
-    Update-RollbackState -StatePath $statePath -State $state -EvidenceComplete $evidenceComplete
-    Write-RollbackEvent -JournalPath $journalPath -Event @{
-        scenario = [string]$state.scenario
-        source = "none"
-        nonce = [guid]::NewGuid().ToString("n")
-        hash = Get-DigestPrefix $postInstalledDigest
-    }
-    Write-Host "COEXIST_ROLLBACK_OK had_prior=$hadPrior evidence_complete=$evidenceComplete"
-    exit 0
 }
 
-Clear-OwnedSubtree -ParentRoot $RunRoot -ChildName "installed"
-Clear-OwnedSubtree -ParentRoot $RunRoot -ChildName "profile"
-Clear-OwnedSubtree -ParentRoot $RunRoot -ChildName "workspace"
-$postInstalledDigest = Get-TreeDigest (Join-Path $RunRoot "installed")
-if ($postInstalledDigest -ne $expectedInstalledDigest) {
-    throw "installed staging digest mismatch after rollback"
+$cleanupComplete = $true
+$cleanupPending = $false
+$rollbackEventHash = $RollbackPendingHash
+
+try {
+    $cleanupOk = Invoke-OwnedCleanupBestEffort -RunRoot $RunRoot
+    if ($cleanupOk) {
+        try {
+            $postInstalledDigest = Get-TreeDigest (Join-Path $RunRoot "installed")
+            if ($postInstalledDigest -ne $expectedInstalledDigest) {
+                $cleanupOk = $false
+            } else {
+                $rollbackEventHash = Get-DigestPrefix $postInstalledDigest
+            }
+        } catch {
+            $cleanupOk = $false
+        }
+    }
+    $cleanupComplete = $cleanupOk
+    $cleanupPending = -not $cleanupOk
+    if (-not $cleanupOk) {
+        $rollbackEventHash = $RollbackPendingHash
+    }
+} catch {
+    $cleanupComplete = $false
+    $cleanupPending = $true
+    $rollbackEventHash = $RollbackPendingHash
 }
-Update-RollbackState -StatePath $statePath -State $state -EvidenceComplete $false
-Write-RollbackEvent -JournalPath $journalPath -Event @{
+
+if (-not $liveRollbackSucceeded) {
+    Update-RollbackState -StatePath $statePath -State $state -EvidenceComplete $evidenceComplete `
+        -CleanupComplete $cleanupComplete -CleanupPending $cleanupPending
+} else {
+    [void](Update-RollbackStateBestEffort -StatePath $statePath -State $state -EvidenceComplete $evidenceComplete `
+        -CleanupComplete $cleanupComplete -CleanupPending $cleanupPending)
+}
+
+Write-RollbackEventBestEffort -JournalPath $journalPath -Event @{
     scenario = [string]$state.scenario
     source = "none"
     nonce = [guid]::NewGuid().ToString("n")
-    hash = Get-DigestPrefix $postInstalledDigest
+    hash = $rollbackEventHash
 }
-Write-Host "COEXIST_ROLLBACK_OK isolated_only"
+
+if ($liveProofRequired) {
+    Write-Host "COEXIST_ROLLBACK_OK had_prior=$hadPrior evidence_complete=$evidenceComplete cleanup_complete=$cleanupComplete cleanup_pending=$cleanupPending"
+} else {
+    Write-Host "COEXIST_ROLLBACK_OK isolated_only evidence_complete=$evidenceComplete cleanup_complete=$cleanupComplete cleanup_pending=$cleanupPending"
+}
 exit 0

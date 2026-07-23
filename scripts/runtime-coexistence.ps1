@@ -303,6 +303,8 @@ function New-BaseState {
         owner_verdict = $null
         runtime_verified = $false
         evidence_complete = $false
+        cleanup_complete = $true
+        cleanup_pending = $false
         ide_attested = $false
     }
 }
@@ -343,6 +345,8 @@ function ConvertFrom-CoexistenceStateObject {
         owner_verdict = $Obj.owner_verdict
         runtime_verified = if ($null -ne $Obj.PSObject.Properties["runtime_verified"]) { [bool]$Obj.runtime_verified } else { $false }
         evidence_complete = if ($null -ne $Obj.PSObject.Properties["evidence_complete"]) { [bool]$Obj.evidence_complete } else { $false }
+        cleanup_complete = if ($null -ne $Obj.PSObject.Properties["cleanup_complete"]) { [bool]$Obj.cleanup_complete } else { $true }
+        cleanup_pending = if ($null -ne $Obj.PSObject.Properties["cleanup_pending"]) { [bool]$Obj.cleanup_pending } else { $false }
         ide_attested = if ($null -ne $Obj.PSObject.Properties["ide_attested"]) { [bool]$Obj.ide_attested } else { $false }
     }
 }
@@ -614,6 +618,8 @@ function Invoke-CoexistenceFinalize {
         [int]$state.invocation_counts.plugin.afterShellExecution +
         [int]$state.invocation_counts.plugin.stop) -gt 0
     $preserveEvidence = [bool]$state.evidence_complete
+    $preserveCleanupComplete = [bool]$state.cleanup_complete
+    $preserveCleanupPending = [bool]$state.cleanup_pending
     $runtimeVerified = $false
     if ($state.real_profile -and $state.ide_attested -and $hasRecord -and ($owner -ne "combined_unsupported") -and $preserveEvidence) {
         $runtimeVerified = $true
@@ -621,6 +627,8 @@ function Invoke-CoexistenceFinalize {
 
     $state.runtime_verified = $runtimeVerified
     $state.evidence_complete = $preserveEvidence
+    $state.cleanup_complete = $preserveCleanupComplete
+    $state.cleanup_pending = $preserveCleanupPending
     if ($state.phase -eq "rolled_back" -and $preserveEvidence) {
         $state.evidence_complete = $true
     }
@@ -647,7 +655,7 @@ function Invoke-CoexistenceFinalize {
         context_bytes = 0
     } -Marker $state.invocation_marker
 
-    Write-Host "COEXIST_FINALIZE_OK owner=$owner runtime_verified=$runtimeVerified evidence_complete=$($state.evidence_complete)"
+    Write-Host "COEXIST_FINALIZE_OK owner=$owner runtime_verified=$runtimeVerified evidence_complete=$($state.evidence_complete) cleanup_complete=$($state.cleanup_complete) cleanup_pending=$($state.cleanup_pending)"
     if (-not $runtimeVerified) {
         Write-Host "COEXIST_RUNTIME_UNVERIFIED external IDE reload required for runtime proof"
     }

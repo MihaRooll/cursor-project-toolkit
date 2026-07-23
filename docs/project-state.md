@@ -12,7 +12,7 @@
 
 ## phase
 
-`toolkit-fast-loop-v3` — SHIP-V2 close. Waves 0–3 implemented locally. **Wave 4 gate:** live `toolkit-verify` green on GitHub (see ship block); branch protection active on `main`. **Waves 4–6** implementation pending. Runtime/plugin coexistence **not** verified.
+`toolkit-fast-loop-v3` — SHIP-V2 close. Waves 0–3 implemented locally. **Wave 4 gate:** live `toolkit-verify` green on GitHub (see ship block); branch protection active on `main`. **Wave 4A runtime experiment:** Human-Gated trials complete; profile restored. **Waves 4–6** implementation pending beyond 4A.
 
 ## ship (open PR)
 
@@ -41,8 +41,10 @@
 | Wave 3D hygiene | done | Program paths, living-eval 12/12, static vs runtime plugin claims |
 | Wave 4 CI gate (live GitHub) | done | run `29983360670` on SHA `5f8eb916…`; required check on `main` |
 | Waves 4–6 implementation | pending | beyond CI gate — not started |
-| Runtime coexistence protocol (Wave 4A) | implemented | transactional backup + TestOnly SelfTest; `runtime_verified` requires RealProfile + IdeAttested + evidence_complete |
-| Runtime coexistence in Cursor IDE | pending | external IDE reload + full phase order — not verified |
+| Runtime coexistence protocol (Wave 4A) | done | tooling + TestOnly + live-first rollback |
+| Wave 4A plugin-only runtime (Human Gate) | done | Cursor 3.12.17; `runtime_verified=true`; profile plugin removed post-trial |
+| Wave 4A combined runtime | done (negative) | both sources recorded → `combined_unsupported`; Essential retained as workspace owner |
+| Runtime coexistence in Cursor IDE (combined) | unsupported | defer until later coexistence design |
 | Marketplace plugin publish | pending | human gate |
 
 ## next_checks
@@ -50,7 +52,8 @@
 - [ ] After docs-touching slices: `scripts\validate-project-docs.ps1 -ProjectRoot .`
 - [ ] Local completion: `scripts\verify-harness.ps1 -Profile Quick`
 - [ ] INV-7 checkpoint (same-SHA): `scripts\verify-harness.ps1 -Profile Full` — align local SHA with PR head before merge
-- [ ] Before merge: confirm PR #4 head matches green CI SHA; do not claim runtime coexistence without evidence
+- [ ] Before merge: confirm PR #4 head matches green CI SHA
+- [ ] Wave 4A: optional `%TEMP%` RunRoot cleanup when trial windows closed (`cleanup_pending` non-profile only)
 - [ ] Waves 4–6: follow [fast-development-harness-plan.md](fast-development-harness-plan.md)
 
 ## toolchain_notes

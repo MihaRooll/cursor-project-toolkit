@@ -10,6 +10,7 @@ $SchemaPath = Join-Path $PSScriptRoot "coexistence-protocol.schema.json"
 $fail = 0
 $captured = New-Object System.Collections.Generic.List[string]
 $sampleToken = "__CPTK_COEXIST_SAMPLE__"
+$script:WorkspaceLockStream = $null
 
 function Assert-True($cond, [string]$msg) {
     if ($cond) {
@@ -41,6 +42,26 @@ function Invoke-Rollback {
     $code = $LASTEXITCODE
     $ErrorActionPreference = $prevEap
     return $code
+}
+
+function Unlock-OwnedRunRootChild {
+    if ($null -ne $script:WorkspaceLockStream) {
+        $script:WorkspaceLockStream.Close()
+        $script:WorkspaceLockStream.Dispose()
+        $script:WorkspaceLockStream = $null
+    }
+}
+
+function Lock-OwnedRunRootChild {
+    param([string]$ChildRoot)
+    New-Item -ItemType Directory -Force -Path $ChildRoot | Out-Null
+    $lockPath = Join-Path $ChildRoot ".cptk-lock"
+    $script:WorkspaceLockStream = [System.IO.File]::Open(
+        $lockPath,
+        [System.IO.FileMode]::OpenOrCreate,
+        [System.IO.FileAccess]::ReadWrite,
+        [System.IO.FileShare]::None
+    )
 }
 
 function Get-TreeDigest {
@@ -250,6 +271,41 @@ try {
     Assert-True ($digestRecovered -eq $digestBeforeFail) "after-backup recovery restores prior digest"
 } finally {
     Remove-Item -LiteralPath $rootFail -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+$rootLock = Join-Path $env:TEMP ("cptk-coexist-lock-" + [guid]::NewGuid().ToString("n"))
+$simLock = Join-Path $rootLock "simulated_profile"
+$markerLock = "lock-" + [guid]::NewGuid().ToString("n")
+try {
+    Seed-PriorPlugin -SimProfileRoot $simLock
+    $digestLockBefore = Get-TreeDigest (Join-Path $simLock "plugins\local\cursor-project-harness")
+    $prepLock = Invoke-Protocol -ArgList @(
+        "-Action", "Prepare", "-Scenario", "plugin-only", "-RunRoot", $rootLock,
+        "-TestOnly", "-InvocationMarker", $markerLock
+    )
+    Assert-True ($prepLock.Code -eq 0) "locked-installed Prepare exit 0"
+    $recLock = Invoke-Protocol -ArgList @(
+        "-Action", "Record", "-RunRoot", $rootLock, "-InvocationMarker", $markerLock,
+        "-Source", "plugin", "-HookEvent", "sessionStart"
+    )
+    Assert-True ($recLock.Code -eq 0) "locked-installed Record exit 0"
+    Lock-OwnedRunRootChild -ChildRoot (Join-Path $rootLock "installed")
+    Assert-True ((Invoke-Rollback -RunRoot $rootLock -InvocationMarker $markerLock) -eq 0) "locked-installed rollback exit 0"
+    $stLock = Get-Content -LiteralPath (Join-Path $rootLock "state.json") -Raw | ConvertFrom-Json
+    Assert-True ([bool]$stLock.evidence_complete) "locked-installed evidence_complete true"
+    Assert-True (-not [bool]$stLock.cleanup_complete) "locked-installed cleanup_complete false"
+    Assert-True ([bool]$stLock.cleanup_pending) "locked-installed cleanup_pending true"
+    $digestLockAfter = Get-TreeDigest (Join-Path $simLock "plugins\local\cursor-project-harness")
+    Assert-True ($digestLockAfter -eq $digestLockBefore) "locked-installed live plugin restored"
+    Unlock-OwnedRunRootChild
+    Assert-True ((Invoke-Rollback -RunRoot $rootLock -InvocationMarker $markerLock) -eq 0) "locked-installed retry rollback exit 0"
+    $stLock2 = Get-Content -LiteralPath (Join-Path $rootLock "state.json") -Raw | ConvertFrom-Json
+    Assert-True ([bool]$stLock2.cleanup_complete) "locked-installed retry cleanup_complete true"
+    Assert-True (-not [bool]$stLock2.cleanup_pending) "locked-installed retry cleanup_pending false"
+    Assert-True ([bool]$stLock2.evidence_complete) "locked-installed retry evidence_complete preserved"
+} finally {
+    Unlock-OwnedRunRootChild
+    Remove-Item -LiteralPath $rootLock -Recurse -Force -ErrorAction SilentlyContinue
 }
 
 $rootRec = Join-Path $env:TEMP ("cptk-coexist-rec-" + [guid]::NewGuid().ToString("n"))

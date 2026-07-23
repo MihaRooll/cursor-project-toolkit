@@ -48,7 +48,7 @@
       "title": "Project state",
       "status": "active",
       "owners": ["team"],
-      "tags": ["state", "wave3", "wave4-gate", "fast-loop", "ship-v2"]
+      "tags": ["state", "wave3", "wave4-gate", "wave4a", "fast-loop", "ship-v2"]
     },
     {
       "path": "docs/memory-and-obsidian.md",
@@ -111,7 +111,7 @@
       "title": "Harness as Cursor plugin",
       "status": "active",
       "owners": ["team"],
-      "tags": ["harness", "plugin", "runtime", "wave4a", "coexistence"]
+      "tags": ["harness", "plugin", "runtime", "wave4a", "coexistence", "live-evidence"]
     },
     {
       "path": "docs/session-handoff-2026-07-23.md",

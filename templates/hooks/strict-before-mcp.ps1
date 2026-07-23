@@ -6,6 +6,21 @@ param()
 
 $ErrorActionPreference = "SilentlyContinue"
 
+function Read-HookStdin {
+    # PS 5.1 cross-host: Console.In receives piped/redirected stdin for -File hooks in most hosts.
+    # OpenStandardInput fallback when Console.In is empty (e.g. some CI redirect spawns).
+    $fromConsole = ""
+    try { $fromConsole = [Console]::In.ReadToEnd() } catch { }
+    if (-not [string]::IsNullOrWhiteSpace($fromConsole)) { return $fromConsole }
+    try {
+        $reader = New-Object System.IO.StreamReader([Console]::OpenStandardInput())
+        $fromStdin = $reader.ReadToEnd()
+        $reader.Dispose()
+        if (-not [string]::IsNullOrWhiteSpace($fromStdin)) { return $fromStdin }
+    } catch { }
+    return ""
+}
+
 function Write-Deny([string]$UserMsg, [string]$AgentMsg) {
     $obj = @{
         permission    = "deny"
@@ -160,7 +175,7 @@ function Test-InjectionOrProd([string]$Text) {
     return $false
 }
 
-$raw = [Console]::In.ReadToEnd()
+$raw = Read-HookStdin
 if ([string]::IsNullOrWhiteSpace($raw)) {
     Write-Deny "MCP hook rejected: empty input." "Missing stdin JSON for beforeMCPExecution."
 }

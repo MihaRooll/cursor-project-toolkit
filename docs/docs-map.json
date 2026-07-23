@@ -128,6 +128,13 @@
       "tags": ["recovery", "wave5b", "toolkit-only", "shadow", "fast-loop"]
     },
     {
+      "path": "docs/changed-path-planner-shadow.md",
+      "title": "Changed-path verification planner shadow",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["verification", "wave6", "toolkit-only", "shadow", "planner", "fast-loop"]
+    },
+    {
       "path": "docs/evidence-sidecar-ab-protocol.md",
       "title": "Evidence sidecar and Fast A/B protocol",
       "status": "active",

@@ -50,6 +50,17 @@ Job summary repeats this boundary; success line must stay `VERIFY_HARNESS_PASS` 
 
 Green CI does **not** replace protection signoff; it only may satisfy the oracle checkpoint before protection is configured.
 
+## Wave 6 shadow planner (not graduated)
+
+| Item | Status |
+|------|--------|
+| Changed-path planner | **Shadow only** — `scripts/plan-verification.ps1` + `shipping/verification-checks.v1.json` |
+| CI wiring | **None** — this workflow stays unconditional Full; no `paths` / matrix / conditional jobs |
+| Observed Full runtime | **~2m25s** on green run `29983360670` — below Wave 6 p95 > 5 min graduation gate |
+| Promotion | `evidence_pending` until ≥20 CI runs, 30–60 same-SHA patches, zero selector misses |
+
+Details: [changed-path-planner-shadow.md](changed-path-planner-shadow.md). Shadow output must **not** skip or gate `toolkit-verify`.
+
 ## Rollout (Human Gate)
 
 1. Push workflow to remote (owner approval).

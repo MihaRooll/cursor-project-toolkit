@@ -1,0 +1,13 @@
+{
+  "mode": "PR",
+  "paths": [
+    { "path": "README.md", "class": "modified", "staged": false, "unstaged": true }
+  ],
+  "flags": {},
+  "expected": {
+    "recommended_profile": "Full",
+    "conservative_full": true,
+    "triggers": ["pre_merge"],
+    "must_include_all_full_oracle": true
+  }
+}

@@ -75,6 +75,7 @@
 | [evidence-sidecar-ab-protocol.md](evidence-sidecar-ab-protocol.md) | Wave 5A evidence sidecar + Fast A/B planner | — | Log task rows; seeded AB/BA plans; no pin promotion |
 | [recovery-escalation.md](recovery-escalation.md) | Recovery R0a shadow/manual protocol | SRC-031 | Explicit `/recovery-escalation`; stuck predicates; promotion gate R0b |
 | [recovery-shadow-sequential.md](recovery-shadow-sequential.md) | Wave 5B sequential recovery shadow simulator | — | Commitment-before-reveal experiments; toolkit-only |
+| [changed-path-planner-shadow.md](changed-path-planner-shadow.md) | Wave 6 changed-path verification planner shadow | — | Select Quick/Full check IDs; no CI wiring |
 | [wsl-windows-stability.md](wsl-windows-stability.md) | Стабильный WSL2 на Windows | — | .wslconfig, когда использовать WSL |
 | [cursor-official-index.md](cursor-official-index.md) | Карта всего official Cursor | SRC-004…009 | Старт: найти plugin/docs/blog |
 | [cursor-agent-best-practices.md](cursor-agent-best-practices.md) | Операционный manual агента | SRC-005 | Plan, context, rules/skills, workflows |

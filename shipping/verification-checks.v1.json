@@ -1,0 +1,330 @@
+{
+  "schema_version": 1,
+  "manifest_version": "v1",
+  "description": "Shadow changed-path verification planner — named checks, globs, dependencies, Full triggers. Toolkit-only; does not run CI.",
+  "profile_quick_stage_count": 13,
+  "profile_full_oracle_stage_count": 13,
+  "profile_full_total_stage_count": 26,
+  "current_full_runtime_observed": "2m25s",
+  "graduation_gates": {
+    "p95_minutes_min": 5,
+    "min_ci_runs": 20,
+    "min_patches_same_sha": 30,
+    "max_patches_same_sha": 60,
+    "median_patches_min": 25,
+    "zero_selector_misses": true,
+    "promotion_status": "evidence_pending"
+  },
+  "conservative_full_triggers": [
+    "missing_history",
+    "merge_conflict",
+    "parse_error",
+    "unknown_path",
+    "unknown_event",
+    "workflow_change",
+    "bootstrap_change",
+    "shipping_manifest_change",
+    "planner_change",
+    "plugin_mirror_change",
+    "shared_contract_change",
+    "pre_merge",
+    "push_main",
+    "dispatch_explicit",
+    "release"
+  ],
+  "release_trigger_globs": [
+    "docs/project-state.md",
+    "CHANGELOG.md"
+  ],
+  "full_trigger_globs": [
+    ".github/workflows/**",
+    "scripts/smoke-bootstrap.ps1",
+    "scripts/verify-harness.ps1",
+    "scripts/bootstrap-into-project.ps1",
+    "scripts/new-project.ps1",
+    "shipping/manifest.v1.json",
+    "shipping/verification-checks.v1.json",
+    "scripts/plan-verification.ps1",
+    "plugin/**",
+    ".cursor/skills/autonomous-task/contracts.md",
+    ".cursor/skills/autonomous-task/tier-rubric.md",
+    "schemas/**",
+    "subagents/**",
+    "tests/portability/**"
+  ],
+  "checks": [
+    {
+      "id": "Q-PARSE",
+      "profile": "quick",
+      "script": "scripts/parse-check-ps1.ps1",
+      "path_globs": ["**/*.ps1"],
+      "dependencies": [],
+      "timeout_seconds": 120,
+      "stage_token": "Q-PARSE"
+    },
+    {
+      "id": "Q-DOCS-ST",
+      "profile": "quick",
+      "script": "scripts/validate-project-docs.ps1",
+      "script_args": ["-SelfTest"],
+      "path_globs": [
+        "docs/docs-map.json",
+        "docs/docs-map-schema.md",
+        "scripts/validate-project-docs.ps1",
+        "docs/**"
+      ],
+      "dependencies": [],
+      "timeout_seconds": 60,
+      "stage_token": "Q-DOCS-ST"
+    },
+    {
+      "id": "Q-DOCS-LIVE",
+      "profile": "quick",
+      "script": "scripts/validate-project-docs.ps1",
+      "script_args": ["-ProjectRoot", "<toolkit-root>"],
+      "path_globs": ["docs/**", "AGENTS.md", "README.md"],
+      "dependencies": ["Q-DOCS-ST"],
+      "timeout_seconds": 60,
+      "stage_token": "Q-DOCS-LIVE"
+    },
+    {
+      "id": "Q-ORCH-ST",
+      "profile": "quick",
+      "script": "scripts/validate-orchestration.ps1",
+      "script_args": ["-SelfTest"],
+      "path_globs": [
+        "scripts/validate-orchestration.ps1",
+        "subagents/**",
+        ".cursor/skills/autonomous-task/**",
+        "docs/autonomous-agent-orchestration.md",
+        "docs/orchestration-evidence.md"
+      ],
+      "dependencies": [],
+      "timeout_seconds": 90,
+      "stage_token": "Q-ORCH-ST"
+    },
+    {
+      "id": "Q-MCP-ST",
+      "profile": "quick",
+      "script": "scripts/validate-mcp-profiles.ps1",
+      "script_args": ["-SelfTest"],
+      "path_globs": [
+        "scripts/validate-mcp-profiles.ps1",
+        "docs/mcp-security.md",
+        "docs/project-integrations.md"
+      ],
+      "dependencies": [],
+      "timeout_seconds": 60,
+      "stage_token": "Q-MCP-ST"
+    },
+    {
+      "id": "Q-LIVE-ST",
+      "profile": "quick",
+      "script": "scripts/validate-living-evals.ps1",
+      "script_args": ["-SelfTest"],
+      "path_globs": [
+        "scripts/validate-living-evals.ps1",
+        "docs/living-documentation.md",
+        "docs/harness-evidence-and-enforcement.md"
+      ],
+      "dependencies": [],
+      "timeout_seconds": 90,
+      "stage_token": "Q-LIVE-ST"
+    },
+    {
+      "id": "Q-REC-ST",
+      "profile": "quick",
+      "script": "scripts/validate-recovery.ps1",
+      "script_args": ["-SelfTest"],
+      "path_globs": [
+        "scripts/validate-recovery.ps1",
+        "tests/recovery/**",
+        "subagents/recovery-*.md",
+        "docs/recovery-escalation.md",
+        ".cursor/skills/autonomous-task/contracts.md"
+      ],
+      "dependencies": [],
+      "timeout_seconds": 120,
+      "stage_token": "Q-REC-ST"
+    },
+    {
+      "id": "Q-DRY-SCRIPTS",
+      "profile": "quick",
+      "script": "scripts/dry-run-strict-hooks.ps1",
+      "path_globs": [
+        "scripts/dry-run-strict-hooks.ps1",
+        ".cursor/hooks/**",
+        ".cursor/hooks.json"
+      ],
+      "dependencies": [],
+      "timeout_seconds": 60,
+      "stage_token": "Q-DRY-SCRIPTS"
+    },
+    {
+      "id": "Q-DRY-TMPL",
+      "profile": "quick",
+      "script": "templates/hooks/dry-run-strict-hooks.ps1",
+      "path_globs": ["templates/hooks/**"],
+      "dependencies": [],
+      "timeout_seconds": 60,
+      "stage_token": "Q-DRY-TMPL"
+    },
+    {
+      "id": "Q-SESSION",
+      "profile": "quick",
+      "script": "scripts/test-session-start-context.ps1",
+      "path_globs": [
+        "scripts/test-session-start-context.ps1",
+        ".cursor/hooks/session-start.ps1"
+      ],
+      "dependencies": [],
+      "timeout_seconds": 60,
+      "stage_token": "Q-SESSION"
+    },
+    {
+      "id": "Q-DOC-SECRET",
+      "profile": "quick",
+      "script": "tests/project-doctor/test-secret-leak.ps1",
+      "path_globs": ["tests/project-doctor/test-secret-leak.ps1", "docs/**"],
+      "dependencies": ["Q-DOCS-ST"],
+      "timeout_seconds": 60,
+      "stage_token": "Q-DOC-SECRET"
+    },
+    {
+      "id": "Q-DOC-BRACKET",
+      "profile": "quick",
+      "script": "tests/project-doctor/test-bracket-path.ps1",
+      "path_globs": ["tests/project-doctor/test-bracket-path.ps1", "scripts/project-doctor.ps1"],
+      "dependencies": [],
+      "timeout_seconds": 60,
+      "stage_token": "Q-DOC-BRACKET"
+    },
+    {
+      "id": "Q-DOC-MISSING",
+      "profile": "quick",
+      "script": "tests/project-doctor/test-missing-phase.ps1",
+      "path_globs": ["tests/project-doctor/test-missing-phase.ps1", "docs/project-state.md"],
+      "dependencies": [],
+      "timeout_seconds": 60,
+      "stage_token": "Q-DOC-MISSING"
+    },
+    {
+      "id": "F-ESSENTIAL",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-bootstrap.ps1",
+      "script_args": ["-OracleOnly"],
+      "path_globs": ["scripts/smoke-bootstrap.ps1", "templates/**"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-ESSENTIAL"
+    },
+    {
+      "id": "F-FULL-MERGE",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-bootstrap.ps1",
+      "path_globs": ["scripts/smoke-bootstrap.ps1"],
+      "dependencies": ["F-ESSENTIAL"],
+      "timeout_seconds": 300,
+      "stage_token": "F-FULL-MERGE"
+    },
+    {
+      "id": "F-NEWPROJECT",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-bootstrap.ps1",
+      "path_globs": ["scripts/new-project.ps1", "scripts/new-project.cmd"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-NEWPROJECT"
+    },
+    {
+      "id": "F-C1",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-bootstrap.ps1",
+      "path_globs": ["scripts/bootstrap-into-project.ps1"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-C1"
+    },
+    {
+      "id": "F-PORT-G",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-portability.ps1",
+      "path_globs": ["scripts/smoke-portability.ps1", "tests/portability/**"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-PORT-G"
+    },
+    {
+      "id": "F-PORT-P",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-portability.ps1",
+      "path_globs": ["tests/portability/**"],
+      "dependencies": ["F-PORT-G"],
+      "timeout_seconds": 300,
+      "stage_token": "F-PORT-P"
+    },
+    {
+      "id": "F-PORT-E",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-portability.ps1",
+      "path_globs": ["tests/portability/**"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-PORT-E"
+    },
+    {
+      "id": "F-PORT-F",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-portability.ps1",
+      "path_globs": ["tests/portability/**"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-PORT-F"
+    },
+    {
+      "id": "F-PORT-D",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-portability.ps1",
+      "path_globs": ["scripts/project-doctor.ps1", "tests/portability/**"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-PORT-D"
+    },
+    {
+      "id": "F-COPY-LIVE",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-bootstrap.ps1",
+      "path_globs": ["scripts/validate-living-evals.ps1", "templates/**"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-COPY-LIVE"
+    },
+    {
+      "id": "F-COPY-REC",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-bootstrap.ps1",
+      "path_globs": ["scripts/validate-recovery.ps1", "tests/recovery/**"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-COPY-REC"
+    },
+    {
+      "id": "F-COPY-MCP",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-bootstrap.ps1",
+      "path_globs": ["scripts/validate-mcp-profiles.ps1"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-COPY-MCP"
+    },
+    {
+      "id": "F-COPY-DRY",
+      "profile": "full-oracle",
+      "script": "scripts/smoke-bootstrap.ps1",
+      "path_globs": ["templates/hooks/**"],
+      "dependencies": [],
+      "timeout_seconds": 300,
+      "stage_token": "F-COPY-DRY"
+    }
+  ]
+}

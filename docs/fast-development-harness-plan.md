@@ -19,7 +19,7 @@
 | T0–T4 orchestration | **Preserve** — Main control plane; Composer sole writer T0–T3; Grok orch/verify; Sol T3 pre-write only |
 | Primary bottleneck | Incomplete/unsafe full oracle + no CI — not test count |
 | P0 order | Quick/Full oracle → unconditional Windows CI → policy/hygiene |
-| Deferred now | Changed-path planner, conditional CI, cache, root Pester/pytest core, Nx/Bazel, remote cache, strict deny gates |
+| Deferred now | Planner **promotion** + conditional CI, cache, root Pester/pytest core, Nx/Bazel, remote cache, strict deny gates |
 
 Observed full smoke ~105s on Windows — acceptable for first CI gate; optimize only after stable CI metrics.
 
@@ -31,7 +31,7 @@ Observed full smoke ~105s on Windows — acceptable for first CI gate; optimize 
 2. **Local completion:** `verify-harness.ps1 -Profile Quick` — all fast static/policy validators at toolkit root, each exactly once.
 3. **Pre-merge / main:** `verify-harness.ps1 -Profile Full` = Quick + exactly one bootstrap/portability oracle (`smoke-bootstrap -OracleOnly`).
 4. **Manual Cursor checks:** model availability, plugin/hook runtime, actual surface — separate from deterministic scripts.
-5. **Changed-path planner:** Wave 6 only after graduation triggers (p95 > 5 min, ≥20 CI runs, stable oracle).
+5. **Changed-path planner (shadow):** **shipped** toolkit-only (`scripts/plan-verification.ps1`, `shipping/verification-checks.v1.json`, `tests/planner/`). **Promotion** to conditional CI only after graduation gates (p95 > 5 min, ≥20 CI runs, stable oracle).
 
 ---
 
@@ -116,6 +116,8 @@ Rollout: `workflow_dispatch` → test PR → owner Human Gate for branch protect
 | **4** Runtime ownership experiment; shadow shipping manifest; provenance | Stable green CI |
 | **5** Fast vs standard A/B; sequential recovery shadow; evidence sidecar | Attributable models + reliable oracle |
 | **6** Changed-path planner shadow | p95 > 5 min or quota pressure; ≥20 CI runs; 30–60 same-SHA patches; zero selector misses |
+
+**Wave 6 status (factual):** shadow planner **execution shipped** toolkit-only (`scripts/plan-verification.ps1`, `shipping/verification-checks.v1.json`, `tests/planner/`). **Not graduated** — promotion `evidence_pending`; observed Full CI runtime **~2m25s** (run `29983360670`) below p95 > 5 min gate; **conditional CI / path filters deferred** until gates met. Unconditional `toolkit-verify` unchanged.
 
 ---
 

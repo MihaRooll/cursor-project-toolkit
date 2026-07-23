@@ -12,7 +12,7 @@
 
 ## phase
 
-`toolkit-fast-loop-v3` — SHIP-V2 close. Waves 0–3 implemented locally. **Wave 4 gate:** live `toolkit-verify` green on GitHub (see ship block); branch protection active on `main`. **Wave 4A runtime experiment:** Human-Gated trials complete; profile restored. **Waves 4A/4B/4C done.** **Wave 5A done; Wave 5B (in progress):** sequential recovery shadow simulator. Remaining Wave 5+ / Waves 6 pending.
+`toolkit-fast-loop-v3` — SHIP-V2 close. Waves 0–3 implemented locally. **Wave 4 gate:** live `toolkit-verify` green on GitHub (see ship block); branch protection active on `main`. **Wave 4A runtime experiment:** Human-Gated trials complete; profile restored. **Waves 4A/4B/4C done.** **Wave 5A/5B done.** **Wave 6 (in progress):** changed-path planner shadow. Remaining Wave 6 graduation / conditional CI pending.
 
 ## ship (open PR)
 
@@ -47,7 +47,8 @@
 | Wave 4B shadow shipping manifest | done | `shipping/manifest.v1.json` + validator vs live bootstrap arrays; bootstrap still array-driven |
 | Wave 4C harness provenance collector | done | `schemas/provenance.v1.json` + `collect-provenance.ps1` + doctor local drift; status/diff only |
 | Wave 5A evidence sidecar + A/B protocol | done | sidecar writer/validator + `ab-protocol.ps1`; toolkit-only; promotion evidence_pending |
-| Wave 5B sequential recovery shadow | in_progress | two-phase Commit/Reveal; `validate-recovery-shadow.ps1`; toolkit-only `tests/recovery-shadow/`; production R0a unchanged |
+| Wave 5B sequential recovery shadow | done | two-phase Commit/Reveal; validate-recovery-shadow; toolkit-only tests/recovery-shadow/ |
+| Wave 6 changed-path planner shadow | in_progress | plan-verification.ps1 + verification-checks.v1.json; shadow only; Full ~2m25s not graduated |
 | Runtime coexistence in Cursor IDE (combined) | unsupported | defer until later coexistence design |
 | Marketplace plugin publish | pending | human gate |
 
@@ -61,6 +62,7 @@
 - [ ] Wave 4C: after provenance edits run `scripts\collect-provenance.ps1 -SelfTest` and `tests\provenance\test-collect-provenance.ps1`
 - [ ] Wave 5A: after sidecar/A/B edits run `scripts\validate-evidence-sidecar.ps1 -SelfTest`, `scripts\write-evidence-sidecar.ps1 -SelfTest`, `scripts\ab-protocol.ps1 -SelfTest`, and `tests\orchestration\evidence\test-evidence-sidecar.ps1`
 - [ ] Wave 5B: after shadow edits run `scripts\recovery-shadow.ps1 -SelfTest`, `scripts\validate-recovery-shadow.ps1 -SelfTest`, and `tests\recovery-shadow\test-recovery-shadow.ps1`
+- [ ] Wave 6: after planner edits run `scripts\plan-verification.ps1 -SelfTest` and `tests\planner\test-plan-verification.ps1`
 - [ ] Waves 4–6: follow [fast-development-harness-plan.md](fast-development-harness-plan.md)
 
 ## toolchain_notes

@@ -141,18 +141,38 @@ function Get-CursorPluginsHooksSnapshot {
     return $snap
 }
 
+function Get-HomeSha256Prefix([string]$Text) {
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($Text)
+        $hash = ($sha.ComputeHash($bytes) | ForEach-Object { $_.ToString("x2") }) -join ""
+        return $hash.Substring(0, 16)
+    } finally {
+        $sha.Dispose()
+    }
+}
+
+function Get-CanonicalUserHomeState($Value) {
+    # Canonical User-scope HOME: only null or zero-length means unset on Windows runners.
+    if ($null -eq $Value) { return "unset" }
+    $t = [string]$Value
+    if ($t.Length -eq 0) { return "unset" }
+    return "set len:$($t.Length) sha256:$(Get-HomeSha256Prefix $t)"
+}
+
+function Test-UserHomeUnchangedCanonical($Before, $After) {
+    $beforeUnset = ($null -eq $Before) -or (([string]$Before).Length -eq 0)
+    $afterUnset = ($null -eq $After) -or (([string]$After).Length -eq 0)
+    if ($beforeUnset -and $afterUnset) { return $true }
+    if ($beforeUnset -or $afterUnset) { return $false }
+    return ([string]$Before -ceq [string]$After)
+}
+
 function Get-SafeHomeFingerprint([string]$Value) {
     if ($null -eq $Value) { return "null" }
     $t = [string]$Value
     if ($t.Length -eq 0) { return "empty" }
-    $sha = [System.Security.Cryptography.SHA256]::Create()
-    try {
-        $bytes = [System.Text.Encoding]::UTF8.GetBytes($t)
-        $hash = ($sha.ComputeHash($bytes) | ForEach-Object { $_.ToString("x2") }) -join ""
-        return "set sha256:$($hash.Substring(0, 16))"
-    } finally {
-        $sha.Dispose()
-    }
+    return "set len:$($t.Length) sha256:$(Get-HomeSha256Prefix $t)"
 }
 
 function Assert-BoundedHomeUnchanged {
@@ -161,7 +181,7 @@ function Assert-BoundedHomeUnchanged {
         [hashtable]$CursorBefore
     )
     $userHomeAfter = [Environment]::GetEnvironmentVariable("HOME", "User")
-    if ($userHomeAfter -ne $UserHomeBefore) {
+    if (-not (Test-UserHomeUnchangedCanonical $UserHomeBefore $userHomeAfter)) {
         $beforeFp = Get-SafeHomeFingerprint $UserHomeBefore
         $afterFp = Get-SafeHomeFingerprint $userHomeAfter
         Assert-True $false "User-scope HOME unchanged (before=$beforeFp after=$afterFp)"

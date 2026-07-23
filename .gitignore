@@ -16,6 +16,7 @@ credentials.json
 .cursor/projects/
 .cursor/**/*.log
 .cursor/evidence-local/
+.cursor/recovery-shadow-local/
 
 # Plans may contain private notes — commit only if intentional
 .cursor/plans/

@@ -14,6 +14,7 @@
 - Premium (T3/security/architecture): GPT Sol + Claude Opus blind review when both available; Fable only explicit `deep` after unresolved cross-family conflict
 - No reliable oracle → `blocked` or `human_pending`; no implementation tournament
 - Validator: `scripts/validate-recovery.ps1 -SelfTest` → `RECOVERY_VALIDATE_PASS`
+- Sequential shadow (Wave 5B toolkit-only): `scripts/recovery-shadow.ps1 -SelfTest` · [recovery-shadow-sequential.md](recovery-shadow-sequential.md)
 - Static fixtures: `tests/recovery/` · living-eval recovery domains in `tests/living-eval/`
 
 **Do not:**

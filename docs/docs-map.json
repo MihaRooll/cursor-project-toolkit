@@ -121,6 +121,13 @@
       "tags": ["harness", "provenance", "wave4c", "shipping-manifest", "doctor"]
     },
     {
+      "path": "docs/recovery-shadow-sequential.md",
+      "title": "Sequential recovery shadow",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["recovery", "wave5b", "toolkit-only", "shadow", "fast-loop"]
+    },
+    {
       "path": "docs/evidence-sidecar-ab-protocol.md",
       "title": "Evidence sidecar and Fast A/B protocol",
       "status": "active",

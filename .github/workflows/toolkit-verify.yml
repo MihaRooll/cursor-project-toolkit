@@ -31,13 +31,76 @@ jobs:
         run: |
           $ErrorActionPreference = "Continue"
           $ProgressPreference = "SilentlyContinue"
+          $MaxEmitLen = 500
+          $RingCapacity = 24
           $started = Get-Date
           $lines = New-Object System.Collections.Generic.List[string]
+          $stageIds = New-Object System.Collections.Generic.List[string]
           $exitCode = $null
           $invokeError = $null
           $stderrNote = $null
+          $tailNote = $null
+          $discardedClixml = 0
           $stdoutFile = Join-Path $env:TEMP ("toolkit-verify-out-" + [guid]::NewGuid().ToString("n") + ".log")
           $stderrFile = Join-Path $env:TEMP ("toolkit-verify-err-" + [guid]::NewGuid().ToString("n") + ".log")
+          function Get-BoundedText([string]$Text, [int]$MaxLen) {
+            $t = [string]$Text
+            if ($t.Length -le $MaxLen) { return $t }
+            return $t.Substring(0, $MaxLen - 3) + "..."
+          }
+          function Test-IsClixmlOrProgressLine([string]$Line) {
+            if ([string]::IsNullOrWhiteSpace($Line)) { return $true }
+            $t = $Line.Trim()
+            if ($t -match '^#\s*<\s*CLIXML') { return $true }
+            if ($t -match '^<Objs\b') { return $true }
+            if ($t -match '^<Obj\b') { return $true }
+            if ($t -match 'xmlns="http://schemas\.microsoft\.com/powershell') { return $true }
+            if ($t -match 'System\.Management\.Automation\.(PSCustomObject|InformationRecord|ProgressRecord|HostInformationMessage)') { return $true }
+            if ($t -match 'Preparing modules for first use') { return $true }
+            return $false
+          }
+          function Test-IsEvidenceLine([string]$Line) {
+            if ([string]::IsNullOrWhiteSpace($Line)) { return $false }
+            if (Test-IsClixmlOrProgressLine $Line) { return $false }
+            if ($Line -match '^\s*STAGE_OK\s+\S+') { return $true }
+            if ($Line -match 'VERIFY_HARNESS_(PASS|FAIL)') { return $true }
+            if ($Line -match '^\s*(FAIL|WARN|PORTABILITY|SMOKE)\b') { return $true }
+            return $false
+          }
+          function Add-RingLine($Ring, [string]$Line, [int]$Capacity) {
+            [void]$Ring.Add($Line)
+            while ($Ring.Count -gt $Capacity) { $Ring.RemoveAt(0) }
+          }
+          function Import-BoundedStdoutEvidence {
+            param(
+              [string]$Path,
+              [System.Collections.Generic.List[string]]$EvidenceLines,
+              [System.Collections.Generic.List[string]]$StageList,
+              [System.Collections.Generic.List[string]]$Ring,
+              [ref]$Discarded
+            )
+            if (-not (Test-Path -LiteralPath $Path)) { return }
+            $reader = New-Object System.IO.StreamReader($Path, (New-Object System.Text.UTF8Encoding $false))
+            try {
+              while ($null -ne ($raw = $reader.ReadLine())) {
+                if (Test-IsClixmlOrProgressLine $raw) {
+                  $Discarded.Value = $Discarded.Value + 1
+                  continue
+                }
+                $bounded = Get-BoundedText $raw $MaxEmitLen
+                Add-RingLine $Ring $bounded $RingCapacity
+                if ($raw -match '^\s*STAGE_OK\s+(\S+)') {
+                  [void]$StageList.Add($Matches[1])
+                }
+                if (Test-IsEvidenceLine $raw) {
+                  Write-Host $bounded
+                  [void]$EvidenceLines.Add($bounded)
+                }
+              }
+            } finally {
+              $reader.Dispose()
+            }
+          }
           try {
             $proc = Start-Process -FilePath "powershell.exe" `
               -ArgumentList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts\verify-harness.ps1", "-Profile", "Full") `
@@ -49,24 +112,30 @@ jobs:
               throw "Start-Process returned null"
             }
             $exitCode = [int]$proc.ExitCode
-            if (Test-Path -LiteralPath $stdoutFile) {
-              Get-Content -LiteralPath $stdoutFile -Encoding UTF8 | ForEach-Object {
-                $text = [string]$_
-                Write-Host $text
-                [void]$lines.Add($text)
-              }
-            }
+            $ring = New-Object System.Collections.Generic.List[string]
+            Import-BoundedStdoutEvidence -Path $stdoutFile -EvidenceLines $lines -StageList $stageIds -Ring $ring -Discarded ([ref]$discardedClixml)
             if (Test-Path -LiteralPath $stderrFile) {
               $errRaw = [string](Get-Content -LiteralPath $stderrFile -Raw -Encoding UTF8 -ErrorAction SilentlyContinue)
               if (-not [string]::IsNullOrWhiteSpace($errRaw)) {
                 $trimmed = $errRaw.Trim()
-                if ($trimmed.Length -gt 400) {
-                  $stderrNote = $trimmed.Substring(0, 397) + "..."
+                if ($trimmed -match '^\#\s*<\s*CLIXML') {
+                  $stderrNote = "CLIXML/progress payload discarded ($($trimmed.Length) chars)"
+                } elseif ($trimmed.Length -gt 400) {
+                  $stderrNote = Get-BoundedText $trimmed 400
                 } else {
                   $stderrNote = $trimmed
                 }
-                Write-Host "WARN child stderr captured (bounded, not merged): $($stderrNote.Length) chars"
+                Write-Host "WARN child stderr captured (bounded, not replayed): $($stderrNote.Length) chars"
               }
+            }
+            $passLine = ($lines | Where-Object { $_ -match 'VERIFY_HARNESS_PASS' } | Select-Object -Last 1)
+            $failLine = ($lines | Where-Object { $_ -match 'VERIFY_HARNESS_FAIL' } | Select-Object -Last 1)
+            $hasFailToken = ($null -ne $failLine) -or ($lines | Where-Object { $_ -match '^\s*FAIL\b' } | Select-Object -First 1)
+            if ($exitCode -ne 0 -and -not $hasFailToken) {
+              Write-Host "WARN bounded tail (nonzero exit $exitCode, no fail token):"
+              foreach ($r in $ring) { Write-Host $r }
+              $tailNote = ($ring -join " | ")
+              if ($tailNote.Length -gt 400) { $tailNote = Get-BoundedText $tailNote 400 }
             }
           } catch {
             $invokeError = $_.Exception.Message
@@ -75,9 +144,6 @@ jobs:
             [void]$lines.Add($failMsg)
           } finally {
             $elapsed = (Get-Date) - $started
-            $joined = $lines -join [Environment]::NewLine
-            $stageMatches = [regex]::Matches($joined, 'STAGE_OK\s+(\S+)')
-            $stageIds = @($stageMatches | ForEach-Object { $_.Groups[1].Value })
             $passLine = ($lines | Where-Object { $_ -match 'VERIFY_HARNESS_PASS' } | Select-Object -Last 1)
             $failLine = ($lines | Where-Object { $_ -match 'VERIFY_HARNESS_FAIL' } | Select-Object -Last 1)
             $displayExit = if ($null -eq $exitCode) { "unset" } else { [string]$exitCode }
@@ -92,6 +158,7 @@ jobs:
               "| Wall clock | $($elapsed.ToString('mm\:ss')) |"
               "| Exit code | $displayExit |"
               "| STAGE_OK count | $($stageIds.Count) |"
+              "| CLIXML lines discarded | $discardedClixml |"
             )
             if ($null -ne $invokeError) {
               $summary += ""
@@ -100,6 +167,10 @@ jobs:
             if (-not [string]::IsNullOrWhiteSpace($stderrNote)) {
               $summary += ""
               $summary += "**Child stderr (bounded):** $stderrNote"
+            }
+            if (-not [string]::IsNullOrWhiteSpace($tailNote)) {
+              $summary += ""
+              $summary += "**Bounded tail (nonzero exit, no fail token):** $tailNote"
             }
             if ($stageIds.Count -gt 0) {
               $summary += ""
@@ -117,6 +188,9 @@ jobs:
             } elseif ($null -eq $exitCode) {
               $summary += ""
               $summary += "**Result:** FAIL verify-harness exit code unset (fail-closed)"
+            } elseif ($exitCode -ne 0) {
+              $summary += ""
+              $summary += "**Result:** FAIL verify-harness exit code $exitCode (fail-closed)"
             }
             if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY)) {
               Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ($summary -join [Environment]::NewLine)

@@ -30,18 +30,43 @@ jobs:
       - name: verify-harness Full
         run: |
           $ErrorActionPreference = "Continue"
+          $ProgressPreference = "SilentlyContinue"
           $started = Get-Date
           $lines = New-Object System.Collections.Generic.List[string]
           $exitCode = $null
           $invokeError = $null
+          $stderrNote = $null
+          $stdoutFile = Join-Path $env:TEMP ("toolkit-verify-out-" + [guid]::NewGuid().ToString("n") + ".log")
+          $stderrFile = Join-Path $env:TEMP ("toolkit-verify-err-" + [guid]::NewGuid().ToString("n") + ".log")
           try {
-            & powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\verify-harness.ps1 -Profile Full 2>&1 | ForEach-Object {
-              $text = [string]$_
-              Write-Host $text
-              [void]$lines.Add($text)
+            $proc = Start-Process -FilePath "powershell.exe" `
+              -ArgumentList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts\verify-harness.ps1", "-Profile", "Full") `
+              -WorkingDirectory (Get-Location).Path `
+              -Wait -PassThru -NoNewWindow `
+              -RedirectStandardOutput $stdoutFile `
+              -RedirectStandardError $stderrFile
+            if ($null -eq $proc) {
+              throw "Start-Process returned null"
             }
-            if ($null -ne $LASTEXITCODE) {
-              $exitCode = [int]$LASTEXITCODE
+            $exitCode = [int]$proc.ExitCode
+            if (Test-Path -LiteralPath $stdoutFile) {
+              Get-Content -LiteralPath $stdoutFile -Encoding UTF8 | ForEach-Object {
+                $text = [string]$_
+                Write-Host $text
+                [void]$lines.Add($text)
+              }
+            }
+            if (Test-Path -LiteralPath $stderrFile) {
+              $errRaw = [string](Get-Content -LiteralPath $stderrFile -Raw -Encoding UTF8 -ErrorAction SilentlyContinue)
+              if (-not [string]::IsNullOrWhiteSpace($errRaw)) {
+                $trimmed = $errRaw.Trim()
+                if ($trimmed.Length -gt 400) {
+                  $stderrNote = $trimmed.Substring(0, 397) + "..."
+                } else {
+                  $stderrNote = $trimmed
+                }
+                Write-Host "WARN child stderr captured (bounded, not merged): $($stderrNote.Length) chars"
+              }
             }
           } catch {
             $invokeError = $_.Exception.Message
@@ -72,6 +97,10 @@ jobs:
               $summary += ""
               $summary += "**Invocation error:** $invokeError"
             }
+            if (-not [string]::IsNullOrWhiteSpace($stderrNote)) {
+              $summary += ""
+              $summary += "**Child stderr (bounded):** $stderrNote"
+            }
             if ($stageIds.Count -gt 0) {
               $summary += ""
               $summary += "### Stages"
@@ -92,6 +121,8 @@ jobs:
             if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY)) {
               Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ($summary -join [Environment]::NewLine)
             }
+            Remove-Item -LiteralPath $stdoutFile -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $stderrFile -Force -ErrorAction SilentlyContinue
           }
           if ($null -ne $invokeError) { exit 1 }
           if ($null -eq $exitCode) {

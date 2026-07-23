@@ -1,0 +1,53 @@
+{
+  "schema_version": 3,
+  "allowed_fields": [
+    "schema_version",
+    "scenario",
+    "source",
+    "event",
+    "nonce",
+    "hash",
+    "elapsed_ms",
+    "invocation_count",
+    "context_bytes"
+  ],
+  "state_fields": [
+    "phase",
+    "invocation_marker",
+    "scenario",
+    "run_root_id",
+    "real_profile",
+    "test_only_profile",
+    "had_prior_plugin",
+    "backup_complete",
+    "expected_live_digest",
+    "backup_digest",
+    "live_surface_id",
+    "prepare_seal",
+    "source_digest",
+    "installed_digest",
+    "pre_rollback_digest",
+    "used_nonces",
+    "invocation_counts",
+    "owner_verdict",
+    "runtime_verified",
+    "evidence_complete",
+    "ide_attested"
+  ],
+  "forbidden_state_fields": [
+    "simulated_profile_root",
+    "profile_root",
+    "absolute_path"
+  ],
+  "scenarios": ["baseline", "essential-only", "plugin-only", "combined"],
+  "sources": ["none", "essential", "plugin", "combined"],
+  "events": ["prepare", "record", "finalize", "rollback", "selftest"],
+  "allowed_record_sources": {
+    "baseline": [],
+    "essential-only": ["essential"],
+    "plugin-only": ["plugin"],
+    "combined": ["essential", "plugin"]
+  },
+  "live_surface_id": "plugins/local/cursor-project-harness",
+  "testonly_profile_relative": "simulated_profile"
+}

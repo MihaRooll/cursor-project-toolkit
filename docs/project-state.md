@@ -41,7 +41,8 @@
 | Wave 3D hygiene | done | Program paths, living-eval 12/12, static vs runtime plugin claims |
 | Wave 4 CI gate (live GitHub) | done | run `29983360670` on SHA `5f8eb916…`; required check on `main` |
 | Waves 4–6 implementation | pending | beyond CI gate — not started |
-| Runtime coexistence | pending | not verified |
+| Runtime coexistence protocol (Wave 4A) | implemented | transactional backup + TestOnly SelfTest; `runtime_verified` requires RealProfile + IdeAttested + evidence_complete |
+| Runtime coexistence in Cursor IDE | pending | external IDE reload + full phase order — not verified |
 | Marketplace plugin publish | pending | human gate |
 
 ## next_checks

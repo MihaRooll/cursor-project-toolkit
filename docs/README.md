@@ -56,7 +56,7 @@
 | [memory-and-obsidian.md](memory-and-obsidian.md) | Memory authority + Obsidian vault rules | SRC-026/027 | Conflict resolution; Automation memory; Obsidian opt-in |
 | [mcp-security.md](mcp-security.md) | MCP placement, pins, Human Gate | SRC-025/028 | Propose/validate MCP; local vs cloud; untrusted tool I/O |
 | [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md) | Living-eval + strict hook promotion | SRC-029 | Full opt-in enforcement; failClosed; Cloud hook limits |
-| [harness-as-cursor-plugin.md](harness-as-cursor-plugin.md) | Copy vs plugin vs submodule | SRC-008/009 | Упаковка harness; local plugin install |
+| [harness-as-cursor-plugin.md](harness-as-cursor-plugin.md) | Copy vs plugin; Wave 4A runtime coexistence protocol | SRC-008/009 | Упаковка harness; local plugin; coexistence SelfTest |
 | [harness-consumers.md](harness-consumers.md) | Живые продукты с Essential | — | Где накатан harness; feedback loop |
 | [openai-gpt56-model-guidance.md](openai-gpt56-model-guidance.md) | GPT-5.6 latest-model | SRC-012 | Модели, effort/pro/PTC, lean prompts |
 | [openai-ai-dev-index.md](openai-ai-dev-index.md) | OpenAI docs для AI-dev | SRC-013 | Что читать из portal; P0–P3 |

@@ -107,6 +107,13 @@
       "tags": ["ci", "harness", "oracle", "fast-loop", "github-actions"]
     },
     {
+      "path": "docs/harness-as-cursor-plugin.md",
+      "title": "Harness as Cursor plugin",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["harness", "plugin", "runtime", "wave4a", "coexistence"]
+    },
+    {
       "path": "docs/session-handoff-2026-07-23.md",
       "title": "Session handoff 2026-07-23",
       "status": "active",

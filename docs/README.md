@@ -49,7 +49,7 @@
 | [project-integrations.md](project-integrations.md) | Essential vs day-0 living docs wiring | — | Bootstrap/plugin integration questions |
 | [project-environment.md](project-environment.md) | Surfaces: IDE/CLI/Cloud/Automation/SCM | SRC-029 | Cross-PC setup; runtime vs build secrets |
 | [cursor-native-controls.md](cursor-native-controls.md) | permissions/sandbox/env/BUGBOT/ignore/Browser | SRC-029/030 | Opt-in native controls; Essential ships none active |
-| [project-state.md](project-state.md) | Phase, milestones, fast-loop v2 progress | — | Session stage; setup skill; doctor advisory |
+| [project-state.md](project-state.md) | Phase, milestones, fast-loop v3 / SHIP-V2; Wave 4 CI gate | — | Session stage; setup skill; doctor advisory |
 | [fast-development-harness-plan.md](fast-development-harness-plan.md) | Quick/Full oracle + CI architecture | — | Fast-loop implementation; Waves 0–3; v2 contract |
 | [ci-toolkit-verify.md](ci-toolkit-verify.md) | GitHub Actions toolkit-verify gate | SRC-032 | CI workflow edits; required check rollout; deterministic boundary |
 | [session-handoff-2026-07-23.md](session-handoff-2026-07-23.md) | 2026-07-23 research session handoff | — | New chat context; git state; do-not-repeat |

@@ -183,9 +183,12 @@ try {
     Remove-Item -LiteralPath $gitRepoRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
 
+$bootstrapText = [System.IO.File]::ReadAllText((Join-Path $ToolkitRoot "scripts\bootstrap-into-project.ps1"), (New-Object System.Text.UTF8Encoding $false))
 $smokeText = [System.IO.File]::ReadAllText((Join-Path $ToolkitRoot "scripts\smoke-bootstrap.ps1"), (New-Object System.Text.UTF8Encoding $false))
-Assert-True ($smokeText -notmatch '"scripts\\plan-verification\.ps1"') "Essential excludes planner script"
-Assert-True ($smokeText -notmatch '"tests\\planner"') "bootstrap excludes planner tests"
+Assert-True ($bootstrapText -notmatch '"scripts\\plan-verification\.ps1"') "essentialFiles excludes planner script"
+Assert-True ($bootstrapText -notmatch '"tests\\planner"') "bootstrap essential excludes planner tests"
+Assert-True ($smokeText -match '"scripts\\plan-verification\.ps1"') "mustAbsent lists planner script"
+Assert-True ($smokeText -match '"tests\\planner"') "mustAbsent lists planner tests"
 
 Push-Location -LiteralPath $ToolkitRoot
 try {

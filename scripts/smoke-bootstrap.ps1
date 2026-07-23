@@ -476,7 +476,21 @@ $mustAbsent = @(
     "scripts\validate-recovery.ps1",
     "tests\recovery",
     "docs\recovery-escalation.md",
-    "scripts\verify-harness.ps1"
+    "scripts\verify-harness.ps1",
+    "scripts\collect-provenance.ps1",
+    "schemas\provenance.v1.json",
+    "tests\provenance",
+    "scripts\write-evidence-sidecar.ps1",
+    "scripts\validate-evidence-sidecar.ps1",
+    "scripts\ab-protocol.ps1",
+    "tests\orchestration\evidence",
+    "tests\orchestration\evidence-schema.json",
+    "scripts\recovery-shadow.ps1",
+    "scripts\validate-recovery-shadow.ps1",
+    "tests\recovery-shadow",
+    "scripts\plan-verification.ps1",
+    "shipping\verification-checks.v1.json",
+    "tests\planner"
 )
 
 Write-Host ""

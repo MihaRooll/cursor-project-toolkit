@@ -203,4 +203,15 @@ jobs:
             Write-Host "FAIL verify-harness exit code unset (fail-closed)"
             exit 1
           }
+          $passFullLines = @($lines | Where-Object { $_ -match 'VERIFY_HARNESS_PASS\s+Full\b' })
+          $failHarnessLines = @($lines | Where-Object { $_ -match 'VERIFY_HARNESS_FAIL' })
+          if ($failHarnessLines.Count -gt 0) {
+            Write-Host "FAIL VERIFY_HARNESS_FAIL token present (fail-closed)"
+            exit 1
+          }
+          if ($passFullLines.Count -ne 1) {
+            Write-Host "FAIL expected exactly one VERIFY_HARNESS_PASS Full token, got $($passFullLines.Count) (fail-closed)"
+            exit 1
+          }
           if ($exitCode -ne 0) { exit $exitCode }
+          exit 0

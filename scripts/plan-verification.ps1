@@ -478,6 +478,16 @@ function Test-PathUnderRepo {
     return $true
 }
 
+function Test-PathMatchesRegisteredCheckGlob {
+    param([string]$Path, $Manifest)
+    foreach ($check in @($Manifest.checks)) {
+        foreach ($glob in @($check.path_globs)) {
+            if (Test-PathMatchesGlob -Path $Path -Glob ([string]$glob)) { return $true }
+        }
+    }
+    return $false
+}
+
 function Test-FullTriggerGlob {
     param([string]$Path, $Manifest)
     foreach ($glob in @($Manifest.full_trigger_globs)) {
@@ -526,6 +536,9 @@ function Resolve-ConservativeTriggers {
             $unknown = $true
             continue
         }
+        if (-not (Test-PathMatchesRegisteredCheckGlob -Path $p -Manifest $Manifest)) {
+            $unknown = $true
+        }
         if (Test-ReleaseTriggerPath -Path $p -Manifest $Manifest) {
             $release = $true
         }
@@ -564,7 +577,8 @@ function Select-ChecksForPaths {
     if ($paths.Count -eq 0) {
         return @()
     }
-    foreach ($check in @($Manifest.checks)) {
+    $quickChecks = @($Manifest.checks | Where-Object { [string]$_.profile -eq "quick" })
+    foreach ($check in @($quickChecks)) {
         $id = [string]$check.id
         foreach ($glob in @($check.path_globs)) {
             foreach ($p in $paths) {
@@ -578,7 +592,7 @@ function Select-ChecksForPaths {
     $changed = $true
     while ($changed) {
         $changed = $false
-        foreach ($check in @($Manifest.checks)) {
+        foreach ($check in @($quickChecks)) {
             $id = [string]$check.id
             if ($selected.Contains($id)) {
                 foreach ($dep in @($check.dependencies)) {
@@ -627,6 +641,12 @@ function New-VerificationPlan {
     if ($conservativeFull) {
         foreach ($req in @($fullOracleStageIds)) {
             if ($selected -notcontains $req) { $selectorMiss = $true }
+        }
+    } else {
+        foreach ($id in @($selected)) {
+            $sid = [string]$id
+            if ($fullOracleIds -contains $sid) { $selectorMiss = $true; break }
+            if ($quickIds -notcontains $sid) { $selectorMiss = $true; break }
         }
     }
 
@@ -796,7 +816,60 @@ function Invoke-SelfTest {
     $docsExpanded = Expand-ChangeEntries -RawEntries $docsMeta.entries -StrictPrivacy
     $docsPlan = New-VerificationPlan -ModeName "worktree" -Manifest $manifest -GatherMeta $docsMeta -Entries $docsExpanded.entries
     Compare-PlanToOracle -Plan $docsPlan -ExpectedProfile "Quick" -ExpectedTriggers @() -MustInclude @("Q-DOCS-ST", "Q-DOCS-LIVE") -ExpectConservativeFull $false -MustNotIncludeFullOracleOnly $true
+    foreach ($oid in @($docsPlan.full_oracle_only_ids)) {
+        Assert-True (@($docsPlan.selected_check_ids) -notcontains [string]$oid) "docs-only excludes full-oracle-only $oid"
+    }
+    Assert-True (-not [bool]$docsPlan.selector_miss) "docs-only no selector_miss"
     Pass "docs-only Quick subset"
+
+    $templatesOnly = @{
+        paths = @(@{ path = "templates/first-chat.md"; class = "modified"; staged = $true })
+        flags = @{}
+    } | ConvertTo-Json -Depth 6 -Compress
+    $tplMeta = Parse-ChangeSpecJson -JsonText $templatesOnly -Strict
+    $tplExpanded = Expand-ChangeEntries -RawEntries $tplMeta.entries -StrictPrivacy
+    $tplPlan = New-VerificationPlan -ModeName "worktree" -Manifest $manifest -GatherMeta $tplMeta -Entries $tplExpanded.entries
+    Assert-True ([string]$tplPlan.recommended_profile -eq "Quick") "templates-only Quick profile"
+    foreach ($oid in @($tplPlan.full_oracle_only_ids)) {
+        Assert-True (@($tplPlan.selected_check_ids) -notcontains [string]$oid) "templates-only excludes full-oracle-only $oid"
+    }
+    Assert-True (-not [bool]$tplPlan.selector_miss) "templates-only no profile bleed"
+    Pass "templates counterexample Quick only"
+
+    $sourcesOnly = @{
+        paths = @(@{ path = "SOURCES.md"; class = "modified"; staged = $true })
+        flags = @{}
+    } | ConvertTo-Json -Depth 6 -Compress
+    $srcMeta = Parse-ChangeSpecJson -JsonText $sourcesOnly -Strict
+    $srcExpanded = Expand-ChangeEntries -RawEntries $srcMeta.entries -StrictPrivacy
+    $srcPlan = New-VerificationPlan -ModeName "worktree" -Manifest $manifest -GatherMeta $srcMeta -Entries $srcExpanded.entries
+    Assert-True ([string]$srcPlan.recommended_profile -eq "Quick") "SOURCES.md Quick profile"
+    Assert-True (-not [bool]$srcPlan.conservative_full) "SOURCES.md not conservative Full"
+    Pass "SOURCES registry path mapped"
+
+    $licenseOnly = @{
+        paths = @(@{ path = "LICENSE"; class = "modified"; staged = $true })
+        flags = @{}
+    } | ConvertTo-Json -Depth 6 -Compress
+    $licMeta = Parse-ChangeSpecJson -JsonText $licenseOnly -Strict
+    $licExpanded = Expand-ChangeEntries -RawEntries $licMeta.entries -StrictPrivacy
+    $licPlan = New-VerificationPlan -ModeName "worktree" -Manifest $manifest -GatherMeta $licMeta -Entries $licExpanded.entries
+    Compare-PlanToOracle -Plan $licPlan -ExpectedProfile "Full" -ExpectedTriggers @("unknown_path") -MustInclude @("Q-PARSE") -ExpectConservativeFull $true
+    Pass "LICENSE unknown_path conservative Full"
+
+    $bracketOnly = @{
+        paths = @(@{ path = "scripts/project-doctor.ps1"; class = "modified"; staged = $true })
+        flags = @{}
+    } | ConvertTo-Json -Depth 6 -Compress
+    $brMeta = Parse-ChangeSpecJson -JsonText $bracketOnly -Strict
+    $brExpanded = Expand-ChangeEntries -RawEntries $brMeta.entries -StrictPrivacy
+    $brPlan = New-VerificationPlan -ModeName "worktree" -Manifest $manifest -GatherMeta $brMeta -Entries $brExpanded.entries
+    Assert-True ([string]$brPlan.recommended_profile -eq "Quick") "project-doctor Quick profile"
+    Assert-True (@($brPlan.selected_check_ids) -contains "Q-DOC-BRACKET") "project-doctor selects bracket check"
+    foreach ($oid in @($brPlan.full_oracle_only_ids)) {
+        Assert-True (@($brPlan.selected_check_ids) -notcontains [string]$oid) "project-doctor excludes full-oracle-only"
+    }
+    Pass "project-doctor counterexample Quick only"
 
     $workflow = @{
         paths = @(@{ path = ".github/workflows/toolkit-verify.yml"; class = "modified"; staged = $true })

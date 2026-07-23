@@ -82,7 +82,7 @@
       "profile": "quick",
       "script": "scripts/validate-project-docs.ps1",
       "script_args": ["-ProjectRoot", "<toolkit-root>"],
-      "path_globs": ["docs/**", "AGENTS.md", "README.md"],
+      "path_globs": ["docs/**", "AGENTS.md", "README.md", "SOURCES.md"],
       "dependencies": ["Q-DOCS-ST"],
       "timeout_seconds": 60,
       "stage_token": "Q-DOCS-LIVE"
@@ -154,7 +154,8 @@
       "path_globs": [
         "scripts/dry-run-strict-hooks.ps1",
         ".cursor/hooks/**",
-        ".cursor/hooks.json"
+        ".cursor/hooks.json",
+        "templates/**"
       ],
       "dependencies": [],
       "timeout_seconds": 60,

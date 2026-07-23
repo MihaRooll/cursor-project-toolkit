@@ -6,9 +6,9 @@
 
 **When to read:** before any fast-loop implementation (`change`/`build`/`fix` touching oracle, CI, verification policy).
 
-**Apply:** preserve T0–T4 orchestration; implement **Quick/Full oracle first**, then one unconditional Windows CI, then small policy/hygiene slices. Waves 0–3 only until graduation gates; Waves 4–6 gated.
+**Apply:** preserve T0–T4 orchestration; implement **Quick/Full oracle first**, then one unconditional Windows CI, then small policy/hygiene slices. **Waves 0–6 tooling/runtime implementation done** locally; **graduation corpora** (planner promotion, conditional CI, marketplace publish) remain **evidence_pending**.
 
-**Do not:** copy advisory `Рекомендация ГПТ про/` into normative docs; resume blocked v1 contract; treat static validators as runtime proof; add planner-first or conditional CI before metrics.
+**Do not:** copy advisory `Рекомендация ГПТ про/` into normative docs; resume blocked v1 contract; treat static validators as runtime proof; freeze authoritative same-SHA completion in docs — verify live PR #4 `toolkit-verify` on GitHub after CI.
 
 ---
 
@@ -117,7 +117,20 @@ Rollout: `workflow_dispatch` → test PR → owner Human Gate for branch protect
 | **5** Fast vs standard A/B; sequential recovery shadow; evidence sidecar | Attributable models + reliable oracle |
 | **6** Changed-path planner shadow | p95 > 5 min or quota pressure; ≥20 CI runs; 30–60 same-SHA patches; zero selector misses |
 
-**Wave 6 status (factual):** shadow planner **execution shipped** toolkit-only (`scripts/plan-verification.ps1`, `shipping/verification-checks.v1.json`, `tests/planner/`). **Not graduated** — promotion `evidence_pending`; observed Full CI runtime **~2m25s** (run `29983360670`) below p95 > 5 min gate; **conditional CI / path filters deferred** until gates met. Unconditional `toolkit-verify` unchanged.
+**Wave 6 status (factual):** shadow planner **execution shipped** toolkit-only (`scripts/plan-verification.ps1`, `shipping/verification-checks.v1.json`, `tests/planner/`). Quick plans select **only** `profile=quick` checks; `selector_miss=true` on full-oracle bleed; in-repo paths with **no** registered check glob → `unknown_path` → conservative Full (e.g. `LICENSE`; `SOURCES.md` mapped). **Not graduated** — promotion `evidence_pending`; observed Full CI runtime **~2m25s** (run `29983360670`) below p95 > 5 min gate; **conditional CI / path filters deferred** until gates met. CI workflow requires exactly one `VERIFY_HARNESS_PASS Full` token (fail-closed). Unconditional `toolkit-verify` unchanged.
+
+---
+
+## v3 implementation summary (cycle 2)
+
+| Area | Status |
+|------|--------|
+| Waves 0–6 tooling/runtime | **Done** on disk — oracle, CI, shipping manifest, provenance, evidence sidecar/A-B, recovery shadow, planner shadow |
+| Shipping manifest `toolkitCi` | Live inventory of Waves 4C–6 executables/schemas/tests/manifests; `toolkit-ci-only`; never Essential/Full |
+| Planner Quick selector | Quick-only check IDs + dependency closure; full-oracle-only excluded unless conservative Full |
+| Conservative triggers | `unknown_path`, release/push, parse/conflict/privacy — see `verification-checks.v1.json` |
+| Graduation corpora | **evidence_pending** — planner promotion, conditional CI, marketplace plugin, strict-hook promotion |
+| Same-SHA completion | Live required check on PR head — not a SHA frozen in `project-state.md` |
 
 ---
 

@@ -48,7 +48,7 @@
       "title": "Project state",
       "status": "active",
       "owners": ["team"],
-      "tags": ["state", "wave3", "wave4-gate", "wave4a", "wave4b", "fast-loop", "ship-v2"]
+      "tags": ["state", "wave3", "wave4-gate", "wave4a", "wave4b", "wave5", "wave6", "fast-loop", "ship-v2"]
     },
     {
       "path": "docs/memory-and-obsidian.md",

@@ -51,11 +51,35 @@
                         "bootstrap_ref":  "toolkitCi"
                     },
                     {
+                        "id":  "ci-schemas-provenance-v1-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "schemas/provenance.v1.json",
+                        "destination":  "schemas/provenance.v1.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-ab-protocol-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/ab-protocol.ps1",
+                        "destination":  "scripts/ab-protocol.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
                         "id":  "ci-scripts-bootstrap-into-project-ps1",
                         "surface":  "toolkit-ci",
                         "policy":  "toolkit-ci-only",
                         "source":  "scripts/bootstrap-into-project.ps1",
                         "destination":  "scripts/bootstrap-into-project.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-collect-provenance-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/collect-provenance.ps1",
+                        "destination":  "scripts/collect-provenance.ps1",
                         "bootstrap_ref":  "toolkitCi"
                     },
                     {
@@ -83,6 +107,22 @@
                         "bootstrap_ref":  "toolkitCi"
                     },
                     {
+                        "id":  "ci-scripts-plan-verification-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/plan-verification.ps1",
+                        "destination":  "scripts/plan-verification.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-recovery-shadow-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/recovery-shadow.ps1",
+                        "destination":  "scripts/recovery-shadow.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
                         "id":  "ci-scripts-runtime-coexistence-ps1",
                         "surface":  "toolkit-ci",
                         "policy":  "toolkit-ci-only",
@@ -107,11 +147,27 @@
                         "bootstrap_ref":  "toolkitCi"
                     },
                     {
+                        "id":  "ci-scripts-validate-evidence-sidecar-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-evidence-sidecar.ps1",
+                        "destination":  "scripts/validate-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
                         "id":  "ci-scripts-validate-orchestration-ps1",
                         "surface":  "toolkit-ci",
                         "policy":  "toolkit-ci-only",
                         "source":  "scripts/validate-orchestration.ps1",
                         "destination":  "scripts/validate-orchestration.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-validate-recovery-shadow-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-recovery-shadow.ps1",
+                        "destination":  "scripts/validate-recovery-shadow.ps1",
                         "bootstrap_ref":  "toolkitCi"
                     },
                     {
@@ -131,11 +187,83 @@
                         "bootstrap_ref":  "toolkitCi"
                     },
                     {
+                        "id":  "ci-scripts-write-evidence-sidecar-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/write-evidence-sidecar.ps1",
+                        "destination":  "scripts/write-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
                         "id":  "ci-shipping-manifest-v1-json",
                         "surface":  "toolkit-ci",
                         "policy":  "toolkit-ci-only",
                         "source":  "shipping/manifest.v1.json",
                         "destination":  "shipping/manifest.v1.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-shipping-verification-checks-v1-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "shipping/verification-checks.v1.json",
+                        "destination":  "shipping/verification-checks.v1.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-orchestration-evidence-schema-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/orchestration/evidence-schema.json",
+                        "destination":  "tests/orchestration/evidence-schema.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-orchestration-evidence-test-evidence-sidecar-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/orchestration/evidence/test-evidence-sidecar.ps1",
+                        "destination":  "tests/orchestration/evidence/test-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-planner-fixtures",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/planner/fixtures",
+                        "destination":  "tests/planner/fixtures",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-planner-test-plan-verification-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/planner/test-plan-verification.ps1",
+                        "destination":  "tests/planner/test-plan-verification.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-provenance-test-collect-provenance-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/provenance/test-collect-provenance.ps1",
+                        "destination":  "tests/provenance/test-collect-provenance.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-recovery-shadow-shadow-schema-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/recovery-shadow/shadow-schema.json",
+                        "destination":  "tests/recovery-shadow/shadow-schema.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-recovery-shadow-test-recovery-shadow-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/recovery-shadow/test-recovery-shadow.ps1",
+                        "destination":  "tests/recovery-shadow/test-recovery-shadow.ps1",
                         "bootstrap_ref":  "toolkitCi"
                     },
                     {
@@ -363,6 +491,54 @@
                         "bootstrap_ref":  "mustAbsent"
                     },
                     {
+                        "id":  "exclude-schemas-provenance.v1.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "schemas/provenance.v1.json",
+                        "destination":  "schemas/provenance.v1.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-ab-protocol.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/ab-protocol.ps1",
+                        "destination":  "scripts/ab-protocol.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-collect-provenance.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/collect-provenance.ps1",
+                        "destination":  "scripts/collect-provenance.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-plan-verification.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/plan-verification.ps1",
+                        "destination":  "scripts/plan-verification.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-recovery-shadow.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/recovery-shadow.ps1",
+                        "destination":  "scripts/recovery-shadow.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-validate-evidence-sidecar.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-evidence-sidecar.ps1",
+                        "destination":  "scripts/validate-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
                         "id":  "exclude-scripts-validate-living-evals.ps1",
                         "surface":  "essential",
                         "policy":  "toolkit-ci-only",
@@ -387,11 +563,35 @@
                         "bootstrap_ref":  "mustAbsent"
                     },
                     {
+                        "id":  "exclude-scripts-validate-recovery-shadow.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-recovery-shadow.ps1",
+                        "destination":  "scripts/validate-recovery-shadow.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
                         "id":  "exclude-scripts-verify-harness.ps1",
                         "surface":  "essential",
                         "policy":  "toolkit-ci-only",
                         "source":  "scripts/verify-harness.ps1",
                         "destination":  "scripts/verify-harness.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-write-evidence-sidecar.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/write-evidence-sidecar.ps1",
+                        "destination":  "scripts/write-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-shipping-verification-checks.v1.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "shipping/verification-checks.v1.json",
+                        "destination":  "shipping/verification-checks.v1.json",
                         "bootstrap_ref":  "mustAbsent"
                     },
                     {
@@ -443,11 +643,51 @@
                         "bootstrap_ref":  "mustAbsent"
                     },
                     {
+                        "id":  "exclude-tests-orchestration-evidence",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/orchestration/evidence",
+                        "destination":  "tests/orchestration/evidence",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-orchestration-evidence-schema.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/orchestration/evidence-schema.json",
+                        "destination":  "tests/orchestration/evidence-schema.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-planner",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/planner",
+                        "destination":  "tests/planner",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-provenance",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/provenance",
+                        "destination":  "tests/provenance",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
                         "id":  "exclude-tests-recovery",
                         "surface":  "essential",
                         "policy":  "toolkit-ci-only",
                         "source":  "tests/recovery",
                         "destination":  "tests/recovery",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-recovery-shadow",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/recovery-shadow",
+                        "destination":  "tests/recovery-shadow",
                         "bootstrap_ref":  "mustAbsent"
                     },
                     {

@@ -1,27 +1,29 @@
 # Session handoff — 2026-07-23
 
-> **AI-first.** Outcomes of the fast-development research/review session. **No production implementation** was committed in this session.
+> **AI-first.** Full fast-development session: morning research/review → afternoon **Waves 0–6 tooling/runtime implementation**. Copy prompt from [continue-chat-prompt.md](../project-workflow/continue-chat-prompt.md).
 
 ## For agents
 
-**When to read:** start of the next implementation chat; before creating `toolkit-fast-loop-v2`.
+**When to read:** start of the next chat after this session; before merge/evidence collection on PR #4.
 
-**Apply:** use [fast-development-harness-plan.md](fast-development-harness-plan.md) as architecture SSOT; copy prompt from [continue-chat-prompt.md](../project-workflow/continue-chat-prompt.md).
+**Apply:** architecture SSOT remains [fast-development-harness-plan.md](fast-development-harness-plan.md); phase tracker [project-state.md](project-state.md); post-implementation continuation prompt in [continue-chat-prompt.md](../project-workflow/continue-chat-prompt.md).
 
-**Do not:** re-run full web research unless `main` materially changed; resume `toolkit-fast-loop-v1`; edit `Рекомендация ГПТ про/`; commit/push without explicit user approval.
+**Do not:** re-run full web research or re-implement Waves 0–6; resume `toolkit-fast-loop-v1`; edit `Рекомендация ГПТ про/`; commit/push/merge without explicit user approval; assume prior-session approvals carry forward.
 
 ---
 
-## Base and git state
+## Final git / ship state
 
 | Item | Value |
 |------|-------|
-| Base SHA | `997fad56416c9ebda38a7235ce7733716ad38b3a` (`main`) |
-| Repo | `cursor-project-toolkit` |
-| Production code changes this session | **None committed** |
+| Branch | `feat/complete-fast-development-harness` |
+| PR | [#4](https://github.com/MihaRooll/cursor-project-toolkit/pull/4) — **open**, not merged |
+| PR head SHA | `9b684cc773468571c5efc4185c686f52d50aaee2` |
+| CI (authoritative on head) | run `29994496765` — **success** (`toolkit-verify`) |
+| `main` protection | strict required status context `toolkit-verify`; force-push and branch deletion disabled |
 | Untracked advisory | `Рекомендация ГПТ про/` (3 files — do not normalize or commit) |
-| Gitignored plan artifact | `.cursor/plans/toolkit-fast-loop-v1.plan.md` (revision 4, cycle 4 — BLOCKED) |
-| Handoff docs (this contract) | New tracked docs + updated prompt/state/map |
+| Blocked v1 plan | `.cursor/plans/toolkit-fast-loop-v1.plan.md` (gitignored; `cycle:4` metadata — do not resume) |
+| Explicitly unchanged | merge, root LICENSE, model pin / cost-class |
 
 ---
 
@@ -29,79 +31,106 @@
 
 | Phase | Outcome |
 |-------|---------|
-| Research ingest | Three GPT advisory files read; mapped to ACCEPT/MODIFY/DEFER/REJECT matrix |
-| Independent audit | 3 cycles × 5 independent passes + adversarial synthesis |
-| Architecture synthesis | [fast-development-harness-plan.md](fast-development-harness-plan.md) — Quick/Full first, CI second, planner deferred |
-| T3 normative plan | `toolkit-fast-loop-v1` drafted through revision 4; principal attempt 2 |
-| Block | Plan frontmatter `cycle: 4` — invalid for contract enum `1\|2\|3`; v1 **BLOCKED** (not a technical gap) |
-| Handoff | This session preserves outcomes in tracked docs; stale continue-chat prompt replaced |
+| Research ingest | Three GPT advisory files; ACCEPT/MODIFY/DEFER/REJECT matrix |
+| Independent audit | 3 cycles × 5 passes + adversarial synthesis |
+| Architecture synthesis | [fast-development-harness-plan.md](fast-development-harness-plan.md) |
+| v1 normative plan | `toolkit-fast-loop-v1` revision 4 — **BLOCKED** (`cycle:4` enum) |
+| v2 contract | Waves 0–3 slices — oracle, CI workflow, policy/hygiene |
+| v3 / SHIP-V2 | Waves 4–6 — runtime coexistence, shipping manifest, provenance, evidence sidecar/A-B, recovery shadow, planner shadow |
+| Runtime trial (Wave 4A) | **plugin-only** verified; **combined unsupported**; **Essential sole owner**; local plugin **removed** from profile post-trial |
+| CI hardening | ASCII PS5.1 shell; bounded CLIXML capture; explicit `-SkipUserHome` / null-empty handling |
+| Handoff (this contract) | Living docs updated for post-implementation continuation |
 
 ---
 
-## Research sources (groups)
+## Major deliverables (on disk)
 
-| Group | Inputs |
+| Wave | Deliverable |
+|------|-------------|
+| 0 | Baseline observation; MIT intent documented |
+| 1 | `verify-harness.ps1` Quick/Full oracle; ownership-safe smoke; all tracked `.ps1` parse; portability safety tests |
+| 2 | `.github/workflows/toolkit-verify.yml` — unconditional Windows Full gate |
+| 3A–3D | Verification profiles; T3 boundary + scout policy; hygiene (paths, living-eval 12/12, static vs runtime claims) |
+| 4A | Runtime coexistence protocol; plugin-only trial `runtime_verified=true`; combined → `combined_unsupported` |
+| 4B | `shipping/manifest.v1.json` + validator vs live bootstrap arrays |
+| 4C | `schemas/provenance.v1.json` + `collect-provenance.ps1` + doctor drift |
+| 5A | Evidence sidecar + `ab-protocol.ps1` (toolkit-only) |
+| 5B | Sequential recovery shadow + `validate-recovery-shadow` |
+| 6 | `plan-verification.ps1` + `shipping/verification-checks.v1.json` + planner tests |
+
+Details and invariants: [fast-development-harness-plan.md](fast-development-harness-plan.md) · [project-state.md](project-state.md).
+
+---
+
+## Verification observed (session)
+
+| Check | Result |
 |-------|--------|
-| Advisory (untracked) | `Рекомендация ГПТ про/*.txt`, `*.md` — recommendation TZ, review cycles, raw GPT brief |
-| Cursor plan (external) | `~/.cursor/plans/fast-development-research_39dc6040.plan.md` — superseded research draft; historical order only |
-| Repo baseline | `main` @ 997fad5 — scripts, validators, smoke, orchestration harness |
-| Normative v1 (blocked) | `.cursor/plans/toolkit-fast-loop-v1.plan.md` — wave tables, invariants, AC |
+| `verify-harness.ps1 -Profile Quick` | exit 0 (local) |
+| `verify-harness.ps1 -Profile Full` | exit 0 (local) |
+| `toolkit-verify` CI on PR head `9b684cc…` | run `29994496765` success |
+| `validate-project-docs.ps1 -SelfTest` + `-ProjectRoot .` | exit 0 (docs contract) |
+| Runtime coexistence TestOnly + live-first rollback | plugin-only pass; combined negative recorded |
 
-Official URLs cited in research (pytest, Pester, GitHub Actions, Cursor hooks, harness engineering) — register in `SOURCES.md` only when implementation PR actually uses them.
-
----
-
-## Out of scope this session
-
-- **TG_BOT_PRO** and other consumer product work — not part of fast-loop implementation
-- Commit, push, branch protection, plugin install, LICENSE, model pin changes
-- Wave 1+ product writes (oracle, CI, policy slices)
+Re-run after any harness/docs touch; numbers and SHAs are observations, not frozen merge authority — verify live PR head on GitHub.
 
 ---
 
-## Validations previously observed (baseline @ 997fad5)
+## CI debugging lessons (Wave 2 hardening)
 
-| Check | Notes |
-|-------|-------|
-| `parse-check-ps1.ps1` | Parses subset only (`scripts/*.ps1`, `.cursor/hooks/*.ps1`) — gap documented |
-| `smoke-bootstrap.ps1` | ~105s full run; unsafe pre-existing target removal; nested duplication |
-| `smoke-portability.ps1` | Missing recovery self-test in full chain; validator repeats |
-| `validate-*` self-tests | Individual validators pass in isolation |
-| `.github/workflows` | **Absent** — no CI gate |
-| `validate-project-docs.ps1` | Used for docs lifecycle |
+| Issue | Fix |
+|-------|-----|
+| Non-ASCII / encoding in PS 5.1 job shell | Keep workflow `shell: powershell` (5.1); ASCII-safe emit paths |
+| CLIXML/progress noise in captured output | Bounded ring buffer; discard lines matching `^#\s*<\s*CLIXML`; report count in job summary |
+| Child smoke touching user profile | Mandatory `-SkipUserHome` / `CPTK_PORTABILITY_SMOKE=1`; explicit null-empty guards in validators |
+| Fail-closed token | Exactly one `VERIFY_HARNESS_PASS Full` in workflow output |
 
-Re-verify after implementation; numbers may change.
+Normative detail: [ci-toolkit-verify.md](ci-toolkit-verify.md).
 
 ---
 
-## Key decisions (frozen for v2)
+## Side effects and cleanup (honest)
 
-1. Preserve T0–T4; Composer writer; Grok orch/verify; Sol T3 only.
-2. P0 = ownership-safe Quick/Full oracle, not planner.
-3. One unconditional Windows CI after oracle stop gate.
-4. Wave 3 executable = 3A + 3B + 3D only; 3C/HOOK-01 deferred.
-5. Scouts default 0; premium planning not repeated for routine slices.
-6. Deterministic scripts ≠ runtime Cursor proof.
-7. v1 blocked on `cycle:4` metadata — start v2 at cycle 1.
+| Item | Status |
+|------|--------|
+| WSL `cursor --help` during diagnostics | Installed `~/.cursor-server` under WSL home — **not removed** (non-profile, unintended) |
+| Runtime trial `%TEMP%` RunRoots | **`cleanup_pending`** on disposable workspaces only — profile restored; Essential retained as sole owner |
+| Local plugin after Wave 4A trial | **Removed** from user profile; repo plugin artifacts unchanged |
 
 ---
 
-## Known risks
+## Residual evidence gates (`evidence_pending` — not blockers)
 
-| Risk | Mitigation |
-|------|------------|
-| Smoke deletes caller-supplied existing path | Wave 1 ownership + junction hard-reject tests |
-| Partial PS parse | Extend to all tracked `.ps1` |
-| Combined plugin + project hooks | Wave 4 experiment; single owner until then |
-| Model pin unavailability | Human Gate hotfix PR; no silent cost-class upgrade |
-| False “done” without CI | INV-7: same-SHA Full until green workflow |
-| Stale docs (`Programms`, 8/8 domains, `_v8_check`) | Wave 3D hygiene slice |
+| Gate | Threshold | Current |
+|------|-----------|---------|
+| Fast A/B promotion | 6–10 comparable tasks + quality/saving gates | **evidence_pending** |
+| Planner graduation | Full p95 > 5 min | ~2m25s observed — **below threshold** |
+| Planner graduation | ≥20 CI runs | **evidence_pending** |
+| Planner graduation | 30–60 same-SHA patches; median ≥ 25 | **evidence_pending** |
+| Planner graduation | zero selector misses | **evidence_pending** |
+| Marketplace plugin publish | human gate | **evidence_pending** |
+| Strict-hook promotion beyond local evidence | eval corpus | **evidence_pending** |
+
+Implementation of shadow tooling is **done**; promotion/conditional CI waits on corpora — not open engineering blockers for PR #4 maintenance.
 
 ---
 
-## Human Gates (unchanged)
+## Human Gates (unchanged — fresh approval each chat)
 
-Branch protection; plugin/user-profile mutation; LICENSE; model pin/cost class; commit/push/release; strict hooks / auto-update / consumer deletion.
+Branch protection edits; plugin/user-profile mutation; LICENSE; model pin / cost-class; commit / push / merge / tag / release / publish; strict hooks promotion; auto-update; consumer deletion; destructive/external writes.
+
+---
+
+## Do not repeat
+
+- Full multi-cycle web research and 5×5 audit
+- Re-implementing Waves 0–6 or resuming `toolkit-fast-loop-v1` / v2 / v3 contracts
+- Planner-first / conditional CI as P0
+- Copying advisory GPT folder into normative docs
+- Referencing stale `_v8_check_review1fix.py` checklist
+- TG_BOT_PRO or consumer fixes under fast-loop contract
+- Raw subagent logs in product docs
+- Assuming prior-session commit/push/merge approvals carry forward
 
 ---
 
@@ -109,21 +138,10 @@ Branch protection; plugin/user-profile mutation; LICENSE; model pin/cost class; 
 
 | Path | Purpose |
 |------|---------|
-| [docs/fast-development-harness-plan.md](fast-development-harness-plan.md) | Architecture SSOT for implementation |
+| [docs/fast-development-harness-plan.md](fast-development-harness-plan.md) | Architecture SSOT |
 | [docs/session-handoff-2026-07-23.md](session-handoff-2026-07-23.md) | This file |
 | [project-workflow/continue-chat-prompt.md](../project-workflow/continue-chat-prompt.md) | New-chat copy prompt |
 | [docs/project-state.md](project-state.md) | Phase tracker |
+| [docs/autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Delegation + model nuance |
 | `.cursor/plans/toolkit-fast-loop-v1.plan.md` | BLOCKED v1 detail (gitignored) |
-| `Рекомендация ГПТ про/` | Advisory only |
-
----
-
-## Do not repeat
-
-- Full multi-cycle web research and 5×5 audit (already done)
-- Resuming `toolkit-fast-loop-v1` or incrementing cycle beyond 3
-- Planner-first / conditional CI as P0
-- Copying advisory GPT folder into normative docs
-- Referencing stale `_v8_check_review1fix.py` checklist
-- TG_BOT_PRO or consumer fixes under fast-loop contract
-- Raw subagent logs in product docs
+| `Рекомендация ГПТ про/` | Advisory only (untracked) |

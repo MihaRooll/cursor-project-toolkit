@@ -4,7 +4,7 @@
 
 ## For agents
 
-**When to read:** session-start hook may inject phase summary; orchestration wave work; fast-loop v3 / SHIP-V2 progress.
+**When to read:** session-start hook may inject phase summary; post-implementation continuation; PR #4 merge/evidence work.
 
 **Apply:** this file tracks **toolkit** evolution, not consumer products. Normative architecture: [fast-development-harness-plan.md](fast-development-harness-plan.md).
 
@@ -22,7 +22,8 @@
 |------|-------|
 | PR | [#4](https://github.com/MihaRooll/cursor-project-toolkit/pull/4) — **open**, not merged |
 | Required check | `toolkit-verify` on **PR head** (authoritative same-SHA completion — verify on GitHub after final CI) |
-| Historical observation | run `29983360670` passed ~2m25s on SHA `5f8eb916…` — not authoritative for current merge head |
+| PR head observation | SHA `9b684cc773468571c5efc4185c686f52d50aaee2`; CI run `29994496765` success — verify live on GitHub before merge |
+| Earlier observation | run `29983360670` ~2m25s on older SHA — historical only |
 | `main` protection | strict required status context `toolkit-verify`; force-push and branch deletion disabled |
 
 ## milestones
@@ -56,6 +57,7 @@
 
 ## next_checks
 
+- [ ] Next chat: copy prompt from [project-workflow/continue-chat-prompt.md](../project-workflow/continue-chat-prompt.md); read [session-handoff-2026-07-23.md](session-handoff-2026-07-23.md)
 - [ ] After docs-touching slices: `scripts\validate-project-docs.ps1 -ProjectRoot .`
 - [ ] Local completion: `scripts\verify-harness.ps1 -Profile Quick`
 - [ ] INV-7 checkpoint (same-SHA): `scripts\verify-harness.ps1 -Profile Full` — then confirm PR #4 head green on GitHub

@@ -19,7 +19,7 @@
 9. Completion = acceptance + deterministic checks + zero blockers.
 10. Verifier/reviewer must not create `_v_*.txt` or temp evidence in product root.
 
-**Не делай:** считать auto-routing, model pin, Sol gate или T4 stop платформенной гарантией; отправлять premium-модели raw logs; путать official `/add-plugin orchestrate` с on-disk policy harness; повышать tier только из-за file count; Main product writes на T0–T3.
+**Не делай:** считать auto-routing, model pin, Sol gate или T4 stop платформенной гарантией; spawn reviewer/verifier из implementer (только Main); resume с явным model slug (omit — reuse prior); отправлять premium-модели raw logs; путать official `/add-plugin orchestrate` с on-disk policy harness; повышать tier только из-за file count; Main product writes на T0–T3; L2 spawn других агентов.
 
 ---
 
@@ -33,7 +33,7 @@
 | T3 | T2 + Sol Principal Packet до product writes + review + verify | нет, если Sol approve |
 | T4 | Human Gate Packet; без implementer до approval | да |
 
-Main — classifier и user-facing completion owner. L2 agents не делегируют. Composer не запускает reviewer/verifier.
+Main — classifier, **sole spawn owner**, и user-facing completion owner. L2 agents **never delegate**. Composer `implementer` **never** spawns Task/subagents/reviewer/verifier — если нужна делегация, возвращает управление Main.
 
 ## Context budgets (best-effort)
 
@@ -56,7 +56,15 @@ Forbidden in packets: raw logs, full files, chat history, tool JSON dumps.
 | verifier | `cursor-grok-4.5-high-fast` | shell checks; T1 required; T2+ when scheduled |
 | principal-arbiter | `gpt-5.6-sol-medium` | readonly, T3 only |
 
-Pin = intent, не platform-enforced. Cursor может fallback из-за plan/admin/Max. Grok/Composer — included pool; Sol только T3.
+### Spawn vs resume (model nuance)
+
+| Call | Model parameter | Behavior |
+|------|-----------------|----------|
+| **Initial** Task/subagent spawn | **Required** — pass requested model slug (e.g. `composer-2.5-fast`) | Intent pin for that agent instance |
+| **Resume** same agent | **Omit** model | Reuses prior agent + model; UI may display **Auto** |
+| Verification record | When observable | Record **actual** model used — pin is best-effort, not platform guarantee |
+
+Pin = intent, **not** platform-enforced. Cursor may fallback due to plan/admin/Max/unavailability. Grok/Composer — included pool; Sol T3 only. Routing and model pins in rules/skills are **best-effort** in normal chat — do not describe as hard enforcement.
 
 ## Plan Mode vs internal plan
 

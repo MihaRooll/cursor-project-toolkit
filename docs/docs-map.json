@@ -83,7 +83,7 @@
       "title": "Autonomous agent orchestration",
       "status": "active",
       "owners": ["team"],
-      "tags": ["orchestration", "wave5", "delegation-first", "verification", "fast-loop", "verify-harness", "inv-7", "t3-boundary", "scout-policy"]
+      "tags": ["orchestration", "wave5", "delegation-first", "verification", "fast-loop", "verify-harness", "inv-7", "t3-boundary", "scout-policy", "model-spawn-resume", "main-spawn-owner"]
     },
     {
       "path": "docs/orchestration-evidence.md",
@@ -146,7 +146,7 @@
       "title": "Session handoff 2026-07-23",
       "status": "active",
       "owners": ["team"],
-      "tags": ["handoff", "session", "fast-loop", "research"]
+      "tags": ["handoff", "session", "fast-loop", "ship-v2", "pr4", "waves0-6", "evidence-pending"]
     }
   ],
   "rules": {

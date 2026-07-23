@@ -53,7 +53,7 @@
 | [project-state.md](project-state.md) | Phase, milestones, fast-loop v3 / SHIP-V2; Waves 0–6 done; graduation evidence_pending | — | Session stage; setup skill; doctor advisory |
 | [fast-development-harness-plan.md](fast-development-harness-plan.md) | Quick/Full oracle + CI architecture; v3 Waves 0–6 implementation summary | — | Fast-loop implementation; planner/shipping gates |
 | [ci-toolkit-verify.md](ci-toolkit-verify.md) | GitHub Actions toolkit-verify gate | SRC-032 | CI workflow edits; required check rollout; deterministic boundary |
-| [session-handoff-2026-07-23.md](session-handoff-2026-07-23.md) | 2026-07-23 research session handoff | — | New chat context; git state; do-not-repeat |
+| [session-handoff-2026-07-23.md](session-handoff-2026-07-23.md) | 2026-07-23 full session handoff (research + Waves 0–6) | — | New chat; PR #4 / CI state; evidence_pending; do-not-repeat |
 | [memory-and-obsidian.md](memory-and-obsidian.md) | Memory authority + Obsidian vault rules | SRC-026/027 | Conflict resolution; Automation memory; Obsidian opt-in |
 | [mcp-security.md](mcp-security.md) | MCP placement, pins, Human Gate | SRC-025/028 | Propose/validate MCP; local vs cloud; untrusted tool I/O |
 | [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md) | Living-eval + strict hook promotion | SRC-029 | Full opt-in enforcement; failClosed; Cloud hook limits |
@@ -70,7 +70,7 @@
 | [mattpocock-skills.md](mattpocock-skills.md) | Matt Pocock skills | SRC-020 | Grill/CONTEXT/TDD/tickets; composable; selective, не Essential |
 | [reme-agent-memory.md](reme-agent-memory.md) | ReMe agent memory | SRC-021 | Markdown memory layer; CLI/MCP; vs continual-learning; opt-in |
 | [security-in-session-cursor-vs-claude.md](security-in-session-cursor-vs-claude.md) | In-session security: Claude vs Cursor | SRC-022 | Bugbot `/review-security`, thermos, Semgrep hooks; нет 1:1 plugin |
-| [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Delegation-first T0–T4: Main control plane, Composer writes, Grok orch/verify | SRC-023/024 | change/build/fix; Work Packet; no Main product writes T0–T3 |
+| [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Delegation-first T0–T4; spawn/resume model nuance; Main sole spawns | SRC-023/024 | change/build/fix; Work Packet; no implementer spawns; no Main product writes T0–T3 |
 | [orchestration-evidence.md](orchestration-evidence.md) | Shadow evidence schema (toolkit-only) | — | Wave eval 10–20 tasks; no strict-hook auto-promotion |
 | [evidence-sidecar-ab-protocol.md](evidence-sidecar-ab-protocol.md) | Wave 5A evidence sidecar + Fast A/B planner | — | Log task rows; seeded AB/BA plans; no pin promotion |
 | [recovery-escalation.md](recovery-escalation.md) | Recovery R0a shadow/manual protocol | SRC-031 | Explicit `/recovery-escalation`; stuck predicates; promotion gate R0b |

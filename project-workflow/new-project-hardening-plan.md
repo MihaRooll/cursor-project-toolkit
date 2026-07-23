@@ -70,7 +70,7 @@ Fail closed if physical Target equals/under physical ToolkitRoot. Win32 final pa
 ## После hardening — wifi-vpn (пример)
 
 ```bat
-cd C:\Users\katko\Desktop\Programms\cursor-project-toolkit
+cd C:\Users\katko\Desktop\Program\cursor-project-toolkit
 .\scripts\new-project.cmd -Name wifi-vpn -Goal "2 клика: новый WiFi + накатить VPN"
 ```
 

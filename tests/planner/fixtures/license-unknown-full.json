@@ -1,0 +1,13 @@
+{
+  "paths": [
+    { "path": "LICENSE", "class": "modified", "staged": true }
+  ],
+  "flags": { "missing_history": false, "merge_conflict": false, "parse_error": false },
+  "expected": {
+    "recommended_profile": "Full",
+    "conservative_full": true,
+    "triggers": ["unknown_path"],
+    "must_include": ["Q-PARSE"],
+    "must_include_all_full_oracle": true
+  }
+}

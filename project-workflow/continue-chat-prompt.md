@@ -1,87 +1,60 @@
-# Промпт для нового чата (продолжение работы)
+# Промпт для нового чата (продолжение после Waves 0–6)
 
-Скопируй блок ниже в новый Agent-чат Cursor (лучше с `@AGENTS.md` и открытым этим репо).
-
-План hardening: [`new-project-hardening-plan.md`](new-project-hardening-plan.md).
+Скопируй блок ниже в **новый** Agent-чат Cursor с открытым репозиторием `cursor-project-toolkit`.
 
 ---
 
 ```text
-Ты продолжаешь работу над репозиторием cursor-project-toolkit
-(https://github.com/MihaRooll/cursor-project-toolkit).
+Ты продолжаешь работу над cursor-project-toolkit после завершённой сессии 2026-07-23.
+Waves 0–6 tooling/runtime УЖЕ реализованы. НЕ делай повторный research и НЕ переimplementируй волны.
 
-## Что это за репо
-Bootstrap-каркас AI-среды разработки (не голая папка заметок):
-docs AI-first → human-second, `.cursor/rules|skills|hooks`, papercuts,
-`scripts/new-project.ps1` = greenfield; `scripts/bootstrap-into-project.ps1` = harness на существующую папку.
-Реестр источников: SOURCES.md. Архив сбоку: archive/.
-
-## Обязательно прочитай сначала
+## Сначала прочитай (focused reads — не whole-repo scan)
 1. AGENTS.md
-2. README.md
-3. docs/bootstrap-scaffold.md
-4. project-workflow/new-project-hardening-plan.md   ← СЛЕДУЮЩИЙ РАБОЧИЙ ПЛАН
-5. project-workflow/new-project-bootstrap.md
-6. scripts/new-project.ps1
-7. docs/papercuts.md
-8. docs/harness-as-cursor-plugin.md
-9. docs/harness-consumers.md
-10. project-workflow/session-checklist.md
-11. SOURCES.md (SRC-001…022)
-12. project-workflow/continue-chat-prompt.md
+2. docs/session-handoff-2026-07-23.md          ← финальный git/CI/runtime state
+3. docs/project-state.md                       ← milestones + evidence_pending gates
+4. docs/fast-development-harness-plan.md       ← архитектура SSOT (reference only)
+5. project-workflow/continue-chat-prompt.md
 
-## Что уже сделано (не повторяй с нуля)
-- Remote GitHub; main = origin (последний merge: PR #2 live consumers + local plugin)
-- Skills RU: add-source, distill-doc, ship-toolkit, review-papercuts, bootstrap-project
-- Hooks + papercuts shim; WSL stabilize; PowerShell footguns (em-dash, ${exit})
-- Essential = product-only; merge-safe AGENTS snippet + hooks.json merge
-- Local plugin: plugin/cursor-project-harness + install-harness-plugin.ps1
-- Live consumers: TG_BOT_PRO, inkavrio_ru
-- NEW: greenfield flow v2 реализован и smoke PASS:
-  - scripts/new-project.ps1 + .cmd
-  - bootstrap -SkipNext
-  - templates/product-brief.md + templates/first-chat.md
-  - skill bootstrap-project (greenfield vs existing)
-  - smoke-bootstrap секция === Smoke new-project === (TEMP + finally)
-- 3 цикла × 5 субагентов: вердикт GO-with-patch — см. new-project-hardening-plan.md
+## Git / PR / CI — проверь live, не доверяй устаревшим SHA в чате
+- Branch: feat/complete-fast-development-harness
+- PR #4 open: https://github.com/MihaRooll/cursor-project-toolkit/pull/4
+- Observed head: 9b684cc773468571c5efc4185c686f52d50aaee2
+- Observed green CI: run 29994496765 (toolkit-verify)
+- main: strict required check toolkit-verify
+Начни с: git status; git log -1; сверка с PR head и последним CI на GitHub.
 
-### Ingest + new-project в working tree (часто ЕЩЁ НЕ ЗАКОММИЧЕНО — проверь git status)
-SRC-012…022 docs + prompting; SOURCES/docs/README; new-project scripts/templates/skill/docs/smoke.
-Не коммить/не пушь без явной просьбы («зашей» / /ship-toolkit).
+## Контракт продолжения
+- НЕ возобновляй toolkit-fast-loop-v1 (BLOCKED: cycle:4).
+- НЕ создавай toolkit-fast-loop-v2/v3 заново — они done.
+- Допустимые задачи: maintain PR #4, docs/evidence slices, collect graduation corpora,
+  Human-Gated merge/publish — только по явному OK пользователя.
+- Graduation gates (A/B 6–10 tasks, planner p95/20 CI/30–60 patches/zero misses) —
+  evidence_pending, не повод re-implement shadow tooling.
 
-## СЛЕДУЮЩАЯ ЗАДАЧА (приоритет)
-Выполни hardening по project-workflow/new-project-hardening-plan.md по порядку:
+## Human Gates — STOP и спроси заново (prior chat approvals НЕ переносятся)
+commit, push, merge, tag, release, branch protection, plugin install/remove,
+запись в user profile, root LICENSE, model pin / cost-class, strict hooks promotion,
+destructive/external writes.
 
-1. NP-01 blocker: Get-FinalPath (Win32) — canonicalize Parent/Target ДО New-Item; fail-closed; smoke junction Parent→toolkit must fail
-2. NP-02/03 blocker: SSOT docs — harness-as-cursor-plugin.md + toolkit-core.mdc + AGENTS layers (greenfield=new-project)
-3. NP-04: честный -AllowExisting (не «merge-safe»)
-4. NP-05: smoke top-5 (Essential mustAbsent brief; refuse non-empty; AllowExisting preserve brief; Name in brief; AGENTS H1)
-5. NP-06…09 по остатку бюджета (title patch, Marketplace day-0 plugin, skills-ru sync, optional SkipNext HOME)
+## Модели и делегирование
+- Первый spawn subagent: явно укажи requested model slug в Task call.
+- resume того же agent: model НЕ передавай — UI может показать Auto; reuse prior agent/model.
+- Pin/routing — best-effort intent, не platform enforcement; фиксируй фактическую модель когда observable.
+- Main — единственный owner spawns и user-facing completion.
+- implementer sole writer T0–T3; implementer НИКОГДА не spawnит Task/subagents/reviewer/verifier —
+  если нужна делегация, верни управление Main.
+- L2 agents never delegate.
 
-После правок .ps1: parse-check-ps1.ps1 затем smoke-bootstrap.ps1.
+## Оркестрация (efficient)
+- Scouts default 0; один writer; compact Work Packets ≤2k; без raw logs.
+- Читай output files точечно.
 
-Потом (если пользователь даст OK): wifi-vpn через new-project.cmd + строка в harness-consumers.md.
-Или ship: ветка + PR для ingest+new-project+hardening — только по «зашей».
+## Verify (после docs/harness touch)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\validate-project-docs.ps1 -ProjectRoot .
+git diff --check
++ при harness edits: scripts\verify-harness.ps1 -Profile Quick (local) / Full перед merge claim
 
-## Ограничения среды
-- PowerShell: .ps1 ASCII; powershell.exe -NoProfile -ExecutionPolicy Bypass
-- Em-dash / $exit: ломают PS 5.1 — ASCII + ${var}
-- Не force-push main; secrets out
-- Skill description на русском
-- Не тащи community dumps / Full packs в Essential
-- new-project.ps1 только из клона toolkit, не «ожидай» его внутри продукта
-
-## Политики
-- Official/actionable → SRC + AI-first docs
-- Community dump → REJECT bulk
-- UI Skills / Matt / Addy / ReMe / clean-code-js → on demand в продуктах
-
-## Стиль
-- ## For agents первым; таблицы; индекс docs/README.md
-- Friction → papercuts
-- Один конкретный следующий шаг в ответе человеку
-
-Начни с: git status, git log -5, сверка origin; кратко что в working tree; затем сразу NP-01 (или спроси «зашей» если пользователь хочет сначала commit без hardening).
+Начни: git status; сверка PR #4 + live CI; краткий статус что уже done vs evidence_pending; спроси цель пользователя.
 ```
 
 ---

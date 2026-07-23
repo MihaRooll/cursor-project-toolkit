@@ -1,0 +1,18 @@
+{
+  "paths": [
+    { "path": "scripts/touched.ps1", "class": "modified", "staged": true },
+    { "path": "scripts/renamed-old.ps1", "class": "renamed_old", "staged": true },
+    { "path": "scripts/renamed-new.ps1", "class": "renamed_new", "staged": true }
+  ],
+  "flags": {},
+  "expected": {
+    "recommended_profile": "Quick",
+    "conservative_full": false,
+    "must_include": ["Q-PARSE"],
+    "path_classes": {
+      "scripts/touched.ps1": "modified",
+      "scripts/renamed-old.ps1": "renamed_old",
+      "scripts/renamed-new.ps1": "renamed_new"
+    }
+  }
+}

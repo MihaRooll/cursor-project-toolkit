@@ -1,5 +1,5 @@
 {
-  "plugin_version": "0.5.0",
+  "plugin_version": "0.5.2",
   "skill_max_lines": 500,
   "rule_max_lines": 30,
   "agents": [

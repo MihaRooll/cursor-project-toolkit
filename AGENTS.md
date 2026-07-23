@@ -82,7 +82,7 @@ Review: `/review-papercuts`. Details: `docs/papercuts.md`.
 - Windows: `$env:HOME = $env:USERPROFILE` for papercuts; prefer git repo cwd or `--file`
 - Hooks live in `.cursor/hooks.json` (PowerShell)
 - Essential bootstrap = product surface only; toolkit skills stay in this repo
-- After harness/.ps1 edits: `scripts/parse-check-ps1.ps1` then `scripts/smoke-bootstrap.ps1` (Essential + new-project sections)
+- After harness/.ps1 edits: `scripts/verify-harness.ps1 -Profile Quick` (local); pre-merge/main: `-Profile Full`. Legacy: `parse-check-ps1.ps1` then `smoke-bootstrap.ps1`
 - Greenfield: `scripts/new-project.ps1` / `.cmd` (not in product Essential surface)
 - Local plugin: `plugin/cursor-project-harness` via `scripts/install-harness-plugin.ps1`
 - Live consumers: TG_BOT_PRO, inkavrio_ru — see `docs/harness-consumers.md`

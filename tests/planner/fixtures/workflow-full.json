@@ -1,0 +1,12 @@
+{
+  "paths": [
+    { "path": ".github/workflows/toolkit-verify.yml", "class": "modified", "staged": true }
+  ],
+  "flags": {},
+  "expected": {
+    "recommended_profile": "Full",
+    "conservative_full": true,
+    "triggers": ["workflow_change"],
+    "must_include_all_full_oracle": true
+  }
+}

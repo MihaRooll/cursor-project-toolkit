@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "manifest_version": "v1",
+  "policies": ["managed", "seed-only", "managed-block", "structural-merge", "plugin-only", "toolkit-ci-only"],
+  "required_entry_fields": ["id", "policy", "surface", "source", "destination", "bootstrap_ref"],
+  "surfaces": ["essential", "full", "plugin", "toolkit-ci", "greenfield"]
+}

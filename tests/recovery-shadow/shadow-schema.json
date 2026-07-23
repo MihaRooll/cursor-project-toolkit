@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "shadow_version": "v1",
+  "description": "Sequential recovery shadow — metadata only; toolkit-only; two-phase Commit then Reveal.",
+  "additionalProperties": false,
+  "definitions": {
+    "oracle": {
+      "type": "object",
+      "required": ["available", "reliable", "check_id"],
+      "additionalProperties": false,
+      "properties": {
+        "available": { "type": "boolean" },
+        "reliable": { "type": "boolean" },
+        "check_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": ["family", "decision"],
+      "additionalProperties": false,
+      "properties": {
+        "family": { "type": "string", "minLength": 1 },
+        "decision": {
+          "type": "string",
+          "enum": ["retry", "scout", "premium", "experiment", "blocked", "human_pending"]
+        }
+      }
+    },
+    "commit_input": {
+      "type": "object",
+      "required": [
+        "candidate_id",
+        "consumer_repo",
+        "tier",
+        "oracle",
+        "first_verdict",
+        "second_call_decision"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "consumer_repo": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "tier": { "type": "string", "enum": ["T0", "T1", "T2", "T3", "T4"] },
+        "oracle": { "$ref": "#/definitions/oracle" },
+        "risk_tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "first_verdict": { "$ref": "#/definitions/verdict" },
+        "second_call_decision": {
+          "type": "string",
+          "enum": ["retry", "scout", "premium", "experiment", "blocked", "human_pending"]
+        }
+      }
+    },
+    "commitment_record": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "shadow_version",
+        "record_type",
+        "candidate_id",
+        "consumer_repo",
+        "tier",
+        "oracle",
+        "promotion_status",
+        "live_model_calls",
+        "pin_or_cost_change"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "type": "integer", "minimum": 1, "maximum": 1 },
+        "shadow_version": { "type": "string", "enum": ["v1"] },
+        "record_type": { "type": "string", "enum": ["commitment"] },
+        "candidate_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "consumer_repo": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "tier": { "type": "string", "enum": ["T0", "T1", "T2", "T3", "T4"] },
+        "oracle": { "$ref": "#/definitions/oracle" },
+        "excluded": { "type": "boolean" },
+        "exclusion_reasons": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "first_verdict": {
+          "type": "object",
+          "required": ["family", "decision", "recorded_at_seq", "verdict_hash"],
+          "additionalProperties": false,
+          "properties": {
+            "family": { "type": "string", "minLength": 1 },
+            "decision": { "type": "string", "enum": ["retry", "scout", "premium", "experiment", "blocked", "human_pending"] },
+            "recorded_at_seq": { "type": "integer", "minimum": 1, "maximum": 1 },
+            "verdict_hash": { "type": "string", "minLength": 8, "maxLength": 80 }
+          }
+        },
+        "commitment": {
+          "type": "object",
+          "required": [
+            "second_call_decision",
+            "commitment_hash",
+            "sequence_proof",
+            "recorded_at_seq",
+            "before_second_reveal"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "second_call_decision": { "type": "string", "enum": ["retry", "scout", "premium", "experiment", "blocked", "human_pending"] },
+            "commitment_hash": { "type": "string", "minLength": 8, "maxLength": 80 },
+            "sequence_proof": { "type": "string", "minLength": 8, "maxLength": 80 },
+            "recorded_at_seq": { "type": "integer", "minimum": 2, "maximum": 2 },
+            "before_second_reveal": { "type": "boolean", "enum": [true] }
+          }
+        },
+        "promotion_status": { "type": "string", "enum": ["evidence_pending"] },
+        "live_model_calls": { "type": "boolean", "enum": [false] },
+        "pin_or_cost_change": { "type": "boolean", "enum": [false] }
+      }
+    },
+    "final_record": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "shadow_version",
+        "record_type",
+        "candidate_id",
+        "consumer_repo",
+        "tier",
+        "oracle",
+        "first_verdict",
+        "commitment",
+        "second_verdict",
+        "score",
+        "promotion_status",
+        "live_model_calls",
+        "pin_or_cost_change",
+        "protocol_sequence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "type": "integer", "minimum": 1, "maximum": 1 },
+        "shadow_version": { "type": "string", "enum": ["v1"] },
+        "record_type": { "type": "string", "enum": ["final"] },
+        "candidate_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "consumer_repo": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "tier": { "type": "string", "enum": ["T0", "T1", "T2", "T3", "T4"] },
+        "oracle": { "$ref": "#/definitions/oracle" },
+        "excluded": { "type": "boolean" },
+        "exclusion_reasons": { "type": "array", "items": { "type": "string" } },
+        "first_verdict": { "type": "object" },
+        "commitment": { "type": "object" },
+        "second_verdict": {
+          "type": "object",
+          "required": ["family", "decision", "revealed_at_seq", "verdict_hash"],
+          "additionalProperties": false,
+          "properties": {
+            "family": { "type": "string", "minLength": 1 },
+            "decision": { "type": "string", "enum": ["retry", "scout", "premium", "experiment", "blocked", "human_pending"] },
+            "revealed_at_seq": { "type": "integer", "minimum": 3, "maximum": 3 },
+            "verdict_hash": { "type": "string", "minLength": 8, "maxLength": 80 }
+          }
+        },
+        "score": {
+          "type": "object",
+          "required": ["deterministic_score", "critical_miss", "agreement_first_second", "commitment_matches_second"],
+          "additionalProperties": false,
+          "properties": {
+            "deterministic_score": { "type": "number", "minimum": 0, "maximum": 1 },
+            "critical_miss": { "type": "boolean" },
+            "agreement_first_second": { "type": "boolean" },
+            "commitment_matches_second": { "type": "boolean" }
+          }
+        },
+        "promotion_status": { "type": "string", "enum": ["evidence_pending"] },
+        "live_model_calls": { "type": "boolean", "enum": [false] },
+        "pin_or_cost_change": { "type": "boolean", "enum": [false] },
+        "experiment_stopped": { "type": "boolean" },
+        "stop_reason": { "type": ["string", "null"] },
+        "protocol_sequence": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "excluded_risk_tags": [
+    "no_oracle",
+    "no-oracle",
+    "high_consequence",
+    "security",
+    "public_contract",
+    "persistent",
+    "irreversible"
+  ],
+  "forbidden_fields": [
+    "raw_prompt",
+    "raw_log",
+    "prompt_text",
+    "log_text",
+    "username",
+    "hostname",
+    "absolute_path",
+    "private_path",
+    "email",
+    "secrets",
+    "plugin_inventory"
+  ],
+  "corpus_thresholds": {
+    "min_candidates": 10,
+    "max_candidates": 16,
+    "min_consumers": 2,
+    "promotion_status": "evidence_pending"
+  }
+}

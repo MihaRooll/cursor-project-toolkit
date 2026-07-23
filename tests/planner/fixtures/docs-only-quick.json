@@ -1,0 +1,12 @@
+{
+  "paths": [
+    { "path": "docs/ci-toolkit-verify.md", "class": "modified", "staged": true }
+  ],
+  "flags": { "missing_history": false, "merge_conflict": false, "parse_error": false },
+  "expected": {
+    "recommended_profile": "Quick",
+    "conservative_full": false,
+    "must_include": ["Q-DOCS-ST", "Q-DOCS-LIVE"],
+    "must_not_include_full_oracle_only": true
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "cursor-project-harness",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Product AI harness: autonomous T0-T4 orchestration, browser-verify, setup-project-environment, doctor, MCP integration skill, model-pinned agents, papercuts hooks, and on-disk bootstrap integration.",
   "author": {
     "name": "MihaRooll"

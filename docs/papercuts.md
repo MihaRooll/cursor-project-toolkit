@@ -21,7 +21,7 @@
 ```powershell
 $env:HOME = $env:USERPROFILE
 # лучше сразу:
-cd C:\Users\katko\Desktop\Programms\cursor-project-toolkit
+cd C:\Users\katko\Desktop\Program\cursor-project-toolkit
 papercuts add "…" --tag toolkit
 # или явно:
 papercuts --file .\.papercuts.jsonl add "…" --tag toolkit
@@ -66,7 +66,7 @@ papercuts --file .\.papercuts.jsonl add "…" --tag toolkit
 Уже есть: `scripts/papercuts.ps1` / `scripts/papercuts.cmd`.
 
 ```powershell
-cd C:\Users\katko\Desktop\Programms\cursor-project-toolkit
+cd C:\Users\katko\Desktop\Program\cursor-project-toolkit
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/papercuts.ps1 add "пример трения" -Tag tooling
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/papercuts.ps1 list -Format md
 ```

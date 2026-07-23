@@ -43,17 +43,21 @@
 | [skills-russian-descriptions.md](skills-russian-descriptions.md) | RU descriptions для skills | — | Новый/правка `SKILL.md` |
 | [prompts-chat-verdict.md](prompts-chat-verdict.md) | prompts.chat — не bulk-ingest | SRC-010 | Предлагают скачать community prompts |
 | [papercuts.md](papercuts.md) | Papercuts CLI — жалобы агентов | SRC-011 | Friction, tooling footguns, triage backlog |
-| [bootstrap-scaffold.md](bootstrap-scaffold.md) | Toolkit → новый проект | — | Bootstrap harness в продукт |
+| [bootstrap-scaffold.md](bootstrap-scaffold.md) | Toolkit → новый проект; Wave 4B shadow shipping manifest | — | Bootstrap harness в продукт |
+| [harness-provenance.md](harness-provenance.md) | Wave 4C local provenance / drift collector | — | Local harness drift vs shadow manifest |
 | [living-documentation.md](living-documentation.md) | Living docs + docs-map index | — | Material doc change; validator; maintain skill |
 | [docs-map-schema.md](docs-map-schema.md) | Schema for docs/docs-map.json | — | Create/edit map; validator errors |
 | [project-integrations.md](project-integrations.md) | Essential vs day-0 living docs wiring | — | Bootstrap/plugin integration questions |
 | [project-environment.md](project-environment.md) | Surfaces: IDE/CLI/Cloud/Automation/SCM | SRC-029 | Cross-PC setup; runtime vs build secrets |
 | [cursor-native-controls.md](cursor-native-controls.md) | permissions/sandbox/env/BUGBOT/ignore/Browser | SRC-029/030 | Opt-in native controls; Essential ships none active |
-| [project-state.md](project-state.md) | Phase, milestones, next checks | — | Session stage; setup skill; doctor advisory |
+| [project-state.md](project-state.md) | Phase, milestones, fast-loop v3 / SHIP-V2; Waves 0–6 done; graduation evidence_pending | — | Session stage; setup skill; doctor advisory |
+| [fast-development-harness-plan.md](fast-development-harness-plan.md) | Quick/Full oracle + CI architecture; v3 Waves 0–6 implementation summary | — | Fast-loop implementation; planner/shipping gates |
+| [ci-toolkit-verify.md](ci-toolkit-verify.md) | GitHub Actions toolkit-verify gate | SRC-032 | CI workflow edits; required check rollout; deterministic boundary |
+| [session-handoff-2026-07-23.md](session-handoff-2026-07-23.md) | 2026-07-23 full session handoff (research + Waves 0–6) | — | New chat; PR #4 / CI state; evidence_pending; do-not-repeat |
 | [memory-and-obsidian.md](memory-and-obsidian.md) | Memory authority + Obsidian vault rules | SRC-026/027 | Conflict resolution; Automation memory; Obsidian opt-in |
 | [mcp-security.md](mcp-security.md) | MCP placement, pins, Human Gate | SRC-025/028 | Propose/validate MCP; local vs cloud; untrusted tool I/O |
 | [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md) | Living-eval + strict hook promotion | SRC-029 | Full opt-in enforcement; failClosed; Cloud hook limits |
-| [harness-as-cursor-plugin.md](harness-as-cursor-plugin.md) | Copy vs plugin vs submodule | SRC-008/009 | Упаковка harness; local plugin install |
+| [harness-as-cursor-plugin.md](harness-as-cursor-plugin.md) | Copy vs plugin; Wave 4A coexistence + Human-Gated trial verdicts | SRC-008/009 | Plugin install; plugin-only runtime verified; combined unsupported |
 | [harness-consumers.md](harness-consumers.md) | Живые продукты с Essential | — | Где накатан harness; feedback loop |
 | [openai-gpt56-model-guidance.md](openai-gpt56-model-guidance.md) | GPT-5.6 latest-model | SRC-012 | Модели, effort/pro/PTC, lean prompts |
 | [openai-ai-dev-index.md](openai-ai-dev-index.md) | OpenAI docs для AI-dev | SRC-013 | Что читать из portal; P0–P3 |
@@ -66,9 +70,12 @@
 | [mattpocock-skills.md](mattpocock-skills.md) | Matt Pocock skills | SRC-020 | Grill/CONTEXT/TDD/tickets; composable; selective, не Essential |
 | [reme-agent-memory.md](reme-agent-memory.md) | ReMe agent memory | SRC-021 | Markdown memory layer; CLI/MCP; vs continual-learning; opt-in |
 | [security-in-session-cursor-vs-claude.md](security-in-session-cursor-vs-claude.md) | In-session security: Claude vs Cursor | SRC-022 | Bugbot `/review-security`, thermos, Semgrep hooks; нет 1:1 plugin |
-| [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Delegation-first T0–T4: Main control plane, Composer writes, Grok orch/verify | SRC-023/024 | change/build/fix; Work Packet; no Main product writes T0–T3 |
+| [autonomous-agent-orchestration.md](autonomous-agent-orchestration.md) | Delegation-first T0–T4; spawn/resume model nuance; Main sole spawns | SRC-023/024 | change/build/fix; Work Packet; no implementer spawns; no Main product writes T0–T3 |
 | [orchestration-evidence.md](orchestration-evidence.md) | Shadow evidence schema (toolkit-only) | — | Wave eval 10–20 tasks; no strict-hook auto-promotion |
+| [evidence-sidecar-ab-protocol.md](evidence-sidecar-ab-protocol.md) | Wave 5A evidence sidecar + Fast A/B planner | — | Log task rows; seeded AB/BA plans; no pin promotion |
 | [recovery-escalation.md](recovery-escalation.md) | Recovery R0a shadow/manual protocol | SRC-031 | Explicit `/recovery-escalation`; stuck predicates; promotion gate R0b |
+| [recovery-shadow-sequential.md](recovery-shadow-sequential.md) | Wave 5B sequential recovery shadow simulator | — | Commitment-before-reveal experiments; toolkit-only |
+| [changed-path-planner-shadow.md](changed-path-planner-shadow.md) | Wave 6 changed-path verification planner shadow | — | Select Quick/Full check IDs; no CI wiring |
 | [wsl-windows-stability.md](wsl-windows-stability.md) | Стабильный WSL2 на Windows | — | .wslconfig, когда использовать WSL |
 | [cursor-official-index.md](cursor-official-index.md) | Карта всего official Cursor | SRC-004…009 | Старт: найти plugin/docs/blog |
 | [cursor-agent-best-practices.md](cursor-agent-best-practices.md) | Операционный manual агента | SRC-005 | Plan, context, rules/skills, workflows |

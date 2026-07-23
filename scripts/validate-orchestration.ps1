@@ -361,7 +361,7 @@ Test-Contains (Join-Path $Root "templates\first-chat.md") "project-state.md" "fi
 Test-Contains (Join-Path $Root "templates\first-chat.md") "setup-project-environment" "first-chat points to setup skill"
 Test-Contains (Join-Path $Root ".cursor\skills\setup-project-environment\SKILL.md") "Human Gate" "setup skill Human Gate"
 Test-Contains (Join-Path $Root ".cursor\skills\setup-project-environment\SKILL.md") "silent install" "setup skill no silent install"
-Test-Contains (Join-Path $Root "scripts\smoke-bootstrap.ps1") "test-session-start-context.ps1" "smoke runs V-SESSION"
+Test-Contains (Join-Path $Root "scripts\verify-harness.ps1") "test-session-start-context.ps1" "verify-harness Quick runs V-SESSION"
 Test-Contains (Join-Path $Root "templates\cursor\environment.json.example") '"env"' "environment example has env key"
 Assert-True (-not (Read-Text (Join-Path $Root "templates\cursor\environment.json.example")).Contains('"$schema"')) "environment example no schema"
 Test-Contains (Join-Path $Root "templates\project-rules\product-core.mdc") "autonomous-task" "product-core points to skill"

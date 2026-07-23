@@ -1,0 +1,1630 @@
+{
+    "schema_version":  1,
+    "manifest_version":  "v1",
+    "policies":  [
+                     "managed",
+                     "seed-only",
+                     "managed-block",
+                     "structural-merge",
+                     "plugin-only",
+                     "toolkit-ci-only"
+                 ],
+    "entries":  [
+                    {
+                        "id":  "block-.cursor-hooks-after-shell-papercuts.ps1",
+                        "surface":  "essential",
+                        "policy":  "managed-block",
+                        "source":  ".cursor/hooks/after-shell-papercuts.ps1",
+                        "destination":  ".cursor/hooks/after-shell-papercuts.ps1",
+                        "bootstrap_ref":  "hooksOrAgents"
+                    },
+                    {
+                        "id":  "block-.cursor-hooks-session-start.ps1",
+                        "surface":  "essential",
+                        "policy":  "managed-block",
+                        "source":  ".cursor/hooks/session-start.ps1",
+                        "destination":  ".cursor/hooks/session-start.ps1",
+                        "bootstrap_ref":  "hooksOrAgents"
+                    },
+                    {
+                        "id":  "block-.cursor-hooks-stop-papercuts-nudge.ps1",
+                        "surface":  "essential",
+                        "policy":  "managed-block",
+                        "source":  ".cursor/hooks/stop-papercuts-nudge.ps1",
+                        "destination":  ".cursor/hooks/stop-papercuts-nudge.ps1",
+                        "bootstrap_ref":  "hooksOrAgents"
+                    },
+                    {
+                        "id":  "block-AGENTS.md",
+                        "surface":  "essential",
+                        "policy":  "managed-block",
+                        "source":  "templates/project-AGENTS.md",
+                        "destination":  "AGENTS.md",
+                        "bootstrap_ref":  "hooksOrAgents"
+                    },
+                    {
+                        "id":  "ci--github-workflows-toolkit-verify-yml",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".github/workflows/toolkit-verify.yml",
+                        "destination":  ".github/workflows/toolkit-verify.yml",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-schemas-provenance-v1-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "schemas/provenance.v1.json",
+                        "destination":  "schemas/provenance.v1.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-ab-protocol-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/ab-protocol.ps1",
+                        "destination":  "scripts/ab-protocol.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-bootstrap-into-project-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/bootstrap-into-project.ps1",
+                        "destination":  "scripts/bootstrap-into-project.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-collect-provenance-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/collect-provenance.ps1",
+                        "destination":  "scripts/collect-provenance.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-install-harness-plugin-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/install-harness-plugin.ps1",
+                        "destination":  "scripts/install-harness-plugin.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-new-project-cmd",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/new-project.cmd",
+                        "destination":  "scripts/new-project.cmd",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-new-project-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/new-project.ps1",
+                        "destination":  "scripts/new-project.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-plan-verification-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/plan-verification.ps1",
+                        "destination":  "scripts/plan-verification.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-recovery-shadow-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/recovery-shadow.ps1",
+                        "destination":  "scripts/recovery-shadow.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-runtime-coexistence-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/runtime-coexistence.ps1",
+                        "destination":  "scripts/runtime-coexistence.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-runtime-coexistence-rollback-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/runtime-coexistence-rollback.ps1",
+                        "destination":  "scripts/runtime-coexistence-rollback.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-smoke-portability-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/smoke-portability.ps1",
+                        "destination":  "scripts/smoke-portability.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-validate-evidence-sidecar-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-evidence-sidecar.ps1",
+                        "destination":  "scripts/validate-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-validate-orchestration-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-orchestration.ps1",
+                        "destination":  "scripts/validate-orchestration.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-validate-recovery-shadow-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-recovery-shadow.ps1",
+                        "destination":  "scripts/validate-recovery-shadow.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-validate-shipping-manifest-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-shipping-manifest.ps1",
+                        "destination":  "scripts/validate-shipping-manifest.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-verify-harness-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/verify-harness.ps1",
+                        "destination":  "scripts/verify-harness.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-scripts-write-evidence-sidecar-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/write-evidence-sidecar.ps1",
+                        "destination":  "scripts/write-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-shipping-manifest-v1-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "shipping/manifest.v1.json",
+                        "destination":  "shipping/manifest.v1.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-shipping-verification-checks-v1-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "shipping/verification-checks.v1.json",
+                        "destination":  "shipping/verification-checks.v1.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-orchestration-evidence-schema-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/orchestration/evidence-schema.json",
+                        "destination":  "tests/orchestration/evidence-schema.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-orchestration-evidence-test-evidence-sidecar-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/orchestration/evidence/test-evidence-sidecar.ps1",
+                        "destination":  "tests/orchestration/evidence/test-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-planner-fixtures",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/planner/fixtures",
+                        "destination":  "tests/planner/fixtures",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-planner-test-plan-verification-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/planner/test-plan-verification.ps1",
+                        "destination":  "tests/planner/test-plan-verification.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-provenance-test-collect-provenance-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/provenance/test-collect-provenance.ps1",
+                        "destination":  "tests/provenance/test-collect-provenance.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-recovery-shadow-shadow-schema-json",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/recovery-shadow/shadow-schema.json",
+                        "destination":  "tests/recovery-shadow/shadow-schema.json",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "ci-tests-recovery-shadow-test-recovery-shadow-ps1",
+                        "surface":  "toolkit-ci",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/recovery-shadow/test-recovery-shadow.ps1",
+                        "destination":  "tests/recovery-shadow/test-recovery-shadow.ps1",
+                        "bootstrap_ref":  "toolkitCi"
+                    },
+                    {
+                        "id":  "exclude-.cursor-agents-recovery-arbiter-claude.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/agents/recovery-arbiter-claude.md",
+                        "destination":  ".cursor/agents/recovery-arbiter-claude.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-agents-recovery-arbiter-fable.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/agents/recovery-arbiter-fable.md",
+                        "destination":  ".cursor/agents/recovery-arbiter-fable.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-agents-recovery-arbiter-openai.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/agents/recovery-arbiter-openai.md",
+                        "destination":  ".cursor/agents/recovery-arbiter-openai.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-agents-recovery-orchestrator.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/agents/recovery-orchestrator.md",
+                        "destination":  ".cursor/agents/recovery-orchestrator.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-agents-reproducer.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/agents/reproducer.md",
+                        "destination":  ".cursor/agents/reproducer.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-BUGBOT.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/BUGBOT.md",
+                        "destination":  ".cursor/BUGBOT.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-environment.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/environment.json",
+                        "destination":  ".cursor/environment.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-mcp.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/mcp.json",
+                        "destination":  ".cursor/mcp.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-permissions.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/permissions.json",
+                        "destination":  ".cursor/permissions.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-rules-docs-ai-first.mdc",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/rules/docs-ai-first.mdc",
+                        "destination":  ".cursor/rules/docs-ai-first.mdc",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-rules-toolkit-core.mdc",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/rules/toolkit-core.mdc",
+                        "destination":  ".cursor/rules/toolkit-core.mdc",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-sandbox.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/sandbox.json",
+                        "destination":  ".cursor/sandbox.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-skills-add-source",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/skills/add-source",
+                        "destination":  ".cursor/skills/add-source",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-skills-bootstrap-project",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/skills/bootstrap-project",
+                        "destination":  ".cursor/skills/bootstrap-project",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-skills-configure-project-integrations",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/skills/configure-project-integrations",
+                        "destination":  ".cursor/skills/configure-project-integrations",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-skills-distill-doc",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/skills/distill-doc",
+                        "destination":  ".cursor/skills/distill-doc",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-skills-recovery-escalation",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/skills/recovery-escalation",
+                        "destination":  ".cursor/skills/recovery-escalation",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-skills-review-harness-evidence",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/skills/review-harness-evidence",
+                        "destination":  ".cursor/skills/review-harness-evidence",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-.cursor-skills-ship-toolkit",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  ".cursor/skills/ship-toolkit",
+                        "destination":  ".cursor/skills/ship-toolkit",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-archive",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "archive",
+                        "destination":  "archive",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-docs-docs-map.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "docs/docs-map.json",
+                        "destination":  "docs/docs-map.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-docs-first-chat.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "docs/first-chat.md",
+                        "destination":  "docs/first-chat.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-docs-mcp-security.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "docs/mcp-security.md",
+                        "destination":  "docs/mcp-security.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-docs-memory-and-obsidian.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "docs/memory-and-obsidian.md",
+                        "destination":  "docs/memory-and-obsidian.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-docs-product-brief.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "docs/product-brief.md",
+                        "destination":  "docs/product-brief.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-docs-recovery-escalation.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "docs/recovery-escalation.md",
+                        "destination":  "docs/recovery-escalation.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-prompting-constraint-first.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "prompting/constraint-first.md",
+                        "destination":  "prompting/constraint-first.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-roles-docs-distiller.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "roles/docs-distiller.md",
+                        "destination":  "roles/docs-distiller.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-schemas-provenance.v1.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "schemas/provenance.v1.json",
+                        "destination":  "schemas/provenance.v1.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-ab-protocol.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/ab-protocol.ps1",
+                        "destination":  "scripts/ab-protocol.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-collect-provenance.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/collect-provenance.ps1",
+                        "destination":  "scripts/collect-provenance.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-plan-verification.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/plan-verification.ps1",
+                        "destination":  "scripts/plan-verification.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-recovery-shadow.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/recovery-shadow.ps1",
+                        "destination":  "scripts/recovery-shadow.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-validate-evidence-sidecar.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-evidence-sidecar.ps1",
+                        "destination":  "scripts/validate-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-validate-living-evals.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-living-evals.ps1",
+                        "destination":  "scripts/validate-living-evals.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-validate-mcp-profiles.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-mcp-profiles.ps1",
+                        "destination":  "scripts/validate-mcp-profiles.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-validate-recovery.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-recovery.ps1",
+                        "destination":  "scripts/validate-recovery.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-validate-recovery-shadow.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/validate-recovery-shadow.ps1",
+                        "destination":  "scripts/validate-recovery-shadow.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-verify-harness.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/verify-harness.ps1",
+                        "destination":  "scripts/verify-harness.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-scripts-write-evidence-sidecar.ps1",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "scripts/write-evidence-sidecar.ps1",
+                        "destination":  "scripts/write-evidence-sidecar.ps1",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-shipping-verification-checks.v1.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "shipping/verification-checks.v1.json",
+                        "destination":  "shipping/verification-checks.v1.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-SOURCES.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "SOURCES.md",
+                        "destination":  "SOURCES.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-subagents-explorer.md",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "subagents/explorer.md",
+                        "destination":  "subagents/explorer.md",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-templates-cursor",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "templates/cursor",
+                        "destination":  "templates/cursor",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-templates-hooks",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "templates/hooks",
+                        "destination":  "templates/hooks",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-templates-mcp",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "templates/mcp",
+                        "destination":  "templates/mcp",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-living-eval",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/living-eval",
+                        "destination":  "tests/living-eval",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-orchestration-evidence",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/orchestration/evidence",
+                        "destination":  "tests/orchestration/evidence",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-orchestration-evidence-schema.json",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/orchestration/evidence-schema.json",
+                        "destination":  "tests/orchestration/evidence-schema.json",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-planner",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/planner",
+                        "destination":  "tests/planner",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-provenance",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/provenance",
+                        "destination":  "tests/provenance",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-recovery",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/recovery",
+                        "destination":  "tests/recovery",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "exclude-tests-recovery-shadow",
+                        "surface":  "essential",
+                        "policy":  "toolkit-ci-only",
+                        "source":  "tests/recovery-shadow",
+                        "destination":  "tests/recovery-shadow",
+                        "bootstrap_ref":  "mustAbsent"
+                    },
+                    {
+                        "id":  "managed-.cursor-agents-adversarial-reviewer.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/agents/adversarial-reviewer.md",
+                        "destination":  ".cursor/agents/adversarial-reviewer.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-agents-implementer.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/agents/implementer.md",
+                        "destination":  ".cursor/agents/implementer.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-agents-operational-orchestrator.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/agents/operational-orchestrator.md",
+                        "destination":  ".cursor/agents/operational-orchestrator.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-agents-principal-arbiter.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/agents/principal-arbiter.md",
+                        "destination":  ".cursor/agents/principal-arbiter.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-agents-verifier.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/agents/verifier.md",
+                        "destination":  ".cursor/agents/verifier.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-rules-autonomous-orchestration.mdc",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/rules/autonomous-orchestration.mdc",
+                        "destination":  ".cursor/rules/autonomous-orchestration.mdc",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-rules-product-core.mdc",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "templates/project-rules/product-core.mdc",
+                        "destination":  ".cursor/rules/product-core.mdc",
+                        "bootstrap_ref":  "essentialExtras"
+                    },
+                    {
+                        "id":  "managed-.cursor-rules-project-docs-lifecycle.mdc",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/rules/project-docs-lifecycle.mdc",
+                        "destination":  ".cursor/rules/project-docs-lifecycle.mdc",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-rules-skills-ru-description.mdc",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/rules/skills-ru-description.mdc",
+                        "destination":  ".cursor/rules/skills-ru-description.mdc",
+                        "bootstrap_ref":  "essentialExtras"
+                    },
+                    {
+                        "id":  "managed-.cursor-skills-autonomous-task",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/skills/autonomous-task",
+                        "destination":  ".cursor/skills/autonomous-task",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-skills-browser-verify",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/skills/browser-verify",
+                        "destination":  ".cursor/skills/browser-verify",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-skills-maintain-project-docs",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/skills/maintain-project-docs",
+                        "destination":  ".cursor/skills/maintain-project-docs",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.cursor-skills-review-papercuts",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/skills/review-papercuts",
+                        "destination":  ".cursor/skills/review-papercuts",
+                        "bootstrap_ref":  "essentialExtras"
+                    },
+                    {
+                        "id":  "managed-.cursor-skills-setup-project-environment",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".cursor/skills/setup-project-environment",
+                        "destination":  ".cursor/skills/setup-project-environment",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-.gitattributes",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  ".gitattributes",
+                        "destination":  ".gitattributes",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-autonomous-agent-orchestration.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/autonomous-agent-orchestration.md",
+                        "destination":  "docs/autonomous-agent-orchestration.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-bootstrap-scaffold.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/bootstrap-scaffold.md",
+                        "destination":  "docs/bootstrap-scaffold.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-cursor-agent-best-practices.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/cursor-agent-best-practices.md",
+                        "destination":  "docs/cursor-agent-best-practices.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-cursor-native-controls.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/cursor-native-controls.md",
+                        "destination":  "docs/cursor-native-controls.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-cursor-primitives.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/cursor-primitives.md",
+                        "destination":  "docs/cursor-primitives.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-docs-map-schema.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/docs-map-schema.md",
+                        "destination":  "docs/docs-map-schema.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-living-documentation.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/living-documentation.md",
+                        "destination":  "docs/living-documentation.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-papercuts.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/papercuts.md",
+                        "destination":  "docs/papercuts.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-project-environment.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/project-environment.md",
+                        "destination":  "docs/project-environment.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-project-integrations.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/project-integrations.md",
+                        "destination":  "docs/project-integrations.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-docs-project-state.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "templates/project-state.md",
+                        "destination":  "docs/project-state.md",
+                        "bootstrap_ref":  "essentialFiles+template"
+                    },
+                    {
+                        "id":  "managed-docs-skills-russian-descriptions.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "docs/skills-russian-descriptions.md",
+                        "destination":  "docs/skills-russian-descriptions.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-project-workflow-session-checklist.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "project-workflow/session-checklist.md",
+                        "destination":  "project-workflow/session-checklist.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-prompting-context-hygiene.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "prompting/context-hygiene.md",
+                        "destination":  "prompting/context-hygiene.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-prompting-lean-prompts-autonomy.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "prompting/lean-prompts-autonomy.md",
+                        "destination":  "prompting/lean-prompts-autonomy.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-prompting-plan-then-build.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "prompting/plan-then-build.md",
+                        "destination":  "prompting/plan-then-build.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-prompting-README.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "prompting/README.md",
+                        "destination":  "prompting/README.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-prompting-verify-loop.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "prompting/verify-loop.md",
+                        "destination":  "prompting/verify-loop.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-roles-implementer.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "roles/implementer.md",
+                        "destination":  "roles/implementer.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-roles-README.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "roles/README.md",
+                        "destination":  "roles/README.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-roles-reviewer.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "roles/reviewer.md",
+                        "destination":  "roles/reviewer.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-scripts-papercuts.cmd",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "scripts/papercuts.cmd",
+                        "destination":  "scripts/papercuts.cmd",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-scripts-papercuts.ps1",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "scripts/papercuts.ps1",
+                        "destination":  "scripts/papercuts.ps1",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-scripts-project-doctor.ps1",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "scripts/project-doctor.ps1",
+                        "destination":  "scripts/project-doctor.ps1",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-scripts-validate-project-docs.ps1",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "scripts/validate-project-docs.ps1",
+                        "destination":  "scripts/validate-project-docs.ps1",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-subagents-README.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "subagents/README.md",
+                        "destination":  "subagents/README.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "managed-subagents-verifier.md",
+                        "surface":  "essential",
+                        "policy":  "managed",
+                        "source":  "subagents/verifier.md",
+                        "destination":  "subagents/verifier.md",
+                        "bootstrap_ref":  "essentialFiles"
+                    },
+                    {
+                        "id":  "merge-.cursor-agents",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  ".cursor/agents",
+                        "destination":  ".cursor/agents",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-.cursor-hooks",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  ".cursor/hooks",
+                        "destination":  ".cursor/hooks",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-.cursor-hooks.json",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  ".cursor/hooks.json",
+                        "destination":  ".cursor/hooks.json",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-.cursor-rules",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  ".cursor/rules",
+                        "destination":  ".cursor/rules",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-.cursor-skills",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  ".cursor/skills",
+                        "destination":  ".cursor/skills",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-archive-README.md",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "archive/README.md",
+                        "destination":  "archive/README.md",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge--cursor-hooks-json",
+                        "surface":  "essential",
+                        "policy":  "structural-merge",
+                        "source":  ".cursor/hooks.json",
+                        "destination":  ".cursor/hooks.json",
+                        "bootstrap_ref":  "Merge-PapercutsHooks"
+                    },
+                    {
+                        "id":  "merge-docs",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "docs",
+                        "destination":  "docs",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-project-workflow",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "project-workflow",
+                        "destination":  "project-workflow",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-prompting",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "prompting",
+                        "destination":  "prompting",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-roles",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "roles",
+                        "destination":  "roles",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-rules-and-skills",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "rules-and-skills",
+                        "destination":  "rules-and-skills",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-scripts-install-rust-papercuts.ps1",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "scripts/install-rust-papercuts.ps1",
+                        "destination":  "scripts/install-rust-papercuts.ps1",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-scripts-parse-check-ps1.ps1",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "scripts/parse-check-ps1.ps1",
+                        "destination":  "scripts/parse-check-ps1.ps1",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-scripts-smoke-bootstrap.ps1",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "scripts/smoke-bootstrap.ps1",
+                        "destination":  "scripts/smoke-bootstrap.ps1",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-scripts-validate-living-evals.ps1",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "scripts/validate-living-evals.ps1",
+                        "destination":  "scripts/validate-living-evals.ps1",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-scripts-validate-mcp-profiles.ps1",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "scripts/validate-mcp-profiles.ps1",
+                        "destination":  "scripts/validate-mcp-profiles.ps1",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-scripts-validate-recovery.ps1",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "scripts/validate-recovery.ps1",
+                        "destination":  "scripts/validate-recovery.ps1",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-SOURCES.md",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "SOURCES.md",
+                        "destination":  "SOURCES.md",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-subagents",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "subagents",
+                        "destination":  "subagents",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-templates-cursor",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "templates/cursor",
+                        "destination":  "templates/cursor",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-templates-hooks",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "templates/hooks",
+                        "destination":  "templates/hooks",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-templates-mcp",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "templates/mcp",
+                        "destination":  "templates/mcp",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-templates-project-AGENTS-harness-snippet-md",
+                        "surface":  "essential",
+                        "policy":  "structural-merge",
+                        "source":  "templates/project-AGENTS-harness-snippet.md",
+                        "destination":  "AGENTS.md",
+                        "bootstrap_ref":  "Ensure-AgentsHarnessSnippet"
+                    },
+                    {
+                        "id":  "merge-tests-living-eval",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "tests/living-eval",
+                        "destination":  "tests/living-eval",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "merge-tests-recovery",
+                        "surface":  "full",
+                        "policy":  "structural-merge",
+                        "source":  "tests/recovery",
+                        "destination":  "tests/recovery",
+                        "bootstrap_ref":  "full"
+                    },
+                    {
+                        "id":  "plugin-pkg-agents-adversarial-reviewer-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/agents/adversarial-reviewer.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/adversarial-reviewer.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-agents-implementer-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/agents/implementer.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/implementer.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-agents-operational-orchestrator-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/agents/operational-orchestrator.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/operational-orchestrator.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-agents-principal-arbiter-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/agents/principal-arbiter.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/principal-arbiter.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-agents-verifier-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/agents/verifier.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/verifier.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-commands-install-harness-scripts-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/commands/install-harness-scripts.md",
+                        "destination":  "plugins/local/cursor-project-harness/commands/install-harness-scripts.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg--cursor-plugin-plugin-json",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/.cursor-plugin/plugin.json",
+                        "destination":  "plugins/local/cursor-project-harness/.cursor-plugin/plugin.json",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-hooks-hooks-json",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/hooks/hooks.json",
+                        "destination":  "plugins/local/cursor-project-harness/hooks/hooks.json",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-README-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/README.md",
+                        "destination":  "plugins/local/cursor-project-harness/README.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-rules-autonomous-orchestration-mdc",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/rules/autonomous-orchestration.mdc",
+                        "destination":  "plugins/local/cursor-project-harness/rules/autonomous-orchestration.mdc",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-rules-product-core-mdc",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/rules/product-core.mdc",
+                        "destination":  "plugins/local/cursor-project-harness/rules/product-core.mdc",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-rules-project-docs-lifecycle-mdc",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/rules/project-docs-lifecycle.mdc",
+                        "destination":  "plugins/local/cursor-project-harness/rules/project-docs-lifecycle.mdc",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-rules-skills-ru-description-mdc",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/rules/skills-ru-description.mdc",
+                        "destination":  "plugins/local/cursor-project-harness/rules/skills-ru-description.mdc",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-scripts-after-shell-papercuts-ps1",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/scripts/after-shell-papercuts.ps1",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/after-shell-papercuts.ps1",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-scripts-papercuts-cmd",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/scripts/papercuts.cmd",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/papercuts.cmd",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-scripts-papercuts-ps1",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/scripts/papercuts.ps1",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/papercuts.ps1",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-scripts-session-start-ps1",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/scripts/session-start.ps1",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/session-start.ps1",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-scripts-stop-papercuts-nudge-ps1",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/scripts/stop-papercuts-nudge.ps1",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/stop-papercuts-nudge.ps1",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-skills-autonomous-task-contracts-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/skills/autonomous-task/contracts.md",
+                        "destination":  "plugins/local/cursor-project-harness/skills/autonomous-task/contracts.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-skills-autonomous-task-SKILL-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/skills/autonomous-task/SKILL.md",
+                        "destination":  "plugins/local/cursor-project-harness/skills/autonomous-task/SKILL.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-skills-autonomous-task-tier-rubric-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/skills/autonomous-task/tier-rubric.md",
+                        "destination":  "plugins/local/cursor-project-harness/skills/autonomous-task/tier-rubric.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-skills-browser-verify-SKILL-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/skills/browser-verify/SKILL.md",
+                        "destination":  "plugins/local/cursor-project-harness/skills/browser-verify/SKILL.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-skills-configure-project-integrations-SKILL-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/skills/configure-project-integrations/SKILL.md",
+                        "destination":  "plugins/local/cursor-project-harness/skills/configure-project-integrations/SKILL.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-skills-maintain-project-docs-SKILL-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/skills/maintain-project-docs/SKILL.md",
+                        "destination":  "plugins/local/cursor-project-harness/skills/maintain-project-docs/SKILL.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-skills-review-papercuts-SKILL-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/skills/review-papercuts/SKILL.md",
+                        "destination":  "plugins/local/cursor-project-harness/skills/review-papercuts/SKILL.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-pkg-skills-setup-project-environment-SKILL-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "plugin/cursor-project-harness/skills/setup-project-environment/SKILL.md",
+                        "destination":  "plugins/local/cursor-project-harness/skills/setup-project-environment/SKILL.md",
+                        "bootstrap_ref":  "pluginPackage"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-agents-adversarial-reviewer-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/agents/adversarial-reviewer.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/adversarial-reviewer.md",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-agents-implementer-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/agents/implementer.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/implementer.md",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-agents-operational-orchestrator-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/agents/operational-orchestrator.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/operational-orchestrator.md",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-agents-principal-arbiter-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/agents/principal-arbiter.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/principal-arbiter.md",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-agents-verifier-md",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/agents/verifier.md",
+                        "destination":  "plugins/local/cursor-project-harness/agents/verifier.md",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-rules-autonomous-orchestration-mdc",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/rules/autonomous-orchestration.mdc",
+                        "destination":  "plugins/local/cursor-project-harness/rules/autonomous-orchestration.mdc",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-rules-product-core-mdc",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "templates/project-rules/product-core.mdc",
+                        "destination":  "plugins/local/cursor-project-harness/rules/product-core.mdc",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-rules-project-docs-lifecycle-mdc",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/rules/project-docs-lifecycle.mdc",
+                        "destination":  "plugins/local/cursor-project-harness/rules/project-docs-lifecycle.mdc",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-rules-skills-ru-description-mdc",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/rules/skills-ru-description.mdc",
+                        "destination":  "plugins/local/cursor-project-harness/rules/skills-ru-description.mdc",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-scripts-after-shell-papercuts-ps1",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/hooks/after-shell-papercuts.ps1",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/after-shell-papercuts.ps1",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-scripts-papercuts-cmd",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "scripts/papercuts.cmd",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/papercuts.cmd",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-scripts-papercuts-ps1",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  "scripts/papercuts.ps1",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/papercuts.ps1",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-scripts-session-start-ps1",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/hooks/session-start.ps1",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/session-start.ps1",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-scripts-stop-papercuts-nudge-ps1",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/hooks/stop-papercuts-nudge.ps1",
+                        "destination":  "plugins/local/cursor-project-harness/scripts/stop-papercuts-nudge.ps1",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-skills-autonomous-task",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/skills/autonomous-task",
+                        "destination":  "plugins/local/cursor-project-harness/skills/autonomous-task",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-skills-browser-verify",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/skills/browser-verify",
+                        "destination":  "plugins/local/cursor-project-harness/skills/browser-verify",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-skills-configure-project-integrations",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/skills/configure-project-integrations",
+                        "destination":  "plugins/local/cursor-project-harness/skills/configure-project-integrations",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-skills-maintain-project-docs",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/skills/maintain-project-docs",
+                        "destination":  "plugins/local/cursor-project-harness/skills/maintain-project-docs",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-skills-review-papercuts",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/skills/review-papercuts",
+                        "destination":  "plugins/local/cursor-project-harness/skills/review-papercuts",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "plugin-sync-plugins-local-cursor-project-harness-skills-setup-project-environment",
+                        "surface":  "plugin",
+                        "policy":  "plugin-only",
+                        "source":  ".cursor/skills/setup-project-environment",
+                        "destination":  "plugins/local/cursor-project-harness/skills/setup-project-environment",
+                        "bootstrap_ref":  "installHarnessPlugin"
+                    },
+                    {
+                        "id":  "seed-docs-docs-map.json",
+                        "surface":  "greenfield",
+                        "policy":  "seed-only",
+                        "source":  "templates/docs-map.json",
+                        "destination":  "docs/docs-map.json",
+                        "bootstrap_ref":  "new-project"
+                    },
+                    {
+                        "id":  "seed-docs-first-chat.md",
+                        "surface":  "greenfield",
+                        "policy":  "seed-only",
+                        "source":  "templates/first-chat.md",
+                        "destination":  "docs/first-chat.md",
+                        "bootstrap_ref":  "new-project"
+                    },
+                    {
+                        "id":  "seed-docs-product-brief.md",
+                        "surface":  "greenfield",
+                        "policy":  "seed-only",
+                        "source":  "templates/product-brief.md",
+                        "destination":  "docs/product-brief.md",
+                        "bootstrap_ref":  "new-project"
+                    }
+                ]
+}

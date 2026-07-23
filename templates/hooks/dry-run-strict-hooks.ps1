@@ -14,30 +14,43 @@ function Assert-True($cond, [string]$msg) {
     if ($cond) { Write-Host "OK  $msg" } else { Write-Host "FAIL $msg"; $script:fail++ }
 }
 
+function Get-BoundedDenyReason($Parsed) {
+    if ($null -eq $Parsed) { return "no-json" }
+    $msg = [string]$Parsed.agent_message
+    if ([string]::IsNullOrWhiteSpace($msg)) { $msg = [string]$Parsed.user_message }
+    if ([string]::IsNullOrWhiteSpace($msg)) { return "deny-no-message" }
+    if ($msg.Length -gt 120) { return $msg.Substring(0, 117) + "..." }
+    return $msg
+}
+
 function Invoke-HookJson {
     param(
         [string]$HookPath,
         [string]$StdinJson
     )
-    $psi = New-Object System.Diagnostics.ProcessStartInfo
-    $psi.FileName = "powershell.exe"
-    $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$HookPath`""
-    $psi.UseShellExecute = $false
-    $psi.RedirectStandardInput = $true
-    $psi.RedirectStandardOutput = $true
-    $psi.RedirectStandardError = $true
-    $psi.CreateNoWindow = $true
-    $p = New-Object System.Diagnostics.Process
-    $p.StartInfo = $psi
-    [void]$p.Start()
-    $p.StandardInput.Write($StdinJson)
-    $p.StandardInput.Close()
-    [void]$p.WaitForExit(15000)
-    $stdout = $p.StandardOutput.ReadToEnd().Trim()
-    $stderr = $p.StandardError.ReadToEnd().Trim()
-    $code = $p.ExitCode
-    $p.Dispose()
-    return @{ stdout = $stdout; stderr = $stderr; exitCode = $code }
+    $stdinFile = Join-Path $env:TEMP ("cptk-dry-hook-" + [guid]::NewGuid().ToString("n") + ".json")
+    $stderrFile = Join-Path $env:TEMP ("cptk-dry-hook-err-" + [guid]::NewGuid().ToString("n") + ".txt")
+    [System.IO.File]::WriteAllText($stdinFile, $StdinJson, (New-Object System.Text.UTF8Encoding $false))
+    try {
+        $prevEap = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        $stdout = Get-Content -LiteralPath $stdinFile -Raw -Encoding UTF8 | & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $HookPath 2>$stderrFile
+        $code = $LASTEXITCODE
+        $ErrorActionPreference = $prevEap
+        $stderr = ""
+        if (Test-Path -LiteralPath $stderrFile) {
+            $stderr = [string](Get-Content -LiteralPath $stderrFile -Raw -Encoding UTF8)
+            if ($null -ne $stderr) { $stderr = $stderr.Trim() }
+        }
+        return @{
+            stdout = [string]$stdout.Trim()
+            stderr = $stderr
+            exitCode = [int]$code
+        }
+    } finally {
+        Remove-Item -LiteralPath $stdinFile -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $stderrFile -Force -ErrorAction SilentlyContinue
+    }
 }
 
 function Test-HookCase {
@@ -54,7 +67,12 @@ function Test-HookCase {
     try { $parsed = $r.stdout | ConvertFrom-Json } catch { $parsed = $null }
     Assert-True ($null -ne $parsed) "$Label stdout ConvertFrom-Json"
     if ($null -ne $parsed) {
-        Assert-True ($parsed.permission -eq $ExpectPermission) "$Label permission=$ExpectPermission"
+        $got = [string]$parsed.permission
+        $detail = ""
+        if ($got -ne $ExpectPermission -and $got -eq "deny") {
+            $detail = "; reason=$(Get-BoundedDenyReason $parsed)"
+        }
+        Assert-True ($got -eq $ExpectPermission) "$Label permission=$ExpectPermission (got=$got$detail)"
     }
     if (-not [string]::IsNullOrEmpty($r.stdout)) {
         $lines = @($r.stdout -split "`n" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })

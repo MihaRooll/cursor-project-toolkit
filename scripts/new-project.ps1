@@ -14,7 +14,10 @@ param(
 
     [string]$Parent = "",
 
-    [switch]$AllowExisting
+    [switch]$AllowExisting,
+
+    # Skip User-scope HOME mutation during bootstrap (portability smoke / isolated runs).
+    [switch]$SkipUserHome
 )
 
 $ErrorActionPreference = "Stop"
@@ -384,8 +387,11 @@ try {
         Write-Host "skip git init (.git present)"
     }
 
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $BootstrapScript `
-        -TargetPath $Target -Mode Essential -SkipNext
+    $bootstrapArgList = @("-TargetPath", $Target, "-Mode", "Essential", "-SkipNext")
+    if ($SkipUserHome -or ($env:CPTK_PORTABILITY_SMOKE -eq "1")) {
+        $bootstrapArgList += "-SkipUserHome"
+    }
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $BootstrapScript @bootstrapArgList
     if ($LASTEXITCODE -ne 0) {
         throw "bootstrap-into-project.ps1 failed (exit $LASTEXITCODE)"
     }

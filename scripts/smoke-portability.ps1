@@ -3,7 +3,9 @@
   Offline portability smoke: greenfield, new-PC plugin, existing re-seed, Full templates, doctor degradation.
   PS 5.1, isolated temp roots (spaces + Unicode), no network, no real USERPROFILE\.cursor writes.
 #>
-param()
+param(
+    [switch]$OracleMode
+)
 
 $ErrorActionPreference = "Stop"
 $ToolkitRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
@@ -14,6 +16,25 @@ if ([string]::IsNullOrWhiteSpace($realUserProfile)) {
     $realUserProfile = $env:USERPROFILE
 }
 $realCursorRoot = Join-Path $realUserProfile ".cursor"
+$UnderVerifyHarness = ($env:CPTK_VERIFY_HARNESS -eq "1")
+$FailClosed = $OracleMode -or $UnderVerifyHarness
+
+function Write-StageOk {
+    param([Parameter(Mandatory = $true)][string]$StageId)
+    if ($OracleMode -or $UnderVerifyHarness) {
+        Write-Host "STAGE_OK $StageId"
+    }
+}
+
+function Write-PortabilitySkip {
+    param([Parameter(Mandatory = $true)][string]$Message)
+    if ($OracleMode -or $UnderVerifyHarness) {
+        Write-Host "FAIL skip forbidden under oracle/verify-harness: $Message"
+        $script:fail++
+        return
+    }
+    Write-Host "SKIP $Message"
+}
 
 function Assert-True($cond, [string]$msg) {
     if ($cond) {
@@ -326,6 +347,7 @@ function Invoke-SessionStartHook {
 }
 
 function Test-Scenario-Greenfield {
+    $failAtStart = $fail
     Write-Host ""
     Write-Host "=== G greenfield new-project ==="
     $parent = New-IsolatedRoot -Label "greenfield"
@@ -337,7 +359,7 @@ function Test-Scenario-Greenfield {
         TOOLKIT_PROJECTS_ROOT  = $parent
     }
     $code = Invoke-Ps1File -File (Join-Path $ToolkitRoot "scripts\new-project.ps1") `
-        -EnvExtra $envBag -ArgList @("-Name", $name, "-Parent", $parent, "-Goal", $goal)
+        -EnvExtra $envBag -ArgList @("-Name", $name, "-Parent", $parent, "-Goal", $goal, "-SkipUserHome")
     Assert-True ($code -eq 0) "G new-project exit 0"
     Assert-True (Test-Path (Join-Path $projectRoot ".git")) "G has .git"
     Assert-True (Test-Path (Join-Path $projectRoot "AGENTS.md")) "G has AGENTS.md"
@@ -358,11 +380,11 @@ function Test-Scenario-Greenfield {
     Assert-True ($doctorCode -in @(0, 1)) "G doctor advisory exit 0 or 1 (got $doctorCode)"
 
     $valDocs = Join-Path $ToolkitRoot "scripts\validate-project-docs.ps1"
-    if (Test-Path $valDocs) {
+    if (Test-Path -LiteralPath $valDocs) {
         $valCode = Invoke-Ps1File -File $valDocs -EnvExtra @{} -ArgList @("-ProjectRoot", $projectRoot)
         Assert-True ($valCode -eq 0) "G validate-project-docs exit 0"
     } else {
-        Write-Host "SKIP G validate-project-docs (toolkit script missing)"
+        Write-PortabilitySkip "G validate-project-docs (toolkit script missing)"
     }
 
     $statePath = Join-Path $projectRoot "docs\project-state.md"
@@ -399,9 +421,13 @@ function Test-Scenario-Greenfield {
             }
         }
     }
+    if (($OracleMode -or $UnderVerifyHarness) -and $fail -eq $failAtStart) {
+        Write-StageOk "F-PORT-G"
+    }
 }
 
 function Test-Scenario-PluginNewPc {
+    $failAtStart = $fail
     Write-Host ""
     Write-Host "=== P new-PC plugin install ==="
     $beforeCursorSnap = Get-CursorRootFileSnapshot -CursorRoot $realCursorRoot
@@ -462,9 +488,13 @@ function Test-Scenario-PluginNewPc {
     $plugHash = (Get-FileHash (Join-Path $pluginRoot "scripts\session-start.ps1")).Hash
     Assert-True ($canonHash -eq $plugHash) "P session-start hash matches canonical"
     Assert-NoRealCursorPluginWrites -BeforeSnap $beforeCursorSnap
+    if (($OracleMode -or $UnderVerifyHarness) -and $fail -eq $failAtStart) {
+        Write-StageOk "F-PORT-P"
+    }
 }
 
 function Test-Scenario-ExistingReseed {
+    $failAtStart = $fail
     Write-Host ""
     Write-Host "=== E existing Essential re-seed ==="
     $target = New-IsolatedRoot -Label "existing"
@@ -541,11 +571,46 @@ function Test-Scenario-ExistingReseed {
     $pcAfter2 = Get-Content $productCorePath -Raw -Encoding utf8
     Assert-True ($pcAfter2 -notmatch [regex]::Escape($productCoreSentinel)) "E product-core sentinel overwritten (pass 2, Always policy)"
     Assert-True ($pcAfter2 -match "Product harness core") "E product-core template applied (pass 2)"
+    if (($OracleMode -or $UnderVerifyHarness) -and $fail -eq $failAtStart) {
+        Write-StageOk "F-PORT-E"
+    }
+}
+
+function Test-PostCopyChecks {
+    param([Parameter(Mandatory = $true)][string]$CopyRoot)
+    $liveVal = Join-Path $CopyRoot "scripts\validate-living-evals.ps1"
+    Assert-True (Test-Path -LiteralPath $liveVal) "post-copy living validator exists"
+    $liveCode = Invoke-Ps1File -File $liveVal -ArgList @("-SelfTest") -WorkingDirectory $CopyRoot
+    Assert-True ($liveCode -eq 0) "F-COPY-LIVE exit 0"
+    Write-StageOk "F-COPY-LIVE"
+
+    $recVal = Join-Path $CopyRoot "scripts\validate-recovery.ps1"
+    Assert-True (Test-Path -LiteralPath $recVal) "post-copy recovery validator exists (F-COPY-REC mandatory)"
+    $recCode = Invoke-Ps1File -File $recVal -ArgList @("-SelfTest") -WorkingDirectory $CopyRoot
+    Assert-True ($recCode -eq 0) "F-COPY-REC exit 0"
+    Write-StageOk "F-COPY-REC"
+
+    $mcpVal = Join-Path $CopyRoot "scripts\validate-mcp-profiles.ps1"
+    Assert-True (Test-Path -LiteralPath $mcpVal) "post-copy MCP validator exists"
+    $mcpCode = Invoke-Ps1File -File $mcpVal -WorkingDirectory $CopyRoot
+    Assert-True ($mcpCode -eq 0) "F-COPY-MCP exit 0"
+    Write-StageOk "F-COPY-MCP"
+
+    $dryRun = Join-Path $CopyRoot "templates\hooks\dry-run-strict-hooks.ps1"
+    Assert-True (Test-Path -LiteralPath $dryRun) "post-copy template dry-run exists"
+    $dryCode = Invoke-Ps1File -File $dryRun -WorkingDirectory $CopyRoot
+    Assert-True ($dryCode -eq 0) "F-COPY-DRY exit 0"
+    Write-StageOk "F-COPY-DRY"
 }
 
 function Test-Scenario-FullTemplates {
+    $failAtStart = $fail
     Write-Host ""
-    Write-Host "=== F Full templates + toolkit validators ==="
+    if ($OracleMode) {
+        Write-Host "=== F Full templates + post-copy checks ==="
+    } else {
+        Write-Host "=== F Full templates + toolkit validators ==="
+    }
     $target = New-IsolatedRoot -Label "full"
     $code = Invoke-Ps1File -File (Join-Path $ToolkitRoot "scripts\bootstrap-into-project.ps1") `
         -EnvExtra @{ CPTK_PORTABILITY_SMOKE = "1" } -ArgList @("-TargetPath", $target, "-Mode", "Full")
@@ -587,41 +652,49 @@ function Test-Scenario-FullTemplates {
         }
     }
 
-    $dryRun = Join-Path $ToolkitRoot "templates\hooks\dry-run-strict-hooks.ps1"
-    if (Test-Path $dryRun) {
-        $dryCode = Invoke-Ps1File -File $dryRun
-        Assert-True ($dryCode -eq 0) "F strict hook dry-run exit 0"
+    if ($OracleMode) {
+        Test-PostCopyChecks -CopyRoot $target
     } else {
-        Write-Host "SKIP F dry-run (template missing)"
-    }
-
-    $validators = @(
-        @{ file = "validate-project-docs.ps1"; args = @("-ProjectRoot", $ToolkitRoot) },
-        @{ file = "validate-project-docs.ps1"; args = @("-SelfTest") },
-        @{ file = "validate-orchestration.ps1"; args = @() },
-        @{ file = "validate-orchestration.ps1"; args = @("-SelfTest") },
-        @{ file = "validate-mcp-profiles.ps1"; args = @() },
-        @{ file = "validate-mcp-profiles.ps1"; args = @("-SelfTest") },
-        @{ file = "validate-living-evals.ps1"; args = @() },
-        @{ file = "validate-living-evals.ps1"; args = @("-SelfTest") }
-    )
-    foreach ($v in $validators) {
-        $vp = Join-Path $ToolkitRoot ("scripts\" + $v.file)
-        if (-not (Test-Path $vp)) {
-            Write-Host "SKIP validator $($v.file)"
-            continue
-        }
-        $argLabel = if ($v.args.Count -gt 0) { $v.args -join " " } else { "(default)" }
-        if ($v.args.Count -gt 0) {
-            $vCode = Invoke-Ps1File -File $vp -EnvExtra @{} -ArgList $v.args
+        $dryRun = Join-Path $ToolkitRoot "templates\hooks\dry-run-strict-hooks.ps1"
+        if (Test-Path -LiteralPath $dryRun) {
+            $dryCode = Invoke-Ps1File -File $dryRun
+            Assert-True ($dryCode -eq 0) "F strict hook dry-run exit 0"
         } else {
-            $vCode = Invoke-Ps1File -File $vp
+            Write-PortabilitySkip "F dry-run (template missing)"
         }
-        Assert-True ($vCode -eq 0) "F $($v.file) $argLabel exit 0"
+
+        $validators = @(
+            @{ file = "validate-project-docs.ps1"; args = @("-ProjectRoot", $ToolkitRoot) },
+            @{ file = "validate-project-docs.ps1"; args = @("-SelfTest") },
+            @{ file = "validate-orchestration.ps1"; args = @() },
+            @{ file = "validate-orchestration.ps1"; args = @("-SelfTest") },
+            @{ file = "validate-mcp-profiles.ps1"; args = @() },
+            @{ file = "validate-mcp-profiles.ps1"; args = @("-SelfTest") },
+            @{ file = "validate-living-evals.ps1"; args = @() },
+            @{ file = "validate-living-evals.ps1"; args = @("-SelfTest") }
+        )
+        foreach ($v in $validators) {
+            $vp = Join-Path $ToolkitRoot ("scripts\" + $v.file)
+            if (-not (Test-Path -LiteralPath $vp)) {
+                Write-PortabilitySkip "validator $($v.file)"
+                continue
+            }
+            $argLabel = if ($v.args.Count -gt 0) { $v.args -join " " } else { "(default)" }
+            if ($v.args.Count -gt 0) {
+                $vCode = Invoke-Ps1File -File $vp -EnvExtra @{} -ArgList $v.args
+            } else {
+                $vCode = Invoke-Ps1File -File $vp
+            }
+            Assert-True ($vCode -eq 0) "F $($v.file) $argLabel exit 0"
+        }
+    }
+    if (($OracleMode -or $UnderVerifyHarness) -and $fail -eq $failAtStart) {
+        Write-StageOk "F-PORT-F"
     }
 }
 
 function Test-Scenario-DoctorDegradation {
+    $failAtStart = $fail
     Write-Host ""
     Write-Host "=== D doctor degradation ==="
     $target = New-IsolatedRoot -Label "doctor"
@@ -675,25 +748,35 @@ function Test-Scenario-DoctorDegradation {
             $env:CURSOR_SESSION_PROJECT_ROOT = $savedRoot
         }
     }
+    if (($OracleMode -or $UnderVerifyHarness) -and $fail -eq $failAtStart) {
+        Write-StageOk "F-PORT-D"
+    }
 }
 
 Write-Host "=== Smoke portability ==="
 Write-Host "Toolkit: $ToolkitRoot"
 Write-Host "Real USERPROFILE: $realUserProfile"
 
-if ($env:PORTABILITY_SMOKE_SKIP -eq "1") {
-    Write-Host "PORTABILITY_SMOKE_SKIP"
-    exit 0
-}
+if ($FailClosed) {
+    if ($env:PORTABILITY_SMOKE_SKIP -eq "1" -or $env:CPTK_SKIP_PORTABILITY -eq "1" -or $env:CPTK_PORTABILITY_NESTED_REENTRY -eq "1") {
+        Write-Host "FAIL portability skip forbidden under verify-harness/oracle mode"
+        exit 1
+    }
+} else {
+    if ($env:PORTABILITY_SMOKE_SKIP -eq "1") {
+        Write-Host "PORTABILITY_SMOKE_SKIP"
+        exit 0
+    }
 
-if ($env:CPTK_SKIP_PORTABILITY -eq "1") {
-    Write-Host "PORTABILITY_SMOKE_SKIP (legacy CPTK_SKIP_PORTABILITY=1)"
-    exit 0
-}
+    if ($env:CPTK_SKIP_PORTABILITY -eq "1") {
+        Write-Host "PORTABILITY_SMOKE_SKIP (legacy CPTK_SKIP_PORTABILITY=1)"
+        exit 0
+    }
 
-if ($env:CPTK_PORTABILITY_NESTED_REENTRY -eq "1") {
-    Write-Host "PORTABILITY_SMOKE_SKIP (CPTK_PORTABILITY_NESTED_REENTRY=1)"
-    exit 0
+    if ($env:CPTK_PORTABILITY_NESTED_REENTRY -eq "1") {
+        Write-Host "PORTABILITY_SMOKE_SKIP (CPTK_PORTABILITY_NESTED_REENTRY=1)"
+        exit 0
+    }
 }
 
 try {

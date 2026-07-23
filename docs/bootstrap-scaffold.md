@@ -12,8 +12,9 @@
 - Essential = **product** harness (не toolkit meta-skills); `product-brief` / `first-chat` / `docs-map.json` пишет только `new-project`, не Essential
 - Living docs assets (docs + `maintain-project-docs` + `project-docs-lifecycle`) копируются в Essential; map seed — day-0 only
 - Papercuts в авто: hooks логируют failed shells; ручной `add` — для всего остального
+- **Shadow shipping manifest (Wave 4B):** `shipping/manifest.v1.json` tracks every Essential/Full/plugin/toolkit-CI path + policy; `scripts/validate-shipping-manifest.ps1` compares live bootstrap/smoke/install arrays — **bootstrap remains array-driven** until a later switch
 
-**Не делай:** копировать `archive/` без нужды; затирать AGENTS без Force; тащить `ship-toolkit` / `add-source` в продукт; запускать `new-project.ps1` **внутри** уже bootstrapped продукта (скрипта там нет — только из клона toolkit).
+**Не делай:** копировать `archive/` без нужды; затирать AGENTS без Force; тащить `ship-toolkit` / `add-source` в продукт; запускать `new-project.ps1` **внутри** уже bootstrapped продукта (скрипта там нет — только из клона toolkit); treat manifest as production switch (shadow only).
 
 ---
 
@@ -39,6 +40,16 @@ my-new-app/             (продукт + скопированный harness)
 | Essential | product rules/skills + hooks + papercuts + ключевые docs + Essential prompting/roles/subagents |
 | Full | + весь docs/SOURCES/папки toolkit + все skills/rules + `templates/mcp` + `templates/cursor` + `templates/hooks` (opt-in) + `tests/living-eval` + `validate-living-evals.ps1` + `validate-mcp-profiles.ps1` + `validate-recovery.ps1` + `tests/recovery` |
 | `-WithSubmodule` | + `git submodule add` → `vendor/cursor-project-toolkit` (нужен git init в target) |
+
+### Shipping manifest (Wave 4B — shadow)
+
+| Artifact | Role |
+|----------|------|
+| `shipping/manifest.v1.json` | SSOT inventory: policy (`managed` \| `seed-only` \| `managed-block` \| `structural-merge` \| `plugin-only` \| `toolkit-ci-only`), surface, source, destination |
+| `scripts/validate-shipping-manifest.ps1` | Compare manifest vs live `$essentialFiles` / `$full` / smoke `$mustExist`/`$mustAbsent` / plugin install / toolkit-CI paths |
+| `tests/shipping/` | Schema, negative fixtures, deterministic test |
+
+Bootstrap/install **still use PowerShell arrays**; manifest is review/provenance shadow only. `scripts/verify-harness.ps1` stays **toolkit-ci-only** (not shipped).
 
 ---
 
@@ -83,17 +94,30 @@ my-new-app/             (продукт + скопированный harness)
 
 Чеклист: [new-project-bootstrap.md](../project-workflow/new-project-bootstrap.md).
 
-## Smoke (после правок harness)
+## Smoke / verify (после правок harness)
+
+**Рекомендуемый checkpoint (toolkit root):**
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-harness.ps1 -Profile Quick
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-harness.ps1 -Profile Full
+```
+
+Quick — 13 static checks по одному разу; Full = Quick + один `smoke-bootstrap -OracleOnly`. `verify-harness.ps1` **не** копируется в Essential/Full.
+
+**Legacy self-contained** (совместимость; может дублировать Quick head):
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\parse-check-ps1.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\smoke-bootstrap.ps1 -TargetPath ..\_toolkit-smoke-test
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\smoke-bootstrap.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\smoke-portability.ps1
 ```
 
-Ожидание: `ALL_OK` + `SMOKE PASS` (Essential + секция new-project); `PORTABILITY_SMOKE_PASS` (offline greenfield / new-PC plugin / existing re-seed / Full templates / doctor); в Essential target — product skills/rules; **нет** `ship-toolkit` / `toolkit-core` / `review-harness-evidence` / active MCP / `templates/mcp` / `templates/hooks` / `tests/living-eval` / `validate-living-evals.ps1` / `configure-project-integrations`. При падении smoke добавь `-KeepOnFailure`, чтобы сохранить `TargetPath` для отладки.
+Default smoke target: `%TEMP%\<GUID>`; caller pre-existing path → hard reject; junction/reparse root → hard reject. При падении: `-KeepOnFailure`.
 
-**Portability smoke** (`smoke-portability.ps1`): PS 5.1, temp roots with spaces/Unicode, `CPTK_PORTABILITY_SMOKE=1` skips User-scope HOME during bootstrap; `-LocalPluginsRoot` for plugin install without `%USERPROFILE%\.cursor` writes. From `smoke-bootstrap.ps1`: when bootstrap smoke passes (`$fail -eq 0`), nested portability always runs — bootstrap clears `CPTK_SKIP_PORTABILITY` before the nested call (that env does **not** opt out from bootstrap). Standalone only: `CPTK_SKIP_PORTABILITY=1` skips scenarios; `CPTK_PORTABILITY_NESTED_REENTRY=1` skips re-entry inside portability (no recursion — portability does not call bootstrap).
+Ожидание Full/legacy: `VERIFY_HARNESS_PASS` / `ALL_OK` + `SMOKE PASS` или `SMOKE ORACLE PASS`; `PORTABILITY_SMOKE_PASS`; ownership tests: `tests\portability\test-smoke-target-safety.ps1` → `SMOKE_TARGET_SAFETY_PASS`. В Essential target — product skills/rules; **нет** toolkit-only поверхности (`verify-harness`, `ship-toolkit`, `toolkit-core`, …).
+
+**Portability smoke** (`smoke-portability.ps1`): PS 5.1, temp roots with spaces/Unicode, `CPTK_PORTABILITY_SMOKE=1` skips User-scope HOME during bootstrap. Под `verify-harness Full` skip-токены (`SKIP`, `PORTABILITY_SMOKE_SKIP`) → fail-closed. Standalone: `CPTK_SKIP_PORTABILITY=1` / `CPTK_PORTABILITY_NESTED_REENTRY=1` по-прежнему могут skip (вне verify-harness).
 
 Strict hooks + living-eval: [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md) (Full opt-in; toolkit skill `/review-harness-evidence` — **not** in Essential product surface).
 

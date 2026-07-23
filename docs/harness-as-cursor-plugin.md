@@ -6,7 +6,9 @@
 
 **Когда читать:** install plugin; сравнить bootstrap vs plugin; обновить verdict.
 
-**Вердикт сейчас:** plugin scaffold в repo — `cursor-project-harness` v0.5.0 с autonomous-task, maintain-project-docs, configure-project-integrations, browser-verify, setup-project-environment, model-pinned agents. Локальная копия может быть старее: после update запусти installer и reload Cursor. Bootstrap Essential остаётся default для on-disk docs/scripts/AGENTS merge; native control **templates** и MCP templates только Full.
+**Вердикт сейчас:** plugin scaffold в repo — `cursor-project-harness` (semver in `plugin/cursor-project-harness/.cursor-plugin/plugin.json`) с autonomous-task, maintain-project-docs, configure-project-integrations, browser-verify, setup-project-environment, model-pinned agents. Локальная копия может быть старее: после update запусти installer и reload Cursor. Bootstrap Essential остаётся default для on-disk docs/scripts/AGENTS merge; native control **templates** и MCP templates только Full.
+
+**Static vs runtime evidence:** mirror hash checks, orchestration SelfTest, and Essential smoke prove **on-disk copy integrity** only. **Runtime coexistence** (plugin hooks + product hooks in Cursor IDE, load order, reload behavior) is **unverified** until a runtime coexistence protocol exists (Wave 4+). Do not claim hooks “verified in consumers” from static merge alone.
 
 **Применяй:**
 - Greenfield (новый продукт) → `scripts/new-project.ps1` / `.cmd` / skill `bootstrap-project`
@@ -22,12 +24,22 @@
 
 | Критерий | Статус |
 |----------|--------|
-| Essential smoke на Windows | done |
+| Essential smoke на Windows | done (static/deterministic) |
 | Product vs toolkit skills | done |
 | ≥2 реальных продукта | done (TG_BOT_PRO, inkavrio_ru) |
-| Repo semver в plugin.json | done (`0.5.0`); live install проверяй после installer |
-| Hooks проверены вне toolkit | done (merge в inkavrio + TG_BOT) |
+| Repo semver in plugin.json | done; live install проверяй после installer |
+| Hooks static merge in consumers | done (on-disk copy) |
+| Hooks runtime coexistence in Cursor | **unverified** — pending runtime protocol |
 | Marketplace publish | optional / human |
+
+### Static hash/smoke vs runtime (normative)
+
+| Layer | What validators prove | Status |
+|-------|----------------------|--------|
+| **Static** | Byte mirrors (`validate-orchestration`), Essential smoke, parse/dry-run | verified by deterministic scripts |
+| **Runtime** | Plugin + product hooks both active; IDE reload; hook event order | **unverified** — manual Cursor protocol not standardized yet |
+
+Do not promote “hooks verified outside toolkit” to runtime verified without explicit coexistence evidence.
 
 ---
 

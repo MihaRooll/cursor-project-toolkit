@@ -1,87 +1,81 @@
-# Промпт для нового чата (продолжение работы)
+# Промпт для нового чата (реализация fast-loop)
 
-Скопируй блок ниже в новый Agent-чат Cursor (лучше с `@AGENTS.md` и открытым этим репо).
-
-План hardening: [`new-project-hardening-plan.md`](new-project-hardening-plan.md).
+Скопируй блок ниже в **новый** Agent-чат Cursor с открытым репозиторием `cursor-project-toolkit`.
 
 ---
 
 ```text
-Ты продолжаешь работу над репозиторием cursor-project-toolkit
+Ты реализуешь fast-development harness для cursor-project-toolkit
 (https://github.com/MihaRooll/cursor-project-toolkit).
 
-## Что это за репо
-Bootstrap-каркас AI-среды разработки (не голая папка заметок):
-docs AI-first → human-second, `.cursor/rules|skills|hooks`, papercuts,
-`scripts/new-project.ps1` = greenfield; `scripts/bootstrap-into-project.ps1` = harness на существующую папку.
-Реестр источников: SOURCES.md. Архив сбоку: archive/.
+## Явная авторизация (из handoff-сессии 2026-07-23)
+Пользователь разрешает ПОЛНУЮ реализацию Waves 0–3 по архитектуре ниже.
+ЗАПРЕЩЕНО без отдельного явного OK: commit, push, merge, tag, release,
+branch protection, plugin install/remove, запись в user profile, LICENSE,
+смена model pin / cost-class, внешние мутации.
 
-## Обязательно прочитай сначала
+## Обязательно прочитай сначала (focused reads, не whole-repo scan)
 1. AGENTS.md
-2. README.md
-3. docs/bootstrap-scaffold.md
-4. project-workflow/new-project-hardening-plan.md   ← СЛЕДУЮЩИЙ РАБОЧИЙ ПЛАН
-5. project-workflow/new-project-bootstrap.md
-6. scripts/new-project.ps1
-7. docs/papercuts.md
-8. docs/harness-as-cursor-plugin.md
-9. docs/harness-consumers.md
-10. project-workflow/session-checklist.md
-11. SOURCES.md (SRC-001…022)
-12. project-workflow/continue-chat-prompt.md
+2. docs/fast-development-harness-plan.md          ← архитектура SSOT
+3. docs/session-handoff-2026-07-23.md            ← контекст сессии, риски, git state
+4. docs/project-state.md
+5. .cursor/plans/toolkit-fast-loop-v1.plan.md    ← wave-таблицы, если файл есть (gitignored)
+6. project-workflow/continue-chat-prompt.md
 
-## Что уже сделано (не повторяй с нуля)
-- Remote GitHub; main = origin (последний merge: PR #2 live consumers + local plugin)
-- Skills RU: add-source, distill-doc, ship-toolkit, review-papercuts, bootstrap-project
-- Hooks + papercuts shim; WSL stabilize; PowerShell footguns (em-dash, ${exit})
-- Essential = product-only; merge-safe AGENTS snippet + hooks.json merge
-- Local plugin: plugin/cursor-project-harness + install-harness-plugin.ps1
-- Live consumers: TG_BOT_PRO, inkavrio_ru
-- NEW: greenfield flow v2 реализован и smoke PASS:
-  - scripts/new-project.ps1 + .cmd
-  - bootstrap -SkipNext
-  - templates/product-brief.md + templates/first-chat.md
-  - skill bootstrap-project (greenfield vs existing)
-  - smoke-bootstrap секция === Smoke new-project === (TEMP + finally)
-- 3 цикла × 5 субагентов: вердикт GO-with-patch — см. new-project-hardening-plan.md
+## Контракт
+- НЕ возобновляй toolkit-fast-loop-v1 (BLOCKED: cycle:4 в metadata).
+- Создай НОВЫЙ контракт toolkit-fast-loop-v2, cycle: 1, tier T3.
+- Один bounded principal gate (Sol) перед product writes — без повторного premium planning/research.
+- Архитектуру бери из docs/fast-development-harness-plan.md + v1 plan body.
+- Не делай новый web research / plan review, если main @ 997fad5 не изменился materially.
 
-### Ingest + new-project в working tree (часто ЕЩЁ НЕ ЗАКОММИЧЕНО — проверь git status)
-SRC-012…022 docs + prompting; SOURCES/docs/README; new-project scripts/templates/skill/docs/smoke.
-Не коммить/не пушь без явной просьбы («зашей» / /ship-toolkit).
+## Модели (явный запрос slug)
+- Sole implementer / writer: composer-2.5-fast
+- operational-orchestrator, adversarial-reviewer, verifier: cursor-grok-4.5-high-fast
+- T3 principal (один вызов при необходимости): gpt-5.6-sol-medium — только bounded gate, не повтор planning
 
-## СЛЕДУЮЩАЯ ЗАДАЧА (приоритет)
-Выполни hardening по project-workflow/new-project-hardening-plan.md по порядку:
+## Оркестрация (efficient agents)
+- Один writer (implementer); Main не product-writes T0–T3.
+- Scouts/explore: max 0 по умолчанию; только при distinct unknown — один scout на uncertainty.
+- Не дублируй scouts; resume того же агента на rework.
+- Compact Work Packets ≤2k; без raw logs и full file dumps в packets.
+- Читай output files точечно, не целиком репо.
 
-1. NP-01 blocker: Get-FinalPath (Win32) — canonicalize Parent/Target ДО New-Item; fail-closed; smoke junction Parent→toolkit must fail
-2. NP-02/03 blocker: SSOT docs — harness-as-cursor-plugin.md + toolkit-core.mdc + AGENTS layers (greenfield=new-project)
-3. NP-04: честный -AllowExisting (не «merge-safe»)
-4. NP-05: smoke top-5 (Essential mustAbsent brief; refuse non-empty; AllowExisting preserve brief; Name in brief; AGENTS H1)
-5. NP-06…09 по остатку бюджета (title patch, Marketplace day-0 plugin, skills-ru sync, optional SkipNext HOME)
+## TodoWrite
+Используй TodoWrite для wave/slice tracking.
+Останавливайся только при definitive blocker (Human Gate, missing command, ownership violation).
+Статус человеку — кратко.
 
-После правок .ps1: parse-check-ps1.ps1 затем smoke-bootstrap.ps1.
+## Порядок реализации
+1. Wave 0 baseline (no writes) — wall-clock, registry observation, MIT intent ask
+2. Wave 1 oracle slice → Grok adversarial-reviewer + verifier
+3. Wave 2 CI slice → Grok review + verify
+4. Wave 3A → 3B → 3D policy/hygiene slices → Grok review каждый; финальный full verify
+Не начинай Waves 4–6.
 
-Потом (если пользователь даст OK): wifi-vpn через new-project.cmd + строка в harness-consumers.md.
-Или ship: ветка + PR для ingest+new-project+hardening — только по «зашей».
+## Wave 1 напоминание (кратко)
+- verify-harness Quick (each check once) + Full = Quick + smoke-bootstrap -OracleOnly
+- Ownership-safe TEMP GUID; reject pre-existing; hard-reject junction; mandatory -SkipUserHome
+- parse ALL tracked .ps1; recovery in Quick; STAGE_OK fail-closed; deterministic-only success text
+- verify-harness NOT on Essential/Full copy lists
 
-## Ограничения среды
-- PowerShell: .ps1 ASCII; powershell.exe -NoProfile -ExecutionPolicy Bypass
-- Em-dash / $exit: ломают PS 5.1 — ASCII + ${var}
-- Не force-push main; secrets out
-- Skill description на русском
-- Не тащи community dumps / Full packs в Essential
-- new-project.ps1 только из клона toolkit, не «ожидай» его внутри продукта
+## Wave 2 напоминание
+- Один windows-latest job, unconditional, verify-harness -Profile Full
+- SHA-pinned actions; contents:read; no paths/matrix/cache/secrets
 
-## Политики
-- Official/actionable → SRC + AI-first docs
-- Community dump → REJECT bulk
-- UI Skills / Matt / Addy / ReMe / clean-code-js → on demand в продуктах
+## Human Gates — STOP и спроси
+- branch protection / required checks
+- plugin user-profile mutation
+- root LICENSE
+- model pin / cost-class change
+- commit / push / release
 
-## Стиль
-- ## For agents первым; таблицы; индекс docs/README.md
-- Friction → papercuts
-- Один конкретный следующий шаг в ответе человеку
+## Verify (после каждого slice)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\validate-project-docs.ps1 -ProjectRoot .
+git diff --check
++ slice-specific commands из v2 plan / fast-development-harness-plan.md
 
-Начни с: git status, git log -5, сверка origin; кратко что в working tree; затем сразу NP-01 (или спроси «зашей» если пользователь хочет сначала commit без hardening).
+Начни: git status; подтверди base; создай toolkit-fast-loop-v2 cycle 1 plan; TodoWrite; Wave 0.
 ```
 
 ---

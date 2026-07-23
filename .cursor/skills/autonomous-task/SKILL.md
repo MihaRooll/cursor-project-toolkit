@@ -65,6 +65,20 @@ Main создаёт compact Work Packet (см. [contracts.md](contracts.md) §0)
 - Если verifier scheduled — implementer не дублирует полный verify, кроме диагностики failure.
 - Verifier/reviewer **не создают** `_v_*.txt` или temp evidence в product root.
 
+## Verification profiles (Main)
+
+Light vocabulary — см. [contracts.md](contracts.md) § Verification profiles. **Не** путать с tier routing.
+
+| Profile | Когда |
+|---------|-------|
+| `targeted` | Default: exact `verify_commands` из Work Packet / Contract |
+| `Quick` | Toolkit local completion; all static checks once |
+| `Full` | Due on Full trigger: pre-merge, release, shared config, public contract, unknown impact, flake, explicit request |
+
+**INV-7:** until required CI active → same-SHA local **Full** for done unless explicit human deferral in Final Report. Green `toolkit-verify` may satisfy pre-protection checkpoint only; report protection status. **Deferred Full ≠ done.**
+
+Static oracle pass ≠ runtime/model/plugin proof. Product repos without toolkit: packet `verify_commands` only.
+
 ## Spawn packets
 
 Каждый prompt субагенту содержит:

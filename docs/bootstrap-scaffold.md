@@ -83,17 +83,30 @@ my-new-app/             (продукт + скопированный harness)
 
 Чеклист: [new-project-bootstrap.md](../project-workflow/new-project-bootstrap.md).
 
-## Smoke (после правок harness)
+## Smoke / verify (после правок harness)
+
+**Рекомендуемый checkpoint (toolkit root):**
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-harness.ps1 -Profile Quick
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-harness.ps1 -Profile Full
+```
+
+Quick — 13 static checks по одному разу; Full = Quick + один `smoke-bootstrap -OracleOnly`. `verify-harness.ps1` **не** копируется в Essential/Full.
+
+**Legacy self-contained** (совместимость; может дублировать Quick head):
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\parse-check-ps1.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\smoke-bootstrap.ps1 -TargetPath ..\_toolkit-smoke-test
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\smoke-bootstrap.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\smoke-portability.ps1
 ```
 
-Ожидание: `ALL_OK` + `SMOKE PASS` (Essential + секция new-project); `PORTABILITY_SMOKE_PASS` (offline greenfield / new-PC plugin / existing re-seed / Full templates / doctor); в Essential target — product skills/rules; **нет** `ship-toolkit` / `toolkit-core` / `review-harness-evidence` / active MCP / `templates/mcp` / `templates/hooks` / `tests/living-eval` / `validate-living-evals.ps1` / `configure-project-integrations`. При падении smoke добавь `-KeepOnFailure`, чтобы сохранить `TargetPath` для отладки.
+Default smoke target: `%TEMP%\<GUID>`; caller pre-existing path → hard reject; junction/reparse root → hard reject. При падении: `-KeepOnFailure`.
 
-**Portability smoke** (`smoke-portability.ps1`): PS 5.1, temp roots with spaces/Unicode, `CPTK_PORTABILITY_SMOKE=1` skips User-scope HOME during bootstrap; `-LocalPluginsRoot` for plugin install without `%USERPROFILE%\.cursor` writes. From `smoke-bootstrap.ps1`: when bootstrap smoke passes (`$fail -eq 0`), nested portability always runs — bootstrap clears `CPTK_SKIP_PORTABILITY` before the nested call (that env does **not** opt out from bootstrap). Standalone only: `CPTK_SKIP_PORTABILITY=1` skips scenarios; `CPTK_PORTABILITY_NESTED_REENTRY=1` skips re-entry inside portability (no recursion — portability does not call bootstrap).
+Ожидание Full/legacy: `VERIFY_HARNESS_PASS` / `ALL_OK` + `SMOKE PASS` или `SMOKE ORACLE PASS`; `PORTABILITY_SMOKE_PASS`; ownership tests: `tests\portability\test-smoke-target-safety.ps1` → `SMOKE_TARGET_SAFETY_PASS`. В Essential target — product skills/rules; **нет** toolkit-only поверхности (`verify-harness`, `ship-toolkit`, `toolkit-core`, …).
+
+**Portability smoke** (`smoke-portability.ps1`): PS 5.1, temp roots with spaces/Unicode, `CPTK_PORTABILITY_SMOKE=1` skips User-scope HOME during bootstrap. Под `verify-harness Full` skip-токены (`SKIP`, `PORTABILITY_SMOKE_SKIP`) → fail-closed. Standalone: `CPTK_SKIP_PORTABILITY=1` / `CPTK_PORTABILITY_NESTED_REENTRY=1` по-прежнему могут skip (вне verify-harness).
 
 Strict hooks + living-eval: [harness-evidence-and-enforcement.md](harness-evidence-and-enforcement.md) (Full opt-in; toolkit skill `/review-harness-evidence` — **not** in Essential product surface).
 

@@ -15,7 +15,7 @@
 5. T2: Main contract → Grok `operational-orchestrator` conditional stages (explore/plan/implement/review/verify).
 6. T3: Grok required plan → Sol Principal Packet до product writes → Composer → Grok review + verify.
 7. T4: Human Gate Packet.
-8. Production writer один (implementer); параллельны только read-only Explore scouts.
+8. Production writer один (implementer); параллельны только read-only Explore scouts — **default 0**, max 3 (4-й с justification); premium scouts запрещены.
 9. Completion = acceptance + deterministic checks + zero blockers.
 10. Verifier/reviewer must not create `_v_*.txt` or temp evidence in product root.
 
@@ -88,9 +88,45 @@ Done строго:
 
 Полные schemas: [contracts.md](../.cursor/skills/autonomous-task/contracts.md).
 
+## Verification profiles (light vocabulary)
+
+Profiles name **deterministic command scope** — not runtime/model/plugin proof. Normative detail: contracts.md § Verification profiles.
+
+| Profile | Scope | Toolkit command |
+|---------|-------|-----------------|
+| `targeted` | Task `verify_commands` | Per Work Packet / Contract |
+| `Quick` | Static/policy once each | `scripts/verify-harness.ps1 -Profile Quick` |
+| `Full` | Quick + one oracle | `scripts/verify-harness.ps1 -Profile Full` |
+
+**Full due** when any trigger: pre-merge, release, shared config (rules/skills/agents/manifests), public contract change, unknown impact, flake, explicit request.
+
+**INV-7 done checkpoint:**
+
+| Phase | Requirement |
+|-------|-------------|
+| Until required CI active | Same-SHA local Full (exit 0) unless explicit human deferral in Final Report |
+| Green `toolkit-verify` on SHA | May satisfy pre-protection checkpoint; **report protection status** |
+| Deferred Full | **≠ done** without INV-7 evidence |
+
+See [ci-toolkit-verify.md](ci-toolkit-verify.md) for workflow boundary. Wave 1 retarget preserved: Quick includes orchestration SelfTest; Full = Quick + `-OracleOnly` once.
+
+## T3 boundary & scouts (3B)
+
+Paired +/- examples (trust boundary, public API, persistence, concurrency, architectural fork): [tier-rubric.md](../.cursor/skills/autonomous-task/tier-rubric.md) § T3 paired examples. **Keyword ≠ tier** — Sol pre-write only for material T3.
+
+| Scouts | Rule |
+|--------|------|
+| Default | 0 |
+| Trigger | Distinct unknown affecting plan/implement |
+| Max | 3 read-only explore contours; 4th needs explicit written justification |
+| Forbidden | Duplicate scouts, premium scouts, parallel product writers |
+| Rework | Resume same scout contour; do not respawn same question |
+
+Normative scout stage detail: [operational-orchestrator.md](../.cursor/agents/operational-orchestrator.md) § Explore scouts.
+
 Shadow evidence (toolkit-only): [orchestration-evidence.md](orchestration-evidence.md) — no strict-hook auto-promotion.
 
-Только в clone самого toolkit: `scripts/validate-orchestration.ps1 -SelfTest`; локальный `scripts/smoke-bootstrap.ps1` запускает validator автоматически. В bootstrapped Essential/Full products validator и его repo fixtures намеренно отсутствуют.
+Только в clone самого toolkit: `scripts/validate-orchestration.ps1 -SelfTest` входит в `scripts/verify-harness.ps1 -Profile Quick` (каждый static check один раз). Legacy `smoke-bootstrap.ps1` без `-OracleOnly` по-прежнему может дублировать Quick head. `verify-harness.ps1` не копируется в Essential/Full. В bootstrapped products validator и repo fixtures намеренно отсутствуют.
 
 ## Premium packet
 

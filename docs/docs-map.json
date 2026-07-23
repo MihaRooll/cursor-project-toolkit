@@ -48,7 +48,7 @@
       "title": "Project state",
       "status": "active",
       "owners": ["team"],
-      "tags": ["state", "wave3"]
+      "tags": ["state", "wave3", "fast-loop"]
     },
     {
       "path": "docs/memory-and-obsidian.md",
@@ -83,7 +83,7 @@
       "title": "Autonomous agent orchestration",
       "status": "active",
       "owners": ["team"],
-      "tags": ["orchestration", "wave5", "delegation-first"]
+      "tags": ["orchestration", "wave5", "delegation-first", "verification", "fast-loop", "verify-harness", "inv-7", "t3-boundary", "scout-policy"]
     },
     {
       "path": "docs/orchestration-evidence.md",
@@ -91,6 +91,27 @@
       "status": "active",
       "owners": ["team"],
       "tags": ["orchestration", "wave5", "toolkit-only", "evidence"]
+    },
+    {
+      "path": "docs/fast-development-harness-plan.md",
+      "title": "Fast development harness plan",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["harness", "oracle", "ci", "fast-loop", "implementation"]
+    },
+    {
+      "path": "docs/ci-toolkit-verify.md",
+      "title": "CI toolkit-verify workflow",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["ci", "harness", "oracle", "fast-loop", "github-actions"]
+    },
+    {
+      "path": "docs/session-handoff-2026-07-23.md",
+      "title": "Session handoff 2026-07-23",
+      "status": "active",
+      "owners": ["team"],
+      "tags": ["handoff", "session", "fast-loop", "research"]
     }
   ],
   "rules": {

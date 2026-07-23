@@ -28,7 +28,7 @@ description: Закоммитить и запушить изменения toolk
 5. Push: prefer PowerShell/`gh` auth on Windows if WSL git 403s:
 
 ```bash
-powershell.exe -NoProfile -Command "cd 'C:\Users\katko\Desktop\Programms\cursor-project-toolkit'; git push -u origin HEAD"
+powershell.exe -NoProfile -Command "cd 'C:\Users\katko\Desktop\Program\cursor-project-toolkit'; git push -u origin HEAD"
 ```
 
 6. If user asked for PR:

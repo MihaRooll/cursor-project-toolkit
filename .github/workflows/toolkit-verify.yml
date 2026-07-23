@@ -1,0 +1,101 @@
+name: toolkit-verify
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: toolkit-verify-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  toolkit-verify:
+    name: toolkit-verify
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # actions/checkout v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: verify-harness Full
+        run: |
+          $ErrorActionPreference = "Continue"
+          $started = Get-Date
+          $lines = New-Object System.Collections.Generic.List[string]
+          $exitCode = $null
+          $invokeError = $null
+          try {
+            & powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\verify-harness.ps1 -Profile Full 2>&1 | ForEach-Object {
+              $text = [string]$_
+              Write-Host $text
+              [void]$lines.Add($text)
+            }
+            if ($null -ne $LASTEXITCODE) {
+              $exitCode = [int]$LASTEXITCODE
+            }
+          } catch {
+            $invokeError = $_.Exception.Message
+            $failMsg = "FAIL verify-harness invocation: $invokeError"
+            Write-Host $failMsg
+            [void]$lines.Add($failMsg)
+          } finally {
+            $elapsed = (Get-Date) - $started
+            $joined = $lines -join [Environment]::NewLine
+            $stageMatches = [regex]::Matches($joined, 'STAGE_OK\s+(\S+)')
+            $stageIds = @($stageMatches | ForEach-Object { $_.Groups[1].Value })
+            $passLine = ($lines | Where-Object { $_ -match 'VERIFY_HARNESS_PASS' } | Select-Object -Last 1)
+            $failLine = ($lines | Where-Object { $_ -match 'VERIFY_HARNESS_FAIL' } | Select-Object -Last 1)
+            $displayExit = if ($null -eq $exitCode) { "unset" } else { [string]$exitCode }
+            $summary = @(
+              "## toolkit-verify (deterministic oracle)"
+              ""
+              "**Boundary:** static validators + bootstrap smoke only — **not** Cursor/model/plugin runtime proof."
+              ""
+              "| Metric | Value |"
+              "|--------|-------|"
+              "| Profile | Full |"
+              "| Wall clock | $($elapsed.ToString('mm\:ss')) |"
+              "| Exit code | $displayExit |"
+              "| STAGE_OK count | $($stageIds.Count) |"
+            )
+            if ($null -ne $invokeError) {
+              $summary += ""
+              $summary += "**Invocation error:** $invokeError"
+            }
+            if ($stageIds.Count -gt 0) {
+              $summary += ""
+              $summary += "### Stages"
+              foreach ($id in $stageIds) {
+                $summary += "- ``$id``"
+              }
+            }
+            if ($passLine) {
+              $summary += ""
+              $summary += "**Result:** $passLine"
+            } elseif ($failLine) {
+              $summary += ""
+              $summary += "**Result:** $failLine"
+            } elseif ($null -eq $exitCode) {
+              $summary += ""
+              $summary += "**Result:** FAIL verify-harness exit code unset (fail-closed)"
+            }
+            if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY)) {
+              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ($summary -join [Environment]::NewLine)
+            }
+          }
+          if ($null -ne $invokeError) { exit 1 }
+          if ($null -eq $exitCode) {
+            Write-Host "FAIL verify-harness exit code unset (fail-closed)"
+            exit 1
+          }
+          if ($exitCode -ne 0) { exit $exitCode }

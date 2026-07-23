@@ -214,6 +214,47 @@ notes: compact optional context
 - `validator_run: yes` expected when map or referenced paths changed; attach exit code
 - Omit section only for pure code changes with zero doc/user-facing touch
 
+## Verification profiles (normative light vocabulary)
+
+Light scope only — **not** a second oracle engine. Profiles name **which deterministic commands** satisfy verify stages; they do **not** prove Cursor/model/plugin runtime (INV-10).
+
+| Profile | Scope | Typical command (toolkit root) |
+|---------|-------|--------------------------------|
+| `targeted` | Task `verify_commands` only (owned paths) | Per Work Packet / Contract |
+| `Quick` | All fast static/policy checks once | `scripts/verify-harness.ps1 -Profile Quick` |
+| `Full` | Quick + exactly one bootstrap oracle | `scripts/verify-harness.ps1 -Profile Full` |
+
+**Default during change/build/fix:** implementer runs **targeted** checks from the packet; toolkit contributors use **Quick** for local completion. **Full** is due when any Full trigger below applies — deferred Full is **not** done without INV-7 evidence.
+
+### Full triggers (schedule Full)
+
+1. **pre-merge** — PR / merge intent to protected branch
+2. **release** — ship, tag, publish, or bootstrap copy to consumers
+3. **shared config** — rules, skills, agents, copy lists, orchestration manifests, plugin mirrors
+4. **public contract** — contracts, tier-rubric, schemas, or APIs shipped to products
+5. **unknown impact** — weak oracle, cross-cutting blast radius unclear
+6. **flake** — prior verify failure in touched area or non-deterministic regression signal
+7. **explicit request** — human or Main asks for Full
+
+### Due checkpoint (INV-7)
+
+| Phase | Done evidence |
+|-------|----------------|
+| Until required CI is **active** | Same-SHA local **Full** (exit 0) unless explicit human deferral recorded in Final Report |
+| After green `toolkit-verify` on target SHA | May satisfy pre-protection checkpoint only; **report branch protection status** |
+| Always | Deferred Full ≠ done without INV-7 evidence |
+
+Protection edits remain Human Gate (T4). Green CI does not replace protection signoff.
+
+### Evidence rules (fixtures-backed policy)
+
+- `verify_commands` name **exact** commands; forbid placeholder "run tests".
+- Verification Record maps each command → AC IDs with exit codes.
+- Static oracle tokens (`VERIFY_HARNESS_PASS`, `STAGE_OK`) = deterministic evidence only.
+- Findings and done claims still require `path + lines + requirement_ref + evidence` — model consensus is not evidence.
+
+Product repos without toolkit oracle: use task `verify_commands` only; do not invent profile names.
+
 ## Artifact ownership
 
 | Artifact | Creator | Persistence |

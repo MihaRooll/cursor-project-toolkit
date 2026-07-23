@@ -29,7 +29,7 @@ Toolkit-only skill. **Не** копируется в plugin и **не** auto-pro
    - [ ] 10–20 tagged tasks (суммарно по трём тегам)
    - [ ] ≥2 consumer product repos (не только toolkit)
    - [ ] False-deny review: легитимные команды не блокировались без documented exception
-   - [ ] Living-eval 8/8 domains green
+   - [ ] Living-eval 12/12 domains green
    - [ ] V-11 dry-run pass
 5. Выведи **Human signoff checklist** (не решай за человека):
 

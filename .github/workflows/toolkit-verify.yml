@@ -59,7 +59,7 @@ jobs:
             $summary = @(
               "## toolkit-verify (deterministic oracle)"
               ""
-              "**Boundary:** static validators + bootstrap smoke only — **not** Cursor/model/plugin runtime proof."
+              "**Boundary:** static validators + bootstrap smoke only -- **not** Cursor/model/plugin runtime proof."
               ""
               "| Metric | Value |"
               "|--------|-------|"

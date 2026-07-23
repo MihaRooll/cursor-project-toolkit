@@ -141,13 +141,33 @@ function Get-CursorPluginsHooksSnapshot {
     return $snap
 }
 
+function Get-SafeHomeFingerprint([string]$Value) {
+    if ($null -eq $Value) { return "null" }
+    $t = [string]$Value
+    if ($t.Length -eq 0) { return "empty" }
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($t)
+        $hash = ($sha.ComputeHash($bytes) | ForEach-Object { $_.ToString("x2") }) -join ""
+        return "set sha256:$($hash.Substring(0, 16))"
+    } finally {
+        $sha.Dispose()
+    }
+}
+
 function Assert-BoundedHomeUnchanged {
     param(
         [string]$UserHomeBefore,
         [hashtable]$CursorBefore
     )
     $userHomeAfter = [Environment]::GetEnvironmentVariable("HOME", "User")
-    Assert-True ($userHomeAfter -eq $UserHomeBefore) "User-scope HOME unchanged"
+    if ($userHomeAfter -ne $UserHomeBefore) {
+        $beforeFp = Get-SafeHomeFingerprint $UserHomeBefore
+        $afterFp = Get-SafeHomeFingerprint $userHomeAfter
+        Assert-True $false "User-scope HOME unchanged (before=$beforeFp after=$afterFp)"
+    } else {
+        Assert-True $true "User-scope HOME unchanged"
+    }
     $cursorAfter = Get-CursorPluginsHooksSnapshot -CursorRoot $realCursorRoot
     $added = @()
     $changed = @()
@@ -628,7 +648,7 @@ $npFailBeforeC1 = $fail
 try {
     New-Item -ItemType Directory -Force -Path $npParent | Out-Null
 
-    $code = Invoke-Ps1File $NewProjectPs1 -Name $npName -Parent $npParent -Goal $npGoal
+    $code = Invoke-Ps1File $NewProjectPs1 -Name $npName -Parent $npParent -Goal $npGoal -SkipUserHome
     if ($code -ne 0) {
         Write-Host "FAIL new-project happy exit=$code"
         $fail++
@@ -703,7 +723,7 @@ try {
         if (Test-Path $statePath) {
             Set-Content -LiteralPath $statePath -Value $stateSentinel -Encoding utf8
         }
-        $code = Invoke-Ps1File $NewProjectPs1 -Name $npName -Parent $npParent -Goal "should-not-clobber" -AllowExisting
+        $code = Invoke-Ps1File $NewProjectPs1 -Name $npName -Parent $npParent -Goal "should-not-clobber" -AllowExisting -SkipUserHome
         Assert-True ($code -eq 0) "AllowExisting exit 0"
         if (Test-Path $briefPath) {
             $briefAfter = Get-Content $briefPath -Raw -Encoding utf8
@@ -732,7 +752,7 @@ try {
     New-Item -ItemType Directory -Force -Path $refuseRoot | Out-Null
     $keepPath = Join-Path $refuseRoot "KEEP.txt"
     Set-Content -LiteralPath $keepPath -Value "KEEP" -Encoding ascii
-    $code = Invoke-Ps1File $NewProjectPs1 -Name $refuseName -Parent $npParent -Goal "refuse"
+    $code = Invoke-Ps1File $NewProjectPs1 -Name $refuseName -Parent $npParent -Goal "refuse" -SkipUserHome
     Assert-True ($code -ne 0) "refuse non-empty exit != 0"
     Assert-True ((Get-Content $keepPath -Raw -Encoding ascii).Trim() -eq "KEEP") "refuse left KEEP unchanged"
     Assert-True (-not (Test-Path (Join-Path $refuseRoot "AGENTS.md"))) "refuse did not bootstrap AGENTS"
@@ -751,7 +771,7 @@ try {
         $fail++
     }
     if ($jCreated) {
-        $code = Invoke-Ps1File $NewProjectPs1 -Name $leakName -Parent $jLink -Goal "junction"
+        $code = Invoke-Ps1File $NewProjectPs1 -Name $leakName -Parent $jLink -Goal "junction" -SkipUserHome
         Assert-True ($code -ne 0) "junction Parent->toolkit exit != 0"
         Assert-True (-not (Test-Path (Join-Path $ToolkitRoot $leakName))) "no leak under ToolkitRoot"
     }

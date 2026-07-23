@@ -359,7 +359,7 @@ function Test-Scenario-Greenfield {
         TOOLKIT_PROJECTS_ROOT  = $parent
     }
     $code = Invoke-Ps1File -File (Join-Path $ToolkitRoot "scripts\new-project.ps1") `
-        -EnvExtra $envBag -ArgList @("-Name", $name, "-Parent", $parent, "-Goal", $goal)
+        -EnvExtra $envBag -ArgList @("-Name", $name, "-Parent", $parent, "-Goal", $goal, "-SkipUserHome")
     Assert-True ($code -eq 0) "G new-project exit 0"
     Assert-True (Test-Path (Join-Path $projectRoot ".git")) "G has .git"
     Assert-True (Test-Path (Join-Path $projectRoot "AGENTS.md")) "G has AGENTS.md"
